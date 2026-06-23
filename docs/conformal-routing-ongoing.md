@@ -60,9 +60,6 @@ Status: exploratory / ongoing.
 
 The scripts are retained and syntax-checked by `npm run check:all`. They should be treated as research scaffolding until independent factual labels or stronger proxy-label validation are available.
 
-## Interview framing
-
-If asked about this part of the repo, the concise answer is:
 
 > The conformal work is a selective-routing appendix. The main result is source-fidelity measurement and candidate-first extraction. Once the system exposes failures, the next engineering question is how to route cases based on observable risk signals. The conformal scripts test that idea with proxy labels, but I do not treat those proxy labels as clinical truth.
 
