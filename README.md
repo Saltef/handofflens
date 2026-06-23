@@ -72,6 +72,8 @@ The full LLM/provenance pipeline is represented in the validation reports and ca
 | Source-fidelity review packets | Prepared | Human factual review is pending |
 | Conformal/selective routing | Ongoing appendix | Uses proxy labels for escalation-policy research, not clinical safety |
 
+![Bar chart: on the 400-case held-out baseline run, 88% of outputs were schema-valid but only 10% passed an exact-source provenance check.](docs/assets/schema-vs-provenance.png)
+
 ## What this does not claim
 
 HandoffLens does not claim clinical accuracy, clinical safety, harmful-error reduction, deployment readiness, patient outcome improvement, or generalization to external hospitals.
