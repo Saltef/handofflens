@@ -44,7 +44,7 @@ The prohibited interpretation is:
 
 > The system can identify clinically safe cases for autonomous use.
 
-## Why it remains in the portfolio release
+## Why take this direction?
 
 This work is included because it shows a second layer of reliability engineering:
 
@@ -52,13 +52,6 @@ This work is included because it shows a second layer of reliability engineering
 2. Detect when source grounding or schema validity fails.
 3. Route uncertain or high-risk cases to abstention, retry, alternate extraction, or human review.
 
-That is relevant to engineers and data scientists building LLM systems over unstructured records. It is not the core claim, but it is a credible ongoing direction.
-
-## Current status
-
-Status: exploratory / ongoing.
-
-The scripts are retained and syntax-checked by `npm run check:all`. They should be treated as research scaffolding until independent factual labels or stronger proxy-label validation are available.
 
 
 > The conformal work is a selective-routing appendix. The main result is source-fidelity measurement and candidate-first extraction. Once the system exposes failures, the next engineering question is how to route cases based on observable risk signals. The conformal scripts test that idea with proxy labels, but I do not treat those proxy labels as clinical truth.
