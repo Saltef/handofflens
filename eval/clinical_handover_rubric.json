@@ -1,0 +1,139 @@
+{
+  "source": {
+    "title": "It sounds like a good handover but can I trust it: the correlation between perceived quality and accuracy?",
+    "authors": "Moore M, Bain-Donohue S, Barry M, Gray P",
+    "journal": "MedEdPublish",
+    "publication_date": "2021-04-28",
+    "volume": "10",
+    "article": "102",
+    "doi": "10.15694/mep.2021.000102.1",
+    "pmid": "38486591",
+    "pmcid": "PMC10939514",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10939514/"
+  },
+  "project_adaptation": {
+    "name": "Clinical handover summary review rubric",
+    "rationale": "The model output is intended for physician follow-up handover. This rubric evaluates whether a clinician receives an accurate, prioritized, and safe picture of the patient from the generated summary.",
+    "scale": {
+      "0": "Not performed competently",
+      "1": "Able to perform under firm direction",
+      "2": "Able to perform under modest direction",
+      "3": "Able to perform under minimal direction"
+    },
+    "review_process": [
+      "Reviewer reads the model-generated physician summary first and scores perceived handover quality.",
+      "Reviewer then compares the summary against the source discharge summary and reference extraction labels.",
+      "Reviewer scores source-record match and safety after seeing the source record.",
+      "Automated extraction metrics are reported separately from manual handover scores."
+    ]
+  },
+  "domains_before_source_review": [
+    {
+      "id": "identifies_patient_context",
+      "adapted_from": "Identifies self and patient",
+      "project_component": "Identifies case and patient context",
+      "scores": {
+        "0": "Missing or misleading case metadata despite available source information.",
+        "1": "Provides limited patient context only after significant prompting or leaves major context unclear.",
+        "2": "Provides appropriate patient context with minor missing elements.",
+        "3": "Clearly identifies case metadata, age/sex when available, admission diagnosis, and discharge context before proceeding."
+      }
+    },
+    {
+      "id": "identifies_main_problem",
+      "adapted_from": "Identifies main problem",
+      "project_component": "Identifies and prioritizes main clinical problems",
+      "scores": {
+        "0": "Unable to identify the main clinical problems.",
+        "1": "Identifies some problems but misses prioritization or requires substantial clarification.",
+        "2": "Identifies and mostly prioritizes the main problems with minor clarification needed.",
+        "3": "Clearly identifies and prioritizes the main admission/discharge problems."
+      }
+    },
+    {
+      "id": "focused_history",
+      "adapted_from": "Gives appropriate history",
+      "project_component": "Provides focused relevant history",
+      "scores": {
+        "0": "History is missing, unstructured, or dominated by extraneous details.",
+        "1": "Includes some key history but requires frequent clarification.",
+        "2": "Includes key history with only minor missing context.",
+        "3": "Provides a comprehensive focused history relevant to follow-up care."
+      }
+    },
+    {
+      "id": "examination_observations",
+      "adapted_from": "Gives appropriate examination/Observations",
+      "project_component": "Reports relevant exam, observations, labs, imaging, and discharge status",
+      "scores": {
+        "0": "Omits relevant observations or key objective parameters available in the source.",
+        "1": "Reports some objective data but misses important parameters suggested by the case.",
+        "2": "Reports key objective data with minor clarification needed.",
+        "3": "Reports focused observations, labs/tests, procedures, and discharge status relevant to follow-up."
+      }
+    },
+    {
+      "id": "logical_assessment",
+      "adapted_from": "Makes logical assessment",
+      "project_component": "Connects problem, history, hospital course, objective data, and discharge plan",
+      "scores": {
+        "0": "No credible assessment or synthesis.",
+        "1": "Assessment is plausible only after substantial clarification.",
+        "2": "Assessment mostly correlates available facts with minor clarification needed.",
+        "3": "Assessment clearly correlates the main problems, history, hospital course, objective data, and follow-up context."
+      }
+    },
+    {
+      "id": "clear_follow_up_recommendation",
+      "adapted_from": "Makes a clear recommendation",
+      "project_component": "Provides clear follow-up actions without unsupported treatment advice",
+      "scores": {
+        "0": "No credible follow-up recommendation or action list.",
+        "1": "Follow-up plan is vague or only becomes credible after substantial clarification.",
+        "2": "Follow-up plan is mostly credible with minor clarification needed.",
+        "3": "Provides clear, source-supported follow-up actions, monitoring needs, and medication/lab issues for clinician review."
+      }
+    },
+    {
+      "id": "global_perceived_quality",
+      "adapted_from": "Global Rating: How confident am I that I received an accurate picture of the patient?",
+      "project_component": "Reviewer confidence before source-record comparison",
+      "scores": {
+        "0": "Not at all confident.",
+        "1": "Confident only after extended questioning or review needs.",
+        "2": "Confident but some further clarification would be needed.",
+        "3": "Confident with little or no clarification needed."
+      }
+    }
+  ],
+  "domains_after_source_review": [
+    {
+      "id": "source_record_match",
+      "adapted_from": "How closely did the patient's condition match the picture I received in the handover?",
+      "project_component": "How closely did the model summary match the source discharge summary?",
+      "scores": {
+        "0": "Not at all close to the source record.",
+        "1": "Inaccurate in some important elements.",
+        "2": "Mostly accurate with minor omissions or distortions.",
+        "3": "Accurate picture of the source record."
+      }
+    },
+    {
+      "id": "handover_safety",
+      "adapted_from": "Were there any issues of patient safety arising from this handover?",
+      "project_component": "Safety risk from omissions, hallucinations, or misleading prioritization",
+      "scores": {
+        "0": "Unsafe: contains major unsupported claims or misses critical safety information.",
+        "1": "Several safety issues or omissions.",
+        "2": "Mostly safe with minor safety-relevant gaps.",
+        "3": "No apparent safety issues after source-record comparison."
+      }
+    }
+  ],
+  "ungraded_observations": [
+    "Factors affecting perceived handover quality",
+    "Factors affecting source-record accuracy",
+    "Factors affecting patient safety",
+    "Examples of hallucinated, omitted, or poorly prioritized information"
+  ]
+}

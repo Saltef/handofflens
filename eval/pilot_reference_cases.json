@@ -1,0 +1,42 @@
+[
+  {
+    "case_id": "SYNTH_CARDIAC_001",
+    "subject_id": "SYNTH_SUBJECT_001",
+    "synthetic": true,
+    "reference_note": "Fully synthetic software-test fixture authored for HandoffLens; not adapted from a source record.",
+    "age": "72",
+    "gender": "F",
+    "admission_diagnosis": "ACUTE DECOMPENSATED HEART FAILURE",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\n\nADMISSION REASON:\nA fictional 72-year-old woman was admitted with increasing leg edema and shortness of breath.\n\nMEDICATIONS AT HOME:\n1. Lisinopril 10 mg daily.\n2. Furosemide 20 mg daily.\n3. Simvastatin 20 mg nightly.\n\nHOSPITAL COURSE:\nChest radiograph showed pulmonary vascular congestion. Echocardiogram showed an ejection fraction of 35 percent. The patient received intravenous diuresis and symptoms improved. Furosemide was increased to 40 mg daily. Carvedilol 3.125 mg twice daily was started. Simvastatin was stopped because of muscle pain and replaced with atorvastatin 20 mg nightly. Potassium was 3.1 mmol/L after diuresis and was replaced.\n\nDISCHARGE DIAGNOSES:\n1. Heart failure with reduced ejection fraction.\n2. Hypokalemia, corrected.\n\nDISCHARGE MEDICATIONS:\n1. Lisinopril 10 mg daily.\n2. Furosemide 40 mg daily.\n3. Carvedilol 3.125 mg twice daily.\n4. Atorvastatin 20 mg nightly.\n\nFOLLOW-UP:\nCardiology clinic in 7 days. Primary care laboratory check for potassium and creatinine in 3 days. Record daily weight and call for a gain above 2 kg in 3 days.",
+    "gold": {
+      "medication_changes.started": ["carvedilol", "atorvastatin"],
+      "medication_changes.changed": ["furosemide increased to 40 mg daily"],
+      "medication_changes.stopped": ["simvastatin"],
+      "diagnosis_changes.new_or_changed": ["heart failure with reduced ejection fraction", "hypokalemia"],
+      "procedures_and_tests": ["chest radiograph", "echocardiogram"],
+      "labs": ["potassium 3.1 mmol/L"],
+      "follow_up_actions": ["cardiology clinic in 7 days", "potassium and creatinine in 3 days", "record daily weight"],
+      "safety_flags": ["call for weight gain above 2 kg in 3 days", "monitor potassium and creatinine"]
+    }
+  },
+  {
+    "case_id": "SYNTH_WOUND_002",
+    "subject_id": "SYNTH_SUBJECT_002",
+    "synthetic": true,
+    "reference_note": "Fully synthetic software-test fixture authored for HandoffLens; not adapted from a source record.",
+    "age": "61",
+    "gender": "M",
+    "admission_diagnosis": "INFECTED LEFT LEG WOUND",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\n\nADMISSION REASON:\nA fictional 61-year-old man with type 2 diabetes was admitted for redness and drainage around a left lower-leg wound.\n\nMEDICATIONS AT HOME:\n1. Metformin 500 mg twice daily.\n2. Amlodipine 5 mg daily.\n\nHOSPITAL COURSE:\nThe wound was surgically debrided and a negative-pressure dressing was placed. A fictional wound culture grew methicillin-sensitive Staphylococcus aureus. Intravenous vancomycin was stopped after culture review. Cephalexin 500 mg four times daily was started to complete 7 days. Creatinine remained 1.0 mg/dL. Hemoglobin A1c was 9.2 percent. Metformin was increased to 1000 mg twice daily.\n\nDISCHARGE DIAGNOSES:\n1. Left lower-leg wound infection.\n2. Type 2 diabetes with suboptimal control.\n\nDISCHARGE MEDICATIONS:\n1. Cephalexin 500 mg four times daily for 5 more days.\n2. Metformin 1000 mg twice daily.\n3. Amlodipine 5 mg daily.\n\nFOLLOW-UP:\nWound clinic in 4 days for dressing change. Primary care in 2 weeks for diabetes review. Return promptly for fever, spreading redness, increasing drainage, or severe pain.",
+    "gold": {
+      "medication_changes.started": ["cephalexin"],
+      "medication_changes.changed": ["metformin increased to 1000 mg twice daily"],
+      "medication_changes.stopped": ["vancomycin"],
+      "diagnosis_changes.new_or_changed": ["left lower-leg wound infection", "type 2 diabetes with suboptimal control"],
+      "procedures_and_tests": ["surgical debridement", "negative-pressure dressing", "wound culture"],
+      "labs": ["creatinine 1.0 mg/dL", "hemoglobin A1c 9.2 percent"],
+      "follow_up_actions": ["wound clinic in 4 days", "primary care in 2 weeks"],
+      "safety_flags": ["fever", "spreading redness", "increasing drainage", "severe pain"]
+    }
+  }
+]

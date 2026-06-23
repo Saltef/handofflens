@@ -1,0 +1,23 @@
+services:
+  demo:
+    build:
+      context: .
+      target: demo
+    ports:
+      - "8080:80"
+    profiles:
+      - demo
+
+  eval:
+    build:
+      context: .
+      target: eval
+    env_file:
+      - .env
+    volumes:
+      - ./results:/app/results
+      - ./eval:/app/eval
+      - ./clinical_cases.csv.gz:/app/clinical_cases.csv.gz:ro
+    profiles:
+      - eval
+    command: ["npm", "run", "check"]

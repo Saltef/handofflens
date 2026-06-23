@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AtomicClinicianReview",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["reviewer_id", "case_id", "model_slot", "claim_reviews", "omissions", "global_review"],
+  "properties": {
+    "reviewer_id": { "type": "string" },
+    "case_id": { "type": "string" },
+    "model_slot": { "enum": ["Model A", "Model B"] },
+    "claim_reviews": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["claim_id", "factual_support", "relationship_support", "severity", "corrected_text", "reviewer_note"],
+        "properties": {
+          "claim_id": { "type": "string" },
+          "factual_support": { "enum": ["", "supported", "partially_supported", "unsupported", "not_assessable"] },
+          "relationship_support": { "enum": ["", "supported", "partially_supported", "unsupported", "not_applicable", "not_assessable"] },
+          "severity": { "enum": ["", "none", "minor", "material", "potentially_harmful"] },
+          "corrected_text": { "type": "string" },
+          "reviewer_note": { "type": "string" }
+        }
+      }
+    },
+    "omissions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["domain", "status", "severity", "description", "source_quote"],
+        "properties": {
+          "domain": { "enum": ["medication", "diagnosis", "procedure_or_test", "lab", "follow_up", "safety", "other"] },
+          "status": { "enum": ["", "none", "present", "not_assessable"] },
+          "severity": { "enum": ["", "none", "minor", "material", "potentially_harmful"] },
+          "description": { "type": "string" },
+          "source_quote": { "type": "string" }
+        }
+      }
+    },
+    "global_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_record_match", "handover_safety", "disposition", "review_minutes", "overall_comment"],
+      "properties": {
+        "source_record_match": { "type": ["integer", "null"], "minimum": 0, "maximum": 3 },
+        "handover_safety": { "type": ["integer", "null"], "minimum": 0, "maximum": 3 },
+        "disposition": { "enum": ["", "accept_draft", "clinician_spot_check", "full_clinician_review", "reject_or_regenerate"] },
+        "review_minutes": { "type": ["number", "null"], "minimum": 0 },
+        "overall_comment": { "type": "string" }
+      }
+    }
+  }
+}

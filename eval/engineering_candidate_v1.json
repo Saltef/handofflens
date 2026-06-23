@@ -1,0 +1,36 @@
+{
+  "candidate_id": "handofflens-engineering-candidate-v1",
+  "status": "candidate_not_production_ready",
+  "selected_configuration": {
+    "model": "command-a-plus-05-2026",
+    "response_format": "json_schema",
+    "temperature": 0,
+    "thinking_token_budget": 512,
+    "max_output_tokens": 8000,
+    "prompt": "prompts/clinical-extraction.md",
+    "prompt_sha256": "9fe40e8936297414a4b022ab0bd6d41e139d8eb382ad887d6252f82a5d42bd4c",
+    "schema": "eval/schema.json",
+    "schema_sha256": "55b1f094cad5aa4161df2e8fe7897de4f384c07fe0b938d6020fcd74a9b32862"
+  },
+  "observed_heldout_performance": {
+    "cases": 400,
+    "first_pass_valid": 350,
+    "first_pass_valid_rate": 0.875,
+    "median_latency_ms": 11283.5,
+    "automated_judge_mean_error_burden": 5.80,
+    "posthoc_deterministic_gate_passed": 40,
+    "posthoc_deterministic_gate_pass_rate": 0.10,
+    "dominant_gate_failure": "Generated source_quote was not a contiguous lexical span in the supplied source",
+    "interpretation": "Automated source-fidelity proxy only; judge repeatability is insufficient for release gating."
+  },
+  "production_requirements": {
+    "first_pass_metric_must_remain_visible": true,
+    "post_recovery_target": 0.99,
+    "release_blocker": "Evidence grounding must be redesigned before production recovery is evaluated",
+    "hidden_retries": false,
+    "blocking_gate": "extraction-quality-gate-v1",
+    "recovery_policy": "explicit-recovery-policy-v1",
+    "complexity_routing": "shadow_only"
+  },
+  "claims_boundary": "Engineering candidate only. Not validated for clinical safety, autonomous care, external validity, or human equivalence."
+}

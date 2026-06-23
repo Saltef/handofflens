@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ClinicalChangeExtraction",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id",
+    "patient_context",
+    "medication_changes",
+    "diagnosis_changes",
+    "procedures_and_tests",
+    "labs",
+    "follow_up_actions",
+    "safety_flags",
+    "uncertain_items",
+    "two_page_summary"
+  ],
+  "properties": {
+    "case_id": { "type": "string" },
+    "patient_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["age", "gender", "admission_diagnosis"],
+      "properties": {
+        "age": { "type": "string" },
+        "gender": { "type": "string" },
+        "admission_diagnosis": { "type": "string" }
+      }
+    },
+    "medication_changes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["started", "stopped", "changed", "continued", "uncertain"],
+      "properties": {
+        "started": { "$ref": "#/$defs/evidenceList" },
+        "stopped": { "$ref": "#/$defs/evidenceList" },
+        "changed": { "$ref": "#/$defs/evidenceList" },
+        "continued": { "$ref": "#/$defs/evidenceList" },
+        "uncertain": { "$ref": "#/$defs/evidenceList" }
+      }
+    },
+    "diagnosis_changes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["admission", "discharge", "new_or_changed"],
+      "properties": {
+        "admission": { "type": "string" },
+        "discharge": { "$ref": "#/$defs/evidenceList" },
+        "new_or_changed": { "$ref": "#/$defs/evidenceList" }
+      }
+    },
+    "procedures_and_tests": { "$ref": "#/$defs/evidenceList" },
+    "labs": { "$ref": "#/$defs/evidenceList" },
+    "follow_up_actions": { "$ref": "#/$defs/evidenceList" },
+    "safety_flags": { "$ref": "#/$defs/evidenceList" },
+    "uncertain_items": { "$ref": "#/$defs/evidenceList" },
+    "two_page_summary": { "type": "string" }
+  },
+  "$defs": {
+    "evidenceList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceItem" }
+    },
+    "evidenceItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "rationale", "source_quote"],
+      "properties": {
+        "label": { "type": "string" },
+        "rationale": { "type": "string" },
+        "source_quote": { "type": "string" }
+      }
+    }
+  }
+}
+

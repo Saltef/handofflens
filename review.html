@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HandoffLens Atomic Review</title>
+  <link rel="stylesheet" href="review.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <strong>HandoffLens</strong>
+      <span>Blinded source review</span>
+    </div>
+    <div class="toolbar">
+      <label class="reviewer-field">Reviewer <input id="reviewerId" autocomplete="off" placeholder="ID"></label>
+      <input id="packetFile" type="file" accept="application/json" hidden>
+      <button id="loadButton" type="button">Load packet</button>
+      <button id="exportButton" type="button" class="primary" disabled>Export review</button>
+    </div>
+  </header>
+
+  <div id="emptyState" class="empty-state">
+    <h1>Atomic source-fidelity review</h1>
+    <p>Load the blinded review packet to begin.</p>
+    <button id="emptyLoadButton" type="button" class="primary">Load packet</button>
+  </div>
+
+  <div id="workspace" class="workspace" hidden>
+    <aside class="sidebar">
+      <div class="progress-block">
+        <div class="progress-line"><span id="progressText">0 of 0 complete</span><strong id="progressPercent">0%</strong></div>
+        <div class="progress-track"><div id="progressFill"></div></div>
+      </div>
+      <nav id="caseList" class="case-list" aria-label="Review cases"></nav>
+    </aside>
+
+    <main class="main">
+      <section class="case-header">
+        <div>
+          <span id="casePosition" class="eyebrow"></span>
+          <h1 id="caseTitle"></h1>
+          <p id="caseMeta"></p>
+        </div>
+        <div id="modelTabs" class="tabs" role="tablist"></div>
+      </section>
+
+      <section class="comparison">
+        <article class="panel">
+          <header><h2>Source record</h2><button id="sourceToggle" type="button" class="quiet">Collapse</button></header>
+          <pre id="sourceText" class="clinical-text"></pre>
+        </article>
+        <article class="panel">
+          <header><h2 id="summaryTitle">Model handoff</h2></header>
+          <div id="summaryText" class="clinical-text summary-text"></div>
+        </article>
+      </section>
+
+      <section class="review-section">
+        <div class="section-heading">
+          <div><span class="eyebrow">Claim audit</span><h2>Atomic claims</h2></div>
+          <span id="claimCount" class="count"></span>
+        </div>
+        <div id="claims" class="claims"></div>
+      </section>
+
+      <section class="review-section">
+        <div class="section-heading"><div><span class="eyebrow">Coverage audit</span><h2>Explicit target omissions</h2></div></div>
+        <div id="omissions" class="omissions"></div>
+      </section>
+
+      <section class="review-section global-review">
+        <div class="section-heading"><div><span class="eyebrow">Source fidelity</span><h2>Global assessment</h2></div></div>
+        <div id="globalReview"></div>
+      </section>
+
+      <footer class="case-actions">
+        <button id="previousButton" type="button">Previous</button>
+        <span id="saveStatus">Saved locally</span>
+        <button id="nextButton" type="button" class="primary">Next</button>
+      </footer>
+    </main>
+  </div>
+
+  <script src="review.js"></script>
+</body>
+</html>

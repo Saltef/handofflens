@@ -1,0 +1,3 @@
+case_id,model,identifies_patient_context,identifies_main_problem,focused_history,examination_observations,logical_assessment,clear_follow_up_recommendation,global_perceived_quality,source_record_match,handover_safety,unsafe_omissions,hallucinations,reviewer_notes
+DEMO_COPD_001,cohere:command-a-plus-05-2026,,,,,,,,,,,,
+DEMO_COPD_001,anthropic/claude-opus-4.8,,,,,,,,,,,,

@@ -1,0 +1,76 @@
+{
+  "protocol_version": "1.0.0",
+  "status": "prospective_from_next_run",
+  "data_description": "hospital discharge-summary benchmark",
+  "primary_estimands": {
+    "engineering": "difference between deployable configurations in first-pass and policy-assisted completion",
+    "source_fidelity": "paired difference in outputs containing at least one semantic source-fidelity error"
+  },
+  "primary_configurations": [
+    {
+      "id": "cohere-aplus-routed-v1",
+      "model": "command-a-plus-05-2026",
+      "provider": "cohere",
+      "schema_path": "json-schema",
+      "fallback_path": "strict-tool",
+      "local_validation_attempts": 2,
+      "provider_retries_per_attempt": 0,
+      "max_output_tokens": 8000,
+      "temperature": 0,
+      "thinking_budget": 512
+    },
+    {
+      "id": "claude-haiku45-strict-v1",
+      "model": "anthropic/claude-haiku-4.5",
+      "provider": "openrouter",
+      "schema_path": "strict-json-schema",
+      "fallback_path": null,
+      "local_validation_attempts": 2,
+      "provider_retries_per_attempt": 0,
+      "max_output_tokens": 20000,
+      "temperature": 0
+    }
+  ],
+  "analysis_units": {
+    "sampling": "subject_id",
+    "splitting": "subject_id",
+    "inference": "subject_id"
+  },
+  "execution_design": {
+    "pairing": "same cases for both configurations",
+    "order": "case-interleaved with deterministic counterbalanced model order",
+    "provider_retries": "disabled; every recovery attempt is locally visible",
+    "duplicate_isolation": "subject_id and near-duplicate note cluster"
+  },
+  "frozen_artifacts": {
+    "prompts/system.md": "052227c30dfec107ef2aa5acfba7e08e6c52d289f3ab6c07f0454dbf27061ed4",
+    "prompts/clinical-extraction.md": "9fe40e8936297414a4b022ab0bd6d41e139d8eb382ad887d6252f82a5d42bd4c",
+    "eval/schema.json": "55b1f094cad5aa4161df2e8fe7897de4f384c07fe0b938d6020fcd74a9b32862",
+    "eval/atomic_clinician_review_schema.json": "b9cd3c1c86d1dd345046b7967ed560f51b35d327c0ef2b4722497546fe812c66",
+    "eval/source_fidelity_review_schema.json": "ea46372eb987a6a5a9e05f38ef01b60bcaf0bc6db070888e620825109db59a6a"
+  },
+  "cohorts": {
+    "development": "risk-enriched; may tune prompts, labels, judge, and routing",
+    "confirmatory_test": "probability sampled, patient-independent, untouched until protocol lock"
+  },
+  "source_fidelity_primary_endpoint": "any semantic source-fidelity error in an included claim, relationship, explicit required target, or narrative summary",
+  "source_fidelity_secondary_endpoints": [
+    "medication-change recall",
+    "follow-up-action recall",
+    "unsupported-claim rate",
+    "narrative-summary semantic error rate",
+    "explicit-target omission rate",
+    "review time"
+  ],
+  "development_judge": {
+    "model": "openai/gpt-5-mini",
+    "blinded": true,
+    "status": "unvalidated_development_only"
+  },
+  "validity_boundary": {
+    "primary_scope": "performance on the study population and supplied discharge-summary source-note task",
+    "clinical_safety_assessment": "out_of_scope",
+    "external_validation_required": true,
+    "generalization_beyond_study_population": "not established"
+  }
+}
