@@ -6,6 +6,8 @@ HandoffLens is a research and engineering project for source-grounded informatio
 
 The project is aimed at engineers and data scientists building LLM systems over long, messy, high-stakes documents. It is a portfolio/research artifact, not a medical product.
 
+This repository is my independent work. It does not represent the views, strategies, or endorsement of Cohere or any other model provider.
+
 ## The result
 
 Structured output is not the same thing as grounded output.
@@ -72,7 +74,11 @@ The full LLM/provenance pipeline is represented in the validation reports and ca
 | Source-fidelity review packets | Prepared | Human factual review is pending |
 | Conformal/selective routing | Ongoing appendix | Uses proxy labels for escalation-policy research, not clinical safety |
 
-![Bar chart: on the 400-case held-out baseline run, 88% of outputs were schema-valid but only 10% passed an exact-source provenance check.](docs/assets/schema-vs-provenance.png)
+The public figure set is reproducible from `eval/public_results_summary.json` by running `python3 scripts/make-results-figure.py` after `python3 -m pip install -r requirements.txt`.
+
+![Bar chart: proxy result from the 400-case held-out baseline run. Schema-valid output was common, but exact-source provenance was rare.](docs/assets/schema-vs-provenance.png)
+![Bar chart: development-path proxy comparison across evidence-span v2, multi-stage v3, candidate-first v4, and the stability repeat test.](docs/assets/stage-yield.png)
+![Bar chart: proxy audit pass rate improved after deterministic rematerialization removed unsupported numeric details from summaries.](docs/assets/rematerialization-proxy-audit.png)
 
 ## What this does not claim
 

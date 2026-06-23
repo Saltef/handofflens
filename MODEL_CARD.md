@@ -6,6 +6,8 @@ HandoffLens is a research and engineering system for source-grounded extraction 
 
 This is not a medical device and is not intended for clinical use.
 
+This repository is my independent work. It does not represent the views, strategies, or endorsement of Cohere or any other model provider.
+
 ## Intended audience
 
 This model card is written for engineers, data scientists, technical professionals, and reviewers evaluating the reliability architecture. It describes what the system demonstrates, what evidence exists, and where the claims stop.

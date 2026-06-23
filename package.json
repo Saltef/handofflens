@@ -6,6 +6,7 @@
   "scripts": {
     "test": "npm run quality:gate:test && npm run evidence:pointer:test && npm run evidence:pipeline:v3:test && npm run candidate:v4:test",
     "check:share": "node scripts/check-share-readiness.js",
+    "figures:build": "python3 scripts/make-results-figure.py",
     "check:all": "npm run check && npm test && npm run check:share",
     "export:clean": "node scripts/export-clean-release.js",
     "export:portfolio": "node scripts/export-clean-release.js --portfolio",

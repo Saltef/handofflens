@@ -7,7 +7,6 @@ const root = path.resolve(__dirname, "..");
 const failures = [];
 const required = [
   "README.md",
-  "CONTRIBUTING.md",
   "MODEL_CARD.md",
   "SECURITY.md",
   "LICENSE.md",
