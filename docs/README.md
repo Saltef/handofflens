@@ -15,7 +15,7 @@ Start here if you are reviewing the project quickly:
 
 - [Reproducibility](REPRODUCIBILITY.md) - commands, private-input boundaries, and artifact handling.
 - [Data Exposure Attestation](data-exposure-attestation.md) - what is excluded from the public repository.
-- [Final Tests Before Sharing](FINAL_TESTS_BEFORE_SHARING.md) - final engineering tests and what still requires review.
+- [Final Tests Before Sharing](FINAL_TESTS.md) - final engineering tests and what still requires review.
 - [Security Checklist](security-checklist.md) - secret and private-data handling.
 
 ## Experiment history and negative results
