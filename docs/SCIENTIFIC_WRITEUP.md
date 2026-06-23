@@ -104,30 +104,14 @@ The limitations are substantial and should be stated plainly:
 - LLM-as-judge results are proxy signals, not labels.
 - Candidate-first v4's higher item yield should be interpreted through factual review to distinguish recovered evidence from over-extraction.
 
-## Publishable claim today
+## Our claim today
 
-The defensible claim is:
+Our defensible claim is:
 
 > HandoffLens demonstrates a reproducible engineering framework for evaluating and improving source-grounded LLM extraction from discharge-summary-like clinical text. Across development iterations, schema-valid generation proved insufficient for evidence fidelity, while a candidate-first architecture with deterministic provenance gates made failure modes more measurable and created a practical path for targeted human review.
 
-The project should not claim clinical safety, clinical accuracy, harmful-error reduction, deployment readiness, or generalization.
+This project, in its current iteration, does not claim clinical safety, clinical accuracy, harmful-error reduction, deployment readiness, or generalization.
 
-## Immediate next steps
-
-```mermaid
-gantt
-    title HandoffLens remaining validation path
-    dateFormat  YYYY-MM-DD
-    axisFormat  %b %d
-    section Engineering
-    Clean export and public checks        :done,    a1, 2026-06-23, 1d
-    V4 frozen 20-case rerun               :done,    a2, 2026-06-23, 1d
-    V4 stability and perturbation test    :done,    a3, 2026-06-23, 1d
-    Reviewer packet preparation           :done,    a4, 2026-06-23, 1d
-    section Review
-    Non-clinician factual review          :         b1, after a4, 7d
-    Clinician review if available         :         b2, after b1, 14d
-```
 
 ## References
 
