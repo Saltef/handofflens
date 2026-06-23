@@ -8,7 +8,7 @@ This is not a medical device and is not intended for clinical use.
 
 ## Intended audience
 
-This model card is written for engineers, data scientists, technical recruiters, and reviewers evaluating the reliability architecture. It describes what the system demonstrates, what evidence exists, and where the claims stop.
+This model card is written for engineers, data scientists, technical professionals, and reviewers evaluating the reliability architecture. It describes what the system demonstrates, what evidence exists, and where the claims stop.
 
 ## System components
 
