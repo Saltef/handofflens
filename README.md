@@ -87,7 +87,6 @@ The evidence supports engineering claims about schema reliability, source proven
 - `app.js`, `index.html`, `styles.css` - static synthetic demo
 - `review.*` - local blinded-review interface
 - `MODEL_CARD.md` - intended use, non-use, and limitations
-- `CONTRIBUTING.md` - local development, export, and sharing workflow
 
 ## License
 
