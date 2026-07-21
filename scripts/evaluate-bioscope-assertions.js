@@ -67,10 +67,25 @@ function expandInputs(inputs) {
 function parseBioScopeXml(xml, filePath) {
   const corpus = corpusName(filePath);
   const examples = [];
+  const fileName = path.basename(filePath);
+  const documentRe = /<Document\b([^>]*)>([\s\S]*?)<\/Document>/gi;
+  let documentMatch;
+  let documentIndex = 0;
+  while ((documentMatch = documentRe.exec(xml))) {
+    documentIndex += 1;
+    const documentId = attr(documentMatch[1], "id") || `${fileName}:doc-${documentIndex}`;
+    examples.push(...parseBioScopeSentences(documentMatch[2], { corpus, fileName, documentId, offset: examples.length }));
+  }
+  if (!documentIndex) examples.push(...parseBioScopeSentences(xml, { corpus, fileName, documentId: `${fileName}:doc-1`, offset: 0 }));
+  return examples;
+}
+
+function parseBioScopeSentences(xml, context) {
+  const examples = [];
   const sentenceRe = /<sentence\b([^>]*)>([\s\S]*?)<\/sentence>/gi;
   let match;
   while ((match = sentenceRe.exec(xml))) {
-    const id = attr(match[1], "id") || `${path.basename(filePath)}:${examples.length + 1}`;
+    const id = attr(match[1], "id") || `${context.fileName}:${context.offset + examples.length + 1}`;
     const inner = match[2];
     const cueTypes = [...inner.matchAll(/<cue\b[^>]*type="([^"]+)"/gi)].map((cueMatch) => cueMatch[1].toLowerCase());
     const xcopeTexts = [...inner.matchAll(/<xcope\b[^>]*>([\s\S]*?)<\/xcope>/gi)].map((scopeMatch) => normalizeText(stripTags(scopeMatch[1])));
@@ -79,7 +94,9 @@ function parseBioScopeXml(xml, filePath) {
     const gold = cueTypes.includes("speculation") ? "possible" : cueTypes.includes("negation") ? "absent" : "present";
     examples.push({
       id,
-      corpus,
+      document_id: context.documentId,
+      source_file: context.fileName,
+      corpus: context.corpus,
       gold_status: gold,
       cue_types: [...new Set(cueTypes)].sort(),
       text,
@@ -181,4 +198,4 @@ function main() {
 }
 
 if (require.main === module) main();
-module.exports = { evaluateBioScopeAssertions, parseBioScopeXml };
+module.exports = { evaluateBioScopeAssertions, parseBioScopeXml, collapseStatus };

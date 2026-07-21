@@ -49,6 +49,38 @@ BioScope public-text per-class intervals:
 
 Interpretation: the expanded uncertainty cue vocabulary materially improves speculation detection while preserving existing tests. Remaining weakness is negation recall, especially nonlocal or structurally scoped negation.
 
+## BioScope Conformal Assertion Layer
+
+The benchmark path now includes a split-conformal wrapper for BioScope assertion labels:
+
+```bash
+npm run benchmark:bioscope:conformal -- --input <bioscope>/abstracts.xml;<bioscope>/full_papers.xml --alpha 0.10 --out <bioscope-conformal-public-text.json>
+```
+
+What it measures:
+
+- A transparent lexical score is assigned to each assertion label: `present`, `absent`, and `possible`.
+- A document-hash split separates calibration examples from held-out test examples when document ids are available.
+- The calibration split chooses a conformal nonconformity threshold for the requested alpha.
+- Test examples receive prediction sets. Singleton sets are accepted; multi-label sets are abstentions/escalations.
+
+The resulting report includes target coverage, empirical held-out coverage, prediction-set size, singleton acceptance rate, abstention rate, accepted accuracy, and class-conditional coverage. The runner reports both a pooled global conformal threshold and a label-conditional threshold.
+
+Public-text BioScope conformal run at alpha 0.10:
+
+| Method | Test sentences | Empirical coverage | Mean set size | Singleton accept rate | Abstention rate | Accepted accuracy | Present coverage | Absent coverage | Possible coverage |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Global split conformal | 7,606 | 0.9105 | 1.022 | 0.9780 | 0.0220 | 0.9095 | 0.9556 | 0.7888 | 0.8053 |
+| Label-conditional split conformal | 7,606 | 0.9511 | 2.452 | 0.2648 | 0.7352 | 0.7726 | 0.9488 | 0.9488 | 0.9613 |
+
+Calibration/test split: document-hash split, 6,935 calibration sentences across 641 documents and 7,606 test sentences across 641 documents.
+
+This is a useful reliability layer for the BioScope assertion subtask, but it should be read narrowly. It controls marginal prediction-set coverage under the exchangeability assumption for the calibration/test split. It does not provide conditional per-class guarantees, does not repair scope-boundary errors, and does not establish clinical safety. The main trade-off is yield: stronger coverage targets generally increase abstention and reduce the fraction of automatically accepted assertion labels.
+
+Interpretation: the global threshold is operationally attractive because it preserves high singleton yield and improves accepted accuracy relative to the hard-label baseline on the held-out split, but it badly undercovers the minority `absent` and `possible` classes. The label-conditional threshold fixes that coverage gap, but only by returning large prediction sets and abstaining on most examples. For safety-facing clinical use, the label-conditional result is the more honest coverage audit; for automation, neither result is sufficient without a stronger calibrated assertion model.
+
+ACI-Bench is intentionally not conformalized in the current public report. The existing ACI path is a reference-derived alignment diagnostic rather than the native ACI-Bench note-generation task. Conformal prediction should be added to ACI only after the benchmark is reframed around note generation or a well-defined claim-support task; otherwise the conformal layer would calibrate the wrong target.
+
 ## Commands Run
 
 ```bash
@@ -57,11 +89,14 @@ npm run benchmark:derive-reference-gold -- --records <aci-valid-records.json> --
 npm run benchmark:predict:candidates -- --records <aci-valid-records.json> --out <aci-valid-predictions.json>
 npm run benchmark:score -- --records <aci-valid-reference-gold.json> --predictions <aci-valid-predictions.json> --bootstrap-repeats 1000 --out <aci-valid-score.json>
 npm run benchmark:bioscope -- --input <bioscope>/abstracts.xml;<bioscope>/full_papers.xml --out <bioscope-assertions-public-text-v2.json>
+npm run benchmark:bioscope:conformal -- --input <bioscope>/abstracts.xml;<bioscope>/full_papers.xml --alpha 0.10 --out <bioscope-conformal-public-text.json>
 ```
 
 ## Non-Claims
 
 - These ACI numbers are not official ACI-Bench summarization scores.
 - These ACI numbers are not native expert entity-extraction F1.
+- ACI conformal prediction is not claimed until the ACI task is reframed around note generation or claim-level source support.
 - BioScope scores evaluate sentence-level assertion cue classification, not exact scope-boundary extraction.
+- BioScope conformal coverage is marginal prediction-set coverage for the assertion subtask, not clinical safety coverage.
 - No i2b2 or n2c2 result is claimed without DUA-controlled data.

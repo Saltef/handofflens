@@ -6,6 +6,7 @@ const { deriveReferenceGold } = require("./derive-reference-gold");
 const { predictBenchmarkCandidates } = require("./predict-benchmark-candidates");
 const { scoreBenchmarkRecords } = require("./score-benchmark-records");
 const { evaluateBioScopeAssertions, parseBioScopeXml } = require("./evaluate-bioscope-assertions");
+const { evaluateBioScopeConformal } = require("./evaluate-bioscope-conformal");
 
 const aci = adaptAciBenchRows([
   {
@@ -26,11 +27,19 @@ const scored = scoreBenchmarkRecords({ records: gold, predictions, bootstrapRepe
 assert.equal(scored.summary.cases, 1);
 assert.ok(scored.summary.relaxed.f1 > 0);
 
-const xml = '<Annotation><DocumentSet><Document><sentence id="S1">There is <xcope id="X1"><cue type="negation" ref="X1">no</cue> pneumonia</xcope>.</sentence><sentence id="S2">This <xcope id="X2"><cue type="speculation" ref="X2">may</cue> represent edema</xcope>.</sentence><sentence id="S3">The lungs are clear.</sentence></Document></DocumentSet></Annotation>';
+const xml = '<Annotation><DocumentSet><Document id="D1"><sentence id="S1">There is <xcope id="X1"><cue type="negation" ref="X1">no</cue> pneumonia</xcope>.</sentence><sentence id="S2">This <xcope id="X2"><cue type="speculation" ref="X2">may</cue> represent edema</xcope>.</sentence><sentence id="S3">The lungs are clear.</sentence></Document><Document id="D2"><sentence id="S4">No pleural effusion is seen.</sentence><sentence id="S5">This could represent atelectasis.</sentence><sentence id="S6">The heart size is normal.</sentence></Document></DocumentSet></Annotation>';
 const examples = parseBioScopeXml(xml, "abstracts.xml");
-assert.deepEqual(examples.map((item) => item.gold_status), ["absent", "possible", "present"]);
+assert.deepEqual(examples.slice(0, 3).map((item) => item.gold_status), ["absent", "possible", "present"]);
+assert.equal(new Set(examples.map((item) => item.document_id)).size, 2);
 const report = evaluateBioScopeAssertions([], { corpus: "all", examples });
-assert.equal(report.summary.examples, 3);
+assert.equal(report.summary.examples, 6);
 assert.ok(report.summary.macro_f1 > 0.6);
+const conformal = evaluateBioScopeConformal([], { corpus: "all", examples, alpha: 0.20, calibrationFraction: 0.50, seed: "unit-test" });
+assert.equal(conformal.schema_version, "bioscope-conformal-assertion-v1");
+assert.equal(conformal.split.strategy, "document_hash_split");
+assert.ok(conformal.split.calibration_examples > 0);
+assert.ok(conformal.split.test_examples > 0);
+assert.ok(conformal.summary.empirical_coverage >= 0 && conformal.summary.empirical_coverage <= 1);
+assert.ok(conformal.summary.singleton_acceptance_rate >= 0 && conformal.summary.singleton_acceptance_rate <= 1);
 
 console.log("PASS public benchmark runner checks");
