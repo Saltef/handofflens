@@ -56,9 +56,17 @@ The regression test covers:
 
 ## What this does not prove
 
-This is not a full assertion-status model and does not establish clinical correctness. It is a scoped heuristic inspired by clinical assertion-status taxonomies. It can miss long-distance negation, section-level assertion cues, abbreviation-heavy evidence, and complex temporal relationships.
+This is not a full assertion-status model and does not establish clinical correctness. It is a scoped heuristic in the tradition of NegEx, ConText, and the i2b2/VA assertion-status task. It can miss long-distance negation, section-level assertion cues, abbreviation-heavy evidence, and complex temporal relationships.
 
-The next stronger version should compare this deterministic proxy against human factual review and, if useful, an assertion classifier or entailment model.
+The next stronger version should compare this deterministic proxy against human factual review and, if licensing permits, an assertion-status benchmark or a ConText-style baseline. Until then, lexical-overstatement rates are detector-dependent proxy diagnostics, not clinical findings.
+
+Relevant grounding:
+
+- Chapman et al. 2001, NegEx, Journal of Biomedical Informatics.
+- Harkema et al. 2009, ConText, Journal of Biomedical Informatics.
+- Uzuner et al. 2011, i2b2/VA assertion classification, Journal of the American Medical Informatics Association.
+- Zha et al. 2023, AlignScore, ACL.
+- Tang et al. 2024, MiniCheck, EMNLP.
 
 ## Lexical provenance overstatement metric
 

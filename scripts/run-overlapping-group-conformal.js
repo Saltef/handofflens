@@ -175,7 +175,7 @@ function runExperiment(rows, alpha, repeats, minGroupCalibration) {
     if (!hasBothClasses(split.train) || !hasBothClasses(split.calibration)) continue;
     summaries.push(evaluateSplit(split.train, split.calibration, split.test, alpha, minGroupCalibration));
   }
-  return aggregateRuns(summaries);
+  return aggregateRuns(summaries, 1 - alpha);
 }
 
 function evaluateSplit(trainRows, calibrationRows, testRows, alpha, minGroupCalibration) {
@@ -281,7 +281,7 @@ function isExtremeRisk(row) {
   );
 }
 
-function aggregateRuns(runs) {
+function aggregateRuns(runs, targetCoverage) {
   const methods = ["global", "overlapping_group", "guarded_group"];
   const out = {
     splits: runs.length,
@@ -290,7 +290,7 @@ function aggregateRuns(runs) {
     methods: {},
     groups: {}
   };
-  for (const method of methods) out.methods[method] = aggregateMetricObjects(runs.map((run) => run.methods[method]));
+  for (const method of methods) out.methods[method] = aggregateMetricObjects(runs.map((run) => run.methods[method]), targetCoverage);
   const groupNames = [...new Set(runs.flatMap((run) => Object.keys(run.groups)))].sort();
   for (const groupName of groupNames) {
     const values = runs.map((run) => run.groups[groupName]).filter(Boolean);
@@ -299,9 +299,9 @@ function aggregateRuns(runs) {
       splits: values.length,
       cases: mean(values.map((item) => item.cases)),
       event_rate: mean(values.map((item) => item.event_rate)),
-      global: aggregateMetricObjects(values.map((item) => item.global)),
-      overlapping_group: aggregateMetricObjects(values.map((item) => item.overlapping_group)),
-      guarded_group: aggregateMetricObjects(values.map((item) => item.guarded_group))
+      global: aggregateMetricObjects(values.map((item) => item.global), targetCoverage),
+      overlapping_group: aggregateMetricObjects(values.map((item) => item.overlapping_group), targetCoverage),
+      guarded_group: aggregateMetricObjects(values.map((item) => item.guarded_group), targetCoverage)
     };
   }
   out.worst_groups = {};
@@ -316,9 +316,21 @@ function aggregateRuns(runs) {
   return out;
 }
 
-function aggregateMetricObjects(values) {
+function aggregateMetricObjects(values, targetCoverage) {
   const keys = [...new Set(values.flatMap((item) => Object.keys(item || {})))];
-  return Object.fromEntries(keys.map((key) => [key, mean(values.map((item) => item?.[key]).filter(Number.isFinite))]));
+  const out = {};
+  for (const key of keys) {
+    const nums = values.map((item) => item?.[key]).filter(Number.isFinite);
+    if (!nums.length) continue;
+    out[key] = mean(nums);
+    if (key === "empirical_coverage") {
+      out.empirical_coverage_min = Math.min(...nums);
+      out.empirical_coverage_p10 = percentile([...nums].sort((a, b) => a - b), 0.10);
+      out.coverage_under_target_rate = mean(nums.map((value) => value < targetCoverage ? 1 : 0));
+    }
+    if (key === "unsafe_low_risk_rate") out.unsafe_low_risk_rate_max = Math.max(...nums);
+  }
+  return out;
 }
 
 function randomSplit(rows, seed) {
@@ -500,6 +512,11 @@ function sigmoid(value) {
   if (value < -35) return 0;
   if (value > 35) return 1;
   return 1 / (1 + Math.exp(-value));
+}
+
+function percentile(values, p) {
+  if (!values.length) return 0;
+  return values[Math.min(values.length - 1, Math.max(0, Math.ceil(values.length * p) - 1))];
 }
 
 function mean(values) {

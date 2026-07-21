@@ -10,9 +10,14 @@ const sourceText = [
   "Acute kidney injury improved before discharge.",
   "Follow up with nephrology in one week.",
   "Cardiology as needed.",
+  "Potassium was 3.1 mmol/L after diuresis and was replaced.",
+  "Potassium was low after diuresis and was replaced.",
+  "Potassium was 3.1 mmol/L after diuresis.",
+  "The wound was surgically debrided.",
 ].join("\n");
 
 assert.equal(expandKnownTerms("AKI"), "acute kidney injury");
+assert.equal(expandKnownTerms("PE"), "pe");
 assert.equal(classifyTypedProvenance({ sourceText, label: "Acute kidney injury", quote: "Acute kidney injury improved before discharge." }).type, "direct_quote");
 assert.equal(classifyTypedProvenance({ sourceText, label: "metoprolol tartrate 25 mg oral twice daily", quote: "Metoprolol tartrate 25 mg, 1 tab PO twice daily - NEW." }).type, "normalized");
 assert.equal(classifyTypedProvenance({ sourceText, label: "pulmonary embolism", quote: "pulmonary embolism" }).type, "assertion_conflict");
@@ -21,6 +26,8 @@ assert.equal(classifyTypedProvenance({ sourceText, label: "cardiac catheterizati
 assert.equal(classifyTypedProvenance({ sourceText, label: "Simvastatin 20 mg nightly stopped", quote: "Simvastatin was stopped because of muscle pain.", domain: "medication_changes.stopped[0]" }).type, "inferential");
 assert.equal(classifyTypedProvenance({ sourceText, label: "Echocardiogram performed", quote: "Echocardiogram showed an ejection fraction of 35 percent.", domain: "procedures_and_tests[0]" }).type, "inferential");
 assert.equal(classifyTypedProvenance({ sourceText, label: "Hypokalemia, corrected", quote: "Potassium was 3.1 mmol/L after diuresis and was replaced.", domain: "diagnosis_changes.discharge[0]" }).type, "inferential");
+assert.equal(classifyTypedProvenance({ sourceText, label: "Hypokalemia, corrected", quote: "Potassium was low after diuresis and was replaced.", domain: "diagnosis_changes.discharge[0]" }).type, "inferential");
+assert.equal(classifyTypedProvenance({ sourceText, label: "Hypokalemia, corrected", quote: "Potassium was 3.1 mmol/L after diuresis.", domain: "diagnosis_changes.discharge[0]" }).type, "unsupported");
 assert.equal(classifyTypedProvenance({ sourceText, label: "Surgical debridement of left lower-leg wound", quote: "The wound was surgically debrided.", domain: "procedures_and_tests[0]" }).type, "inferential");
 
 const report = analyzeTypedProvenance({
@@ -93,4 +100,4 @@ assert.equal(evalReport.summary.records, 1);
 assert.equal(evalReport.summary.evidence_items, 4);
 assert.equal(evalReport.summary.type_counts.assertion_conflict, 1);
 
-console.log("PASS typed provenance classification and analysis (18 assertions)");
+console.log("PASS typed provenance classification and analysis (21 assertions)");

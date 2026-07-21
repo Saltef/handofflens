@@ -8,18 +8,28 @@ const NORMALIZATION_PAIRS = [
   ["qday", "daily"],
   ["qd", "daily"],
   ["po", "oral"],
-  ["mi", "myocardial infarction"],
   ["aki", "acute kidney injury"],
   ["ckd", "chronic kidney disease"],
   ["copd", "chronic obstructive pulmonary disease"],
-  ["pe", "pulmonary embolism"],
   ["uti", "urinary tract infection"],
   ["sob", "shortness of breath"],
   ["htn", "hypertension"],
-  ["dm", "diabetes mellitus"],
   ["afib", "atrial fibrillation"],
   ["debrided", "debridement"],
   ["surgically", "surgical"],
+];
+
+const PROVENANCE_THRESHOLDS = {
+  normalizedDice: 0.72,
+  inferentialDice: 0.3,
+  domainInferenceDice: 0.25,
+};
+
+const LAB_INFERENCES = [
+  { label: /\bhypokalemia\b/, quote: /\bpotassium\b/, cue: /\b(?:low|decreased|repleted|replaced|corrected)\b/ },
+  { label: /\bhyperkalemia\b/, quote: /\bpotassium\b/, cue: /\b(?:high|elevated|increased|treated|corrected)\b/ },
+  { label: /\bacute kidney injury\b|\baki\b/, quote: /\b(?:creatinine|renal function|kidney function)\b/, cue: /\b(?:increased|elevated|rose|improved|resolved|recovered)\b/ },
+  { label: /\banemia\b/, quote: /\b(?:hemoglobin|hgb|hematocrit|hct)\b/, cue: /\b(?:low|decreased|dropped|transfused|improved)\b/ },
 ];
 
 function classifyTypedProvenance({ sourceText, label, quote, domain }) {
@@ -29,8 +39,8 @@ function classifyTypedProvenance({ sourceText, label, quote, domain }) {
   const labelNorm = normalize(labelText);
   const quoteNorm = normalize(quoteText);
   const sourceNorm = normalize(sourceText || "");
-  const labelTokens = contentTokens(labelText);
-  const quoteTokens = contentTokens(quoteText);
+  const labelTokens = contentTokens(expandKnownTerms(labelText));
+  const quoteTokens = contentTokens(expandKnownTerms(quoteText));
   const sourceLocated = assertion.quote_found_in_source || (quoteNorm && sourceNorm.includes(quoteNorm));
   const assertionAcknowledged = labelAcknowledgesAssertion(labelText, assertion.status);
 
@@ -50,10 +60,10 @@ function classifyTypedProvenance({ sourceText, label, quote, domain }) {
     return result("inferential", assertion, { sourceLocated, labelTokens, quoteTokens, domain });
   }
   const overlap = dice(labelTokens, quoteTokens);
-  if (overlap >= 0.72) {
+  if (overlap >= PROVENANCE_THRESHOLDS.normalizedDice) {
     return result("normalized", assertion, { sourceLocated, labelTokens, quoteTokens, domain, tokenOverlap: overlap });
   }
-  if (overlap >= 0.3 && sourceLocated) {
+  if (overlap >= PROVENANCE_THRESHOLDS.inferentialDice && sourceLocated) {
     return result("inferential", assertion, { sourceLocated, labelTokens, quoteTokens, domain, tokenOverlap: overlap });
   }
   return result("unsupported", assertion, { sourceLocated, labelTokens, quoteTokens, domain, tokenOverlap: overlap });
@@ -80,7 +90,7 @@ function normalizationSupported(labelNorm, quoteNorm) {
   if (!labelNorm || !quoteNorm) return false;
   const expandedLabel = expandKnownTerms(labelNorm);
   const expandedQuote = expandKnownTerms(quoteNorm);
-  return expandedQuote.includes(expandedLabel) || expandedLabel.includes(expandedQuote) || dice(contentTokens(expandedLabel), contentTokens(expandedQuote)) >= 0.72;
+  return expandedQuote.includes(expandedLabel) || expandedLabel.includes(expandedQuote) || dice(contentTokens(expandedLabel), contentTokens(expandedQuote)) >= PROVENANCE_THRESHOLDS.normalizedDice;
 }
 
 function clinicalInferenceSupported(labelNorm, quoteNorm, domain) {
@@ -91,21 +101,18 @@ function clinicalInferenceSupported(labelNorm, quoteNorm, domain) {
   const quoteTokens = contentTokens(expandedQuote);
   const overlap = dice(labelTokens, quoteTokens);
 
-  if (/\bhypokalemia\b/.test(expandedLabel) && /\bpotassium\b/.test(expandedQuote) && /\b(replaced|corrected|3\.1|low)\b/.test(expandedQuote)) {
-    return true;
-  }
-  if (/\bdebridement\b/.test(expandedLabel) && /\bdebridement\b/.test(expandedQuote)) {
+  if (LAB_INFERENCES.some((rule) => rule.label.test(expandedLabel) && rule.quote.test(expandedQuote) && rule.cue.test(expandedQuote))) {
     return true;
   }
   if (String(domain || "").includes("procedures_and_tests") || String(domain || "").includes("handoff_atoms")) {
     if (/\b(echocardiogram|radiograph|xray|x ray|cta|ct|mri|ultrasound)\b/.test(expandedLabel)
       && /\b(showed|shows|revealed|demonstrated|obtained|performed)\b/.test(expandedQuote)
-      && overlap >= 0.25) return true;
+      && overlap >= PROVENANCE_THRESHOLDS.domainInferenceDice) return true;
   }
   if (String(domain || "").includes("medication_changes") || String(domain || "").includes("handoff_atoms")) {
     if (/\b(stopped|started|increased|decreased|continued)\b/.test(expandedLabel)
       && /\b(stopped|started|increased|decreased|continued|replaced)\b/.test(expandedQuote)
-      && overlap >= 0.25) return true;
+      && overlap >= PROVENANCE_THRESHOLDS.domainInferenceDice) return true;
   }
   return false;
 }
@@ -133,6 +140,8 @@ function labelAcknowledgesAssertion(label, status) {
 function contentTokens(value) {
   const stop = new Set([
     "the",
+    "was",
+    "were",
     "and",
     "for",
     "with",
@@ -160,7 +169,10 @@ function contentTokens(value) {
     "tablet",
     "capsule",
   ]);
-  return normalize(value).split(/\s+/).filter((token) => token.length >= 3 && !stop.has(token));
+  return normalize(value)
+    .split(/\s+/)
+    .map((token) => /^\d+(?:\.\d+)?$/.test(token) ? token : token.replace(/\.+$/g, ""))
+    .filter((token) => token.length >= 3 && !stop.has(token));
 }
 
 function dice(left, right) {
@@ -180,4 +192,4 @@ function escapeRegex(value) {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-module.exports = { classifyTypedProvenance, contentTokens, expandKnownTerms };
+module.exports = { classifyTypedProvenance, contentTokens, expandKnownTerms, PROVENANCE_THRESHOLDS };

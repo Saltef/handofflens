@@ -34,11 +34,11 @@ Together, these explore:
 
 Read it as an engineering appendix for selective risk control, not as clinical validation.
 
-The conformal scripts use proxy outcomes such as provider failure, schema failure, provenance-gate failure, routing label, or LLM-judge/review-needed signals. Those are useful for workflow design, but they are not ground-truth labels for patient safety, clinical harm, or clinical correctness.
+The conformal scripts use proxy outcomes such as provider failure, schema failure, provenance-gate failure, routing label, or LLM-judge/review-needed signals. Those are useful for workflow design, but they are not ground-truth labels for patient safety, clinical harm, or clinical correctness. Coverage of a self-generated routing label should be interpreted as router reproducibility under a split, not as safety coverage.
 
 The intended interpretation is:
 
-> If proxy failure labels are available, conformal-style routing may help create auditable escalation policies with explicit coverage/abstention trade-offs.
+> If proxy failure labels are available, conformal-style routing may help create auditable escalation policies with explicit coverage/abstention trade-offs. Any shift scenario must be read empirically unless exchangeability or a valid weighted-conformal design is justified.
 
 The prohibited interpretation is:
 
@@ -56,3 +56,19 @@ This work is included because it shows a second layer of reliability engineering
 
 > The conformal work is a selective-routing appendix. The main result is source-fidelity measurement and candidate-first extraction. Once the system exposes failures, the next engineering question is how to route cases based on observable risk signals. The conformal scripts test that idea with proxy labels, but I do not treat those proxy labels as clinical truth.
 
+## Reporting Requirements
+
+Public reports should include:
+
+- mean, minimum, and lower-tail empirical coverage across splits;
+- the fraction of splits below the nominal coverage target;
+- unsafe low-risk mean and worst-split rate;
+- separate rows for conformal methods and deterministic guarded escalation;
+- a statement that marginal coverage is not label-conditional safety coverage.
+
+Relevant grounding:
+
+- Lei et al. 2018, distribution-free predictive inference, JASA.
+- Sadinle, Lei, and Wasserman 2019, set-valued classifiers, JASA.
+- Tibshirani et al. 2019, conformal prediction under covariate shift, NeurIPS.
+- Barber et al. 2021, limits of distribution-free conditional predictive inference.

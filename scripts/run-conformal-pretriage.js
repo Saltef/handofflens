@@ -133,7 +133,7 @@ function runTargetExperiments(rows, targetName, alpha, repeats, neighborhoodK) {
   return {
     event_rate: eventRate,
     event_count: rows.filter((row) => row.y === 1).length,
-    scenarios: Object.fromEntries(Object.entries(scenarioSummaries).map(([name, values]) => [name, aggregateScenario(values)]))
+    scenarios: Object.fromEntries(Object.entries(scenarioSummaries).map(([name, values]) => [name, aggregateScenario(values, 1 - alpha)]))
   };
 }
 
@@ -359,7 +359,7 @@ function vectorize(row, featureNames, scaler) {
   });
 }
 
-function aggregateScenario(values) {
+function aggregateScenario(values, targetCoverage) {
   const methods = [
     "global_conformal",
     "guarded_global_conformal",
@@ -381,7 +381,15 @@ function aggregateScenario(values) {
     out[method] = {};
     for (const key of keys) {
       const nums = values.map((item) => item[method]?.[key]).filter(Number.isFinite);
-      if (nums.length) out[method][key] = mean(nums);
+      if (nums.length) {
+        out[method][key] = mean(nums);
+        if (key === "empirical_coverage") {
+          out[method].empirical_coverage_min = Math.min(...nums);
+          out[method].empirical_coverage_p10 = percentile([...nums].sort((a, b) => a - b), 0.10);
+          out[method].coverage_under_target_rate = mean(nums.map((value) => value < targetCoverage ? 1 : 0));
+        }
+        if (key === "unsafe_low_risk_rate") out[method].unsafe_low_risk_rate_max = Math.max(...nums);
+      }
     }
   }
   return out;

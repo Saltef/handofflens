@@ -190,23 +190,33 @@ function hasFamilyOrOtherExperiencer(context, target) {
 
 function cueNearTarget(context, target, maxTokens, direction) {
   const terms = labelKeywords(target).slice(0, 6);
-  if (!terms.length) return true;
+  if (!terms.length) return false;
   const tokens = context.split(/\s+/).filter(Boolean);
   const targetPositions = [];
   tokens.forEach((token, index) => {
     if (terms.some((term) => token === term || token.includes(term) || term.includes(token))) targetPositions.push(index);
   });
-  if (!targetPositions.length) return true;
+  if (!targetPositions.length) return false;
   const cuePositions = tokens
     .map((token, index) => ({ token, index }))
     .filter(({ token }) => /^(?:no|not|never|without|denies|denied|negative|ruled|possible|possibly|probable|suspected|concern|question|may|might|cannot|rule|if|when|should|unless|risk|would|could|consider|candidate|planned|history|prior|previous|previously|remote|resolved|old|family|mother|father|sister|brother|son|daughter|wife|husband)$/.test(token))
     .map(({ index }) => index);
   return cuePositions.some((cueIndex) => targetPositions.some((targetIndex) => {
     const distance = targetIndex - cueIndex;
+    if (hasScopeTerminatorBetween(tokens, cueIndex, targetIndex)) return false;
     if (direction === "before") return distance >= 0 && distance <= maxTokens;
     if (direction === "after") return distance <= 0 && Math.abs(distance) <= maxTokens;
     return Math.abs(distance) <= maxTokens;
   }));
+}
+
+function hasScopeTerminatorBetween(tokens, leftIndex, rightIndex) {
+  const start = Math.min(leftIndex, rightIndex) + 1;
+  const end = Math.max(leftIndex, rightIndex);
+  for (let index = start; index < end; index += 1) {
+    if (/^(?:but|however|although|though|except|nevertheless|nonetheless|while|whereas)$/.test(tokens[index])) return true;
+  }
+  return false;
 }
 
 function labelAcknowledgesAssertion(label, status) {

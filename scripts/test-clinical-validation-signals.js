@@ -18,6 +18,8 @@ assert.equal(detectAssertionStatus({ sourceText: source, quote: "chest pain", la
 assert.equal(detectAssertionStatus({ sourceText: source, quote: "atrial fibrillation", label: "atrial fibrillation" }).status, "historical");
 assert.equal(detectAssertionStatus({ sourceText: source, quote: "colon cancer", label: "colon cancer" }).status, "associated_with_someone_else");
 assert.equal(detectAssertionStatus({ sourceText: source, quote: "Acute kidney injury", label: "Acute kidney injury" }).status, "present");
+assert.equal(detectAssertionStatus({ sourceText: "No fever but has pneumonia.", quote: "pneumonia", label: "pneumonia" }).status, "present");
+assert.equal(detectAssertionStatus({ sourceText: source, quote: "missing target", label: "pneumonia" }).status, "present");
 
 const extraction = {
   medication_changes: { started: [], stopped: [], changed: [], continued: [], uncertain: [] },
@@ -68,4 +70,4 @@ assert.equal(safetyValidation.issues.filter((issue) => issue.code === "monitorin
 assert.equal(safetyValidation.issues.some((issue) => issue.path === "safety_flags[0]" && /safety/.test(issue.code)), false);
 assert.equal(safetyValidation.issues.some((issue) => issue.path === "safety_flags[1]" && /safety|return/.test(issue.code)), false);
 
-console.log("PASS clinical validation assertion-status and safety-flag checks (13 assertions)");
+console.log("PASS clinical validation assertion-status and safety-flag checks (15 assertions)");
