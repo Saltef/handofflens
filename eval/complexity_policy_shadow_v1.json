@@ -1,0 +1,12 @@
+{
+  "policy_id": "development-complexity-policy-v1",
+  "status": "shadow_only",
+  "recommended_profile": "balanced",
+  "balanced_rule": {
+    "route_complex_if_any": ["note_words >= 1800", "dose_mentions >= 18"],
+    "development_route_rate": 0.43,
+    "development_failure_sensitivity": 0.79,
+    "development_positive_predictive_value": 0.44
+  },
+  "restriction": "Do not alter prompts or model parameters in production from this rule until validated on new independent data."
+}

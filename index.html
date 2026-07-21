@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HandoffLens</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Deterministic baseline demo</p>
+        <h1>HandoffLens</h1>
+        <p class="lede">
+          Shows a browser-only, synthetic baseline for source-grounded handoff extraction. The full LLM/provenance pipeline is documented in the validation reports.
+        </p>
+      </div>
+      <div class="status-pill">Browser-only prototype</div>
+    </header>
+
+    <main class="workspace">
+      <section class="input-panel" aria-label="Input case">
+        <div class="panel-title">
+          <h2>Case Input</h2>
+          <button id="loadSample" type="button">Load sample</button>
+        </div>
+
+        <label for="caseMeta">Case metadata</label>
+        <textarea id="caseMeta" rows="5" spellcheck="false"></textarea>
+
+        <label for="summaryInput">Discharge summary</label>
+        <textarea id="summaryInput" rows="18" spellcheck="false"></textarea>
+
+        <div class="controls">
+          <button id="generate" type="button" class="primary">Run baseline extractor</button>
+          <button id="clear" type="button">Clear</button>
+        </div>
+      </section>
+
+      <section class="output-panel" aria-label="Deterministic baseline output">
+        <div class="panel-title">
+          <h2>Baseline Output</h2>
+          <div class="export-controls">
+            <button id="copyMarkdown" type="button">Copy Markdown</button>
+            <button id="downloadMarkdown" type="button">Download</button>
+            <button id="printSummary" type="button">Print/PDF</button>
+          </div>
+        </div>
+
+        <article id="summaryOutput" class="summary-output">
+          <p class="empty-state">Load the synthetic software sample or paste a test case. This static demo makes no network model calls.</p>
+        </article>
+      </section>
+    </main>
+
+    <section class="pipeline-demo" aria-label="Precomputed pipeline examples">
+      <div class="panel-title">
+        <h2>Precomputed pipeline snapshots</h2>
+        <p class="mini-note">Synthetic examples only. These cards show the actual behaviors the full pipeline tests: grounded evidence, abstention, and audit failure.</p>
+      </div>
+
+      <div class="pipeline-grid">
+        <article class="pipeline-card pass">
+          <p class="card-kicker">Provenance gate passed</p>
+          <h3>Accepted evidence keeps the quote attached</h3>
+          <p><strong>Candidate:</strong> Medication changed</p>
+          <blockquote>Furosemide was increased to 40 mg daily.</blockquote>
+          <p><strong>Extractive label:</strong> Furosemide was increased to 40 mg daily.</p>
+          <p class="card-note">The label is copied from the accepted source quote, so the final summary cannot add unsupported dose details.</p>
+        </article>
+
+        <article class="pipeline-card abstain">
+          <p class="card-kicker">Structured abstention</p>
+          <h3>Missing evidence withholds output</h3>
+          <p><strong>Detected issue:</strong> Follow-up section present, but no stable candidate survived validation.</p>
+          <p><strong>Disposition:</strong> Withhold output and route for review instead of producing plausible prose.</p>
+          <p class="card-note">Abstention is a feature: the system should fail visibly when source support is insufficient.</p>
+        </article>
+
+        <article class="pipeline-card warn">
+          <p class="card-kicker">Audit flag</p>
+          <h3>Generated summaries can leak unsupported details</h3>
+          <p><strong>Proxy audit finding:</strong> model-written summaries introduced numeric details not found in accepted evidence.</p>
+          <p><strong>Fix:</strong> deterministic extractive rematerialization reduced proxy audit issues from 15/20 records to 3/20.</p>
+          <p class="card-note">This is the core lesson: schema-valid output still needs source-fidelity checks.</p>
+        </article>
+      </div>
+    </section>
+
+    <footer>
+      Research prototype only. Static synthetic demo; not clinical NLP validation and not for care decisions.
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,3 @@
+case_id,model,information_compression,safety_critical_recall,uncertainty_visibility,overconfidence_control,abstention_quality,human_review_trigger,risk_sensitive_utility,low_probability_high_harm_omissions,unsafe_overreliance_risk,reviewer_notes
+DEMO_COPD_001,cohere:command-a-plus-05-2026,,,,,,,,,,
+DEMO_COPD_001,anthropic/claude-opus-4.8,,,,,,,,,,

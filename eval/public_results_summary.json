@@ -1,0 +1,71 @@
+{
+  "generated_on": "2026-06-23",
+  "status": "development_evidence_only",
+  "clinical_validation_complete": false,
+  "human_factual_review_complete": false,
+  "headline": "Schema-valid extraction is not evidence fidelity. A naive structured-output baseline frequently produced valid-looking but ungrounded quotations; candidate-first extraction was built to make that failure visible and reduce it through deterministic provenance.",
+  "heldout_engineering_run": {
+    "cases": 400,
+    "json_schema_reasoning_128_valid": 352,
+    "json_schema_reasoning_512_valid": 350,
+    "strict_tools_reasoning_512_valid": 299,
+    "posthoc_provenance_gate_passed": 40,
+    "generated_quote_not_found_issues": 5467,
+    "how_to_read_this": "The low provenance pass rate is the baseline finding, not a defect in the repository. It quantifies how often schema-valid output was not exactly grounded in the source text."
+  },
+  "architecture_development": {
+    "evidence_span_v2_final_rerun": {
+      "cases": 20,
+      "technical_successes": 17,
+      "pointer_adapter_failures": 3,
+      "provenance_gate_passes": 10,
+      "provenance_gate_rate_among_successes": 0.5882352941176471,
+      "interpretation": "conservative source-grounded comparator"
+    },
+    "multi_stage_v3": {
+      "cases": 5,
+      "deterministic_gate_passed": 3,
+      "recovery_triggered": 5,
+      "median_independent_item_jaccard": 0.045454545454545456,
+      "interpretation": "rejected negative result"
+    },
+    "candidate_first_v4_final_rerun": {
+      "cases": 20,
+      "deterministic_gate_passed": 19,
+      "abstained": 1,
+      "evidence_items_after_extractive_rematerialization": 524,
+      "api_calls": 39,
+      "stage_failures": 0,
+      "interpretation": "strongest current engineering architecture; over-extraction unresolved"
+    },
+    "candidate_first_v4_stability": {
+      "cases": 5,
+      "deterministic_gate_passed": 5,
+      "median_selection_jaccard": 1.0,
+      "minimum_selection_jaccard": 0.5,
+      "interpretation": "passed deterministic gates, but model-selected ambiguous candidates are not perfectly repeatable"
+    },
+    "candidate_first_v4_source_fidelity_audit": {
+      "original_model_written_summary_records_passing_proxy_audit": 5,
+      "extractive_rematerialized_records_passing_proxy_audit": 17,
+      "records": 20,
+      "remaining_issue_type": "possible_negation_conflict",
+      "interpretation": "deterministic extractive summaries removed unsupported numeric-detail leakage; remaining issues require factual review"
+    }
+  },
+  "prepared_review_packets": {
+    "source_fidelity_pilot": {
+      "complete_cases": 46,
+      "model_outputs": 92,
+      "human_review_complete": false
+    },
+    "v2_v4_factual_comparison": {
+      "items": 30,
+      "shared": 10,
+      "v2_only": 10,
+      "v4_only": 10,
+      "human_review_complete": false
+    }
+  },
+  "claims_boundary": "Aggregate engineering and proxy evidence only; no clinical accuracy, safety, appropriateness, harmfulness, or generalizability claim."
+}

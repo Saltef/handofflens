@@ -1,0 +1,18 @@
+{
+  "schema_version": "adjudicated-extraction-gold-v1",
+  "description": "Blank template for a small adjudicated item-level source-fidelity set. Do not include raw source records in the public repository.",
+  "cases": [
+    {
+      "case_id": "example-case-id",
+      "gold_items": [
+        {
+          "item_id": "example-case-id:G001",
+          "domain": "diagnosis",
+          "label": "",
+          "source_quote": "",
+          "assertion_status": "present"
+        }
+      ]
+    }
+  ]
+}
