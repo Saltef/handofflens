@@ -52,7 +52,8 @@ This public repository contains:
 - source-fidelity and review-packet tooling;
 - ongoing selective-routing/conformal experiments using proxy labels;
 - config-driven extraction profiles for discharge summaries and dialogue-like records;
-- a benchmark manifest scaffold that blocks unsupported public benchmark claims.
+- a benchmark manifest scaffold that blocks unsupported public benchmark claims;
+- an ACI-style public adapter and item-level benchmark scorer that refuse unscored headline results.
 
 It does not contain source clinical records, private cohorts, case-level private outputs, reviewer packets, API keys, or completed human annotations.
 

@@ -1,0 +1,25 @@
+{
+  "schema_version": "aci-bench-adapter-fixture-v1",
+  "description": "Synthetic ACI-shaped fixture for adapter and scorer tests. This is not ACI-Bench data.",
+  "rows": [
+    {
+      "id": "aci-synth-001",
+      "dialogue": "Doctor: Start aspirin 81 mg daily. Follow up with cardiology in one week.",
+      "note": "Aspirin 81 mg daily started. Cardiology follow-up in one week.",
+      "gold_items": [
+        {
+          "item_id": "g1",
+          "domain": "medication_changes.started",
+          "label": "aspirin 81 mg daily",
+          "source_quote": "Start aspirin 81 mg daily"
+        },
+        {
+          "item_id": "g2",
+          "domain": "follow_up_actions",
+          "label": "cardiology follow up in one week",
+          "source_quote": "Follow up with cardiology in one week"
+        }
+      ]
+    }
+  ]
+}

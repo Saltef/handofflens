@@ -12,6 +12,7 @@ Start here if you are reviewing the project quickly:
 - [Conformal and Selective-Routing Work](conformal-routing-ongoing.md) - ongoing proxy-risk routing appendix and how to interpret it.
 - [Benchmark Close-Out Plan](benchmark-closeout-plan.md) - final public approach for external benchmark completion.
 - [Records Adapter Contract](records-adapter-contract.md) - stable input schema for dataset adapters.
+- [Benchmark Adapter and Scoring](benchmark-adapter-scoring.md) - ACI-style adapter and item-level benchmark scorer.
 
 ## Reproducibility and sharing
 

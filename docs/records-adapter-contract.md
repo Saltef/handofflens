@@ -8,6 +8,7 @@ HandoffLens should run on a new corpus through an adapter, not through edits to 
 {
   "record_id": "string, stable within the dataset",
   "source_text": "string, the full source record to audit",
+  "reference_text": "optional string, benchmark reference note or summary when the corpus provides one",
   "metadata": {
     "dataset_id": "string",
     "split": "train|dev|test|unknown",
