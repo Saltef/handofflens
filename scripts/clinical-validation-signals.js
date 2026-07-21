@@ -164,7 +164,7 @@ function hasNegationCue(context, target) {
 }
 
 function hasPossibleCue(context, target) {
-  const cue = /\b(?:possible|possibly|probable|probably|suspected|concern for|question of|may have|might have|cannot exclude|rule out|r\/o)\b/;
+  const cue = /\b(?:possible|possibly|probable|probably|suspected|concern for|question of|may(?:\s+have)?|might(?:\s+have)?|could|cannot exclude|rule out|r\/o|suggests?|suggested|suggesting|indicates?|indicated|indicating|appears?|appeared|likely|possibility|potentially|putative|whether)\b/;
   return cue.test(context) && cueNearTarget(context, target, 12, "before");
 }
 
@@ -199,7 +199,7 @@ function cueNearTarget(context, target, maxTokens, direction) {
   if (!targetPositions.length) return false;
   const cuePositions = tokens
     .map((token, index) => ({ token, index }))
-    .filter(({ token }) => /^(?:no|not|never|without|denies|denied|negative|ruled|possible|possibly|probable|suspected|concern|question|may|might|cannot|rule|if|when|should|unless|risk|would|could|consider|candidate|planned|history|prior|previous|previously|remote|resolved|old|family|mother|father|sister|brother|son|daughter|wife|husband)$/.test(token))
+    .filter(({ token }) => /^(?:no|not|never|without|denies|denied|negative|ruled|possible|possibly|probable|probably|suspected|concern|question|may|might|cannot|rule|suggest|suggests|suggested|suggesting|indicate|indicates|indicated|indicating|appears|appeared|likely|possibility|potentially|putative|whether|if|when|should|unless|risk|would|could|consider|candidate|planned|history|prior|previous|previously|remote|resolved|old|family|mother|father|sister|brother|son|daughter|wife|husband)$/.test(token))
     .map(({ index }) => index);
   return cuePositions.some((cueIndex) => targetPositions.some((targetIndex) => {
     const distance = targetIndex - cueIndex;

@@ -13,6 +13,7 @@ Start here if you are reviewing the project quickly:
 - [Benchmark Close-Out Plan](benchmark-closeout-plan.md) - final public approach for external benchmark completion.
 - [Records Adapter Contract](records-adapter-contract.md) - stable input schema for dataset adapters.
 - [Benchmark Adapter and Scoring](benchmark-adapter-scoring.md) - ACI-style adapter and item-level benchmark scorer.
+- [Public Benchmark Run Results](public-benchmark-results-2026-07-21.md) - first ACI/BioScope public benchmark execution.
 
 ## Reproducibility and sharing
 

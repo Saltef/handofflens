@@ -32,7 +32,7 @@ function adaptAciBenchRows(rows, options = {}) {
   const records = [];
   const issues = [];
   rows.forEach((row, index) => {
-    const recordId = firstValue(row, ["record_id", "case_id", "encounter_id", "dialogue_id", "id"]) || `${datasetId}:${split}:${index + 1}`;
+    const recordId = firstValue(row, ["record_id", "case_id", "encounter_id", "dialogue_id", "id", "file"]) || `${datasetId}:${split}:${index + 1}`;
     const sourceText = firstValue(row, ["source_text", "dialogue", "conversation", "transcript", "src", "input", "text"]);
     const referenceText = firstValue(row, ["reference_text", "reference_note", "note", "clinical_note", "target", "tgt", "summary"]);
     if (!sourceText) {

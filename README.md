@@ -39,6 +39,7 @@ For a quick review, these are the most useful files:
 6. [Conformal and Selective-Routing Work](docs/conformal-routing-ongoing.md) - ongoing proxy-risk routing work and how to interpret it.
 7. [Benchmark Close-Out Plan](docs/benchmark-closeout-plan.md) - final public approach for external benchmark completion.
 8. [Records Adapter Contract](docs/records-adapter-contract.md) - dataset adapter input schema and publishing rules.
+9. [Public Benchmark Run Results](docs/public-benchmark-results-2026-07-21.md) - first ACI/BioScope public benchmark execution.
 
 ## What is included
 
