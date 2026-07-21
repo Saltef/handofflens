@@ -1,0 +1,84 @@
+{
+  "schema_version": "handofflens-profile-v1",
+  "profile_id": "discharge-summary",
+  "display_name": "Discharge Summary",
+  "description": "Default profile for hospital discharge-summary-style records. Regexes are configuration, not benchmark evidence.",
+  "record_contract": {
+    "text_field": "source_text",
+    "id_field": "record_id",
+    "gold_field": "gold_items"
+  },
+  "domains": {
+    "medication_changes": {
+      "headings": [
+        { "pattern": "\\b(?:DISCHARGE MEDICATIONS?|MEDICATIONS? ON DISCHARGE)\\s*:", "flags": "gi" }
+      ],
+      "cues": [
+        "\\b(?:mg|mcg|units?|tablet|capsule|p\\.o\\.|po\\b|bid\\b|tid\\b|q\\.?d\\.?|daily|medication|prednisone|insulin|aspirin|antibiotic)\\b"
+      ]
+    },
+    "diagnosis_changes": {
+      "headings": [
+        { "pattern": "\\b(?:DISCHARGE DIAGNOSES?|FINAL DIAGNOSES?|PRINCIPAL DIAGNOSES?)\\s*:", "flags": "gi" }
+      ],
+      "cues": [
+        "\\b(?:diagnos|assessment|impression|failure|syndrome|disease|pneumonia|infection|exacerbation|hypertension|infarction)\\b"
+      ]
+    },
+    "procedures_and_tests": {
+      "headings": [
+        { "pattern": "\\b(?:MAJOR SURGICAL OR INVASIVE PROCEDURE|PROCEDURES?|OPERATIONS?)\\s*:", "flags": "gi" }
+      ],
+      "cues": [
+        "\\b(?:procedure|surgery|operation|performed|underwent|ct\\b|mri\\b|x-?ray|ultrasound|echocardiogram|biopsy|catheter|intubat|extubat|bronchoscopy)\\b"
+      ]
+    },
+    "labs": {
+      "headings": [
+        { "pattern": "\\b(?:PERTINENT RESULTS?|LABORATOR(?:Y|IES)(?: ON ADMISSION)?)\\s*:", "flags": "gi" }
+      ],
+      "cues": [
+        "\\b(?:wbc|hgb|hemoglobin|hematocrit|platelets?|creatinine|bun\\b|sodium|potassium|glucose|inr\\b|troponin|laborator|ph\\b|pco2)\\b"
+      ]
+    },
+    "follow_up_actions": {
+      "headings": [
+        { "pattern": "\\b(?:DISCHARGE FOLLOWUP|FOLLOWUP INSTRUCTIONS?|FOLLOW[- ]?UP|DISCHARGE INSTRUCTIONS?)\\s*:", "flags": "gi" }
+      ],
+      "cues": [
+        "\\b(?:follow\\s*-?\\s*up|appointment|clinic|within\\s+\\w+\\s+(?:day|week|month)|return to|call\\s+.*clinic|scheduled)\\b"
+      ]
+    }
+  },
+  "normalization_pairs": [
+    ["bid", "twice daily"],
+    ["tid", "three times daily"],
+    ["qid", "four times daily"],
+    ["qhs", "nightly"],
+    ["qday", "daily"],
+    ["qd", "daily"],
+    ["po", "oral"],
+    ["aki", "acute kidney injury"],
+    ["ckd", "chronic kidney disease"],
+    ["copd", "chronic obstructive pulmonary disease"],
+    ["uti", "urinary tract infection"],
+    ["sob", "shortness of breath"],
+    ["htn", "hypertension"],
+    ["afib", "atrial fibrillation"],
+    ["debrided", "debridement"],
+    ["surgically", "surgical"]
+  ],
+  "lab_inferences": [
+    { "label": "\\bhypokalemia\\b", "quote": "\\bpotassium\\b", "cue": "\\b(?:low|decreased|repleted|replaced|corrected)\\b" },
+    { "label": "\\bhyperkalemia\\b", "quote": "\\bpotassium\\b", "cue": "\\b(?:high|elevated|increased|treated|corrected)\\b" },
+    { "label": "\\bacute kidney injury\\b|\\baki\\b", "quote": "\\b(?:creatinine|renal function|kidney function)\\b", "cue": "\\b(?:increased|elevated|rose|improved|resolved|recovered)\\b" },
+    { "label": "\\banemia\\b", "quote": "\\b(?:hemoglobin|hgb|hematocrit|hct)\\b", "cue": "\\b(?:low|decreased|dropped|transfused|improved)\\b" }
+  ],
+  "safety_types": [
+    "medication_monitoring",
+    "return_precaution",
+    "follow_up_timing",
+    "diagnostic_uncertainty",
+    "abnormal_lab_follow_up"
+  ]
+}

@@ -10,6 +10,8 @@ Start here if you are reviewing the project quickly:
 - [Claims Register](claims-register.md) - allowed and prohibited interpretations.
 - [Model Card](../MODEL_CARD.md) - intended use, non-use, and limitations.
 - [Conformal and Selective-Routing Work](conformal-routing-ongoing.md) - ongoing proxy-risk routing appendix and how to interpret it.
+- [Benchmark Close-Out Plan](benchmark-closeout-plan.md) - final public approach for external benchmark completion.
+- [Records Adapter Contract](records-adapter-contract.md) - stable input schema for dataset adapters.
 
 ## Reproducibility and sharing
 
@@ -38,3 +40,4 @@ These documents are retained as an audit trail, not as the headline claim. In pa
 - prompt ablations and failure-pattern analyses
 
 When a historical or exploratory document conflicts with the README, final validation snapshot, project status, or claims register, the current canonical document governs.
+

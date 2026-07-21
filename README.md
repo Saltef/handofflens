@@ -37,6 +37,8 @@ For a quick review, these are the most useful files:
 4. [Claims Register](docs/claims-register.md) - what each result does and does not justify.
 5. [Handoff Atoms Design](docs/handoff-atoms-design.md) - atom-first extraction, typed safety flags, and deterministic atom/view canonicalization.
 6. [Conformal and Selective-Routing Work](docs/conformal-routing-ongoing.md) - ongoing proxy-risk routing work and how to interpret it.
+7. [Benchmark Close-Out Plan](docs/benchmark-closeout-plan.md) - final public approach for external benchmark completion.
+8. [Records Adapter Contract](docs/records-adapter-contract.md) - dataset adapter input schema and publishing rules.
 
 ## What is included
 
@@ -48,7 +50,9 @@ This public repository contains:
 - a browser-only synthetic demo;
 - aggregate validation summaries;
 - source-fidelity and review-packet tooling;
-- ongoing selective-routing/conformal experiments using proxy labels.
+- ongoing selective-routing/conformal experiments using proxy labels;
+- config-driven extraction profiles for discharge summaries and dialogue-like records;
+- a benchmark manifest scaffold that blocks unsupported public benchmark claims.
 
 It does not contain source clinical records, private cohorts, case-level private outputs, reviewer packets, API keys, or completed human annotations.
 
@@ -75,6 +79,7 @@ The full LLM/provenance pipeline is represented in the validation reports and ca
 | Source-fidelity review packets | Prepared | Human factual review is pending |
 | Handoff atoms and safety typing | Added | Repairs atom/category projection failures and exposes typed safety misses |
 | Conformal/selective routing | Ongoing appendix | Uses proxy labels for escalation-policy research, not clinical safety |
+| Benchmark/profile close-out | Infrastructure added | Profiles and manifest are CI-gated; external benchmark scores are not yet claimed |
 
 The public figure set is reproducible from `eval/public_results_summary.json` by running `python3 scripts/make-results-figure.py` after `python3 -m pip install -r requirements.txt`.
 
@@ -93,6 +98,7 @@ The evidence supports engineering claims about schema reliability, source proven
 - `scripts/` - evaluation, gating, routing, review, and analysis programs
 - `prompts/` - prompt variants and extraction instructions
 - `eval/` - public schemas, rubrics, manifests, and synthetic fixtures
+- `profiles/` - note-type/domain profiles used by candidate-first extraction
 - `docs/` - scientific write-up, validation snapshot, status, claims, and appendix material
 - `app.js`, `index.html`, `styles.css` - static synthetic demo
 - `review.*` - local blinded-review interface
@@ -101,3 +107,4 @@ The evidence supports engineering claims about schema reliability, source proven
 ## License
 
 Portfolio and research demonstration. Not licensed for reuse or redistribution.
+

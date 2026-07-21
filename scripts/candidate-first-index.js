@@ -1,19 +1,11 @@
 const crypto = require("node:crypto");
+const { DEFAULT_PROFILE_ID, compileProfile, loadProfile } = require("./profile-config");
 
-const HEADINGS = [
-  ["medication_changes", /\b(?:DISCHARGE MEDICATIONS?|MEDICATIONS? ON DISCHARGE)\s*:/gi],
-  ["diagnosis_changes", /\b(?:DISCHARGE DIAGNOSES?|FINAL DIAGNOSES?|PRINCIPAL DIAGNOSES?)\s*:/gi],
-  ["procedures_and_tests", /\b(?:MAJOR SURGICAL OR INVASIVE PROCEDURE|PROCEDURES?|OPERATIONS?)\s*:/gi],
-  ["labs", /\b(?:PERTINENT RESULTS?|LABORATOR(?:Y|IES)(?: ON ADMISSION)?)\s*:/gi],
-  ["follow_up_actions", /\b(?:DISCHARGE FOLLOWUP|FOLLOWUP INSTRUCTIONS?|FOLLOW[- ]?UP|DISCHARGE INSTRUCTIONS?)\s*:/gi]
-];
-const CUES = {
-  medication_changes: /\b(?:mg|mcg|units?|tablet|capsule|p\.o\.|po\b|bid\b|tid\b|q\.?d\.?|daily|medication|prednisone|insulin|aspirin|antibiotic)\b/i,
-  diagnosis_changes: /\b(?:diagnos|assessment|impression|failure|syndrome|disease|pneumonia|infection|exacerbation|hypertension|infarction)\b/i,
-  procedures_and_tests: /\b(?:procedure|surgery|operation|performed|underwent|ct\b|mri\b|x-?ray|ultrasound|echocardiogram|biopsy|catheter|intubat|extubat|bronchoscopy)\b/i,
-  labs: /\b(?:wbc|hgb|hemoglobin|hematocrit|platelets?|creatinine|bun\b|sodium|potassium|glucose|inr\b|troponin|laborator|ph\b|pco2)\b/i,
-  follow_up_actions: /\b(?:follow\s*-?\s*up|appointment|clinic|within\s+\w+\s+(?:day|week|month)|return to|call\s+.*clinic|scheduled)\b/i
-};
+function compiledProfileFromOptions(options = {}) {
+  if (options.compiledProfile) return options.compiledProfile;
+  const profileRef = options.profile || options.profilePath || options.profileId || process.env.HANDOFFLENS_PROFILE || DEFAULT_PROFILE_ID;
+  return compileProfile(loadProfile(profileRef));
+}
 
 function canonicalizeWithMap(source) {
   const input = String(source || "");
@@ -29,9 +21,10 @@ function canonicalizeWithMap(source) {
 }
 
 function generateCandidates(source, options = {}) {
+  const profile = compiledProfileFromOptions(options);
   const map = canonicalizeWithMap(source), proposed = [];
   const headingMatches = [];
-  for (const [domain, pattern] of HEADINGS) {
+  for (const [domain, pattern] of profile.headings) {
     pattern.lastIndex = 0;
     for (let match = pattern.exec(map.text); match; match = pattern.exec(map.text)) headingMatches.push({ domain, start: match.index, contentStart: match.index + match[0].length });
   }
@@ -50,7 +43,9 @@ function generateCandidates(source, options = {}) {
     const midpoint = (span.start + span.end) / 2;
     if (covered.some((range) => midpoint >= range.start && midpoint < range.end)) continue;
     const value = map.text.slice(span.start, span.end);
-    for (const [domain, cue] of Object.entries(CUES)) if (cue.test(value)) proposed.push(makeCandidate(map, domain, span.start, span.end, "cue_chunk"));
+    for (const [domain, cues] of Object.entries(profile.cues)) {
+      if (cues.some((cue) => { cue.lastIndex = 0; return cue.test(value); })) proposed.push(makeCandidate(map, domain, span.start, span.end, "cue_chunk"));
+    }
   }
   const deduped = [], seen = new Set();
   for (const candidate of proposed) {
@@ -65,7 +60,14 @@ function generateCandidates(source, options = {}) {
     else { counts[candidate.domain_hint] += 1; selected.push(candidate); }
   }
   assignStableIds(selected);
-  return { version: "candidate-first-index-v1", canonical_text_sha256: sha256(map.text), candidates: selected, overflow: { count: overflow.length, by_domain: countBy(overflow.map((x) => x.domain_hint)) }, detected_domains: Object.fromEntries(Object.keys(CUES).map((domain) => [domain, selected.some((x) => x.domain_hint === domain)])) };
+  return {
+    version: "candidate-first-index-v1",
+    profile_id: profile.profile_id,
+    canonical_text_sha256: sha256(map.text),
+    candidates: selected,
+    overflow: { count: overflow.length, by_domain: countBy(overflow.map((x) => x.domain_hint)) },
+    detected_domains: Object.fromEntries(Object.keys(profile.cues).map((domain) => [domain, selected.some((x) => x.domain_hint === domain)])),
+  };
 }
 
 function splitSection(value, offset) {

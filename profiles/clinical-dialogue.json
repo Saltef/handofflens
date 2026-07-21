@@ -1,0 +1,81 @@
+{
+  "schema_version": "handofflens-profile-v1",
+  "profile_id": "clinical-dialogue",
+  "display_name": "Clinical Dialogue",
+  "description": "Demonstration profile for ambient clinical dialogue or transcript-like records. It proves the extraction cues are portable configuration, not hardcoded discharge-summary sections.",
+  "record_contract": {
+    "text_field": "source_text",
+    "id_field": "record_id",
+    "gold_field": "gold_items"
+  },
+  "domains": {
+    "medication_changes": {
+      "headings": [
+        { "pattern": "\\b(?:MEDICATION PLAN|MEDICATIONS DISCUSSED|PLAN FOR MEDICATIONS)\\s*:", "flags": "gi" }
+      ],
+      "cues": [
+        "\\b(?:start|started|stop|stopped|continue|continued|increase|decrease|dose|mg|mcg|tablet|capsule|twice daily|daily|insulin|aspirin|antibiotic)\\b"
+      ]
+    },
+    "diagnosis_changes": {
+      "headings": [
+        { "pattern": "\\b(?:ASSESSMENT|PROBLEM DISCUSSION|CLINICAL IMPRESSION)\\s*:", "flags": "gi" }
+      ],
+      "cues": [
+        "\\b(?:diagnosis|assessment|impression|infection|pneumonia|heart failure|kidney injury|hypertension|exacerbation|rule out|concern for)\\b"
+      ]
+    },
+    "procedures_and_tests": {
+      "headings": [
+        { "pattern": "\\b(?:TESTS DISCUSSED|IMAGING DISCUSSED|PROCEDURES DISCUSSED)\\s*:", "flags": "gi" }
+      ],
+      "cues": [
+        "\\b(?:test|scan|ct\\b|mri\\b|x-?ray|ultrasound|echo|echocardiogram|lab work|blood work|procedure|biopsy|catheter)\\b"
+      ]
+    },
+    "labs": {
+      "headings": [
+        { "pattern": "\\b(?:LABS DISCUSSED|BLOOD WORK|RESULTS DISCUSSED)\\s*:", "flags": "gi" }
+      ],
+      "cues": [
+        "\\b(?:wbc|hgb|hemoglobin|hematocrit|platelets?|creatinine|bun\\b|sodium|potassium|glucose|inr\\b|troponin|lab|blood work|renal function)\\b"
+      ]
+    },
+    "follow_up_actions": {
+      "headings": [
+        { "pattern": "\\b(?:FOLLOW-UP PLAN|NEXT STEPS|DISCHARGE INSTRUCTIONS DISCUSSED)\\s*:", "flags": "gi" }
+      ],
+      "cues": [
+        "\\b(?:follow\\s*-?\\s*up|appointment|clinic|call us|return to|come back|within\\s+\\w+\\s+(?:day|week|month)|scheduled|monitor at home)\\b"
+      ]
+    }
+  },
+  "normalization_pairs": [
+    ["bid", "twice daily"],
+    ["tid", "three times daily"],
+    ["qid", "four times daily"],
+    ["qhs", "nightly"],
+    ["qday", "daily"],
+    ["qd", "daily"],
+    ["po", "oral"],
+    ["aki", "acute kidney injury"],
+    ["ckd", "chronic kidney disease"],
+    ["copd", "chronic obstructive pulmonary disease"],
+    ["uti", "urinary tract infection"],
+    ["sob", "shortness of breath"],
+    ["htn", "hypertension"],
+    ["afib", "atrial fibrillation"]
+  ],
+  "lab_inferences": [
+    { "label": "\\bhypokalemia\\b", "quote": "\\bpotassium\\b", "cue": "\\b(?:low|decreased|repleted|replaced|corrected)\\b" },
+    { "label": "\\bhyperkalemia\\b", "quote": "\\bpotassium\\b", "cue": "\\b(?:high|elevated|increased|treated|corrected)\\b" },
+    { "label": "\\bacute kidney injury\\b|\\baki\\b", "quote": "\\b(?:creatinine|renal function|kidney function)\\b", "cue": "\\b(?:increased|elevated|rose|improved|resolved|recovered)\\b" }
+  ],
+  "safety_types": [
+    "medication_monitoring",
+    "return_precaution",
+    "follow_up_timing",
+    "diagnostic_uncertainty",
+    "abnormal_lab_follow_up"
+  ]
+}

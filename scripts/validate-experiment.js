@@ -12,7 +12,7 @@ function check(name, condition, detail = "") {
 }
 
 function readJson(filePath) {
-  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  return JSON.parse(fs.readFileSync(filePath, "utf8").replace(/^\uFEFF/, ""));
 }
 
 function readText(filePath) {
@@ -215,3 +215,4 @@ if (failed.length) {
 } else {
   console.log(`\nAll ${checks.length} validation checks passed.`);
 }
+

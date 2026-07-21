@@ -1,0 +1,78 @@
+{
+  "schema_version": "handofflens-benchmark-manifest-v1",
+  "status": "planning",
+  "purpose": "Public benchmark close-out scaffold. This file names target datasets and expected adapters but does not claim benchmark results.",
+  "result_policy": {
+    "no_headline_results_without_verified_source": true,
+    "no_dua_data_in_public_repo": true,
+    "all_external_scores_require_manifest_and_evidence": true
+  },
+  "datasets": [
+    {
+      "dataset_id": "bioscope",
+      "display_name": "BioScope",
+      "tier": 1,
+      "availability": "verify_required",
+      "profile_id": "discharge-summary",
+      "adapter_status": "planned",
+      "tasks": ["assertion_negation_scope"],
+      "claimed_results": null,
+      "notes": "Open/verification target for assertion and negation behavior."
+    },
+    {
+      "dataset_id": "aci_bench",
+      "display_name": "ACI-Bench",
+      "tier": 1,
+      "availability": "verify_required",
+      "profile_id": "clinical-dialogue",
+      "adapter_status": "planned",
+      "tasks": ["dialogue_to_note_extraction", "grounding_audit"],
+      "claimed_results": null,
+      "notes": "Transcript-like target for method portability."
+    },
+    {
+      "dataset_id": "mediqa",
+      "display_name": "MEDIQA clinical summarization tracks",
+      "tier": 1,
+      "availability": "verify_required",
+      "profile_id": "discharge-summary",
+      "adapter_status": "optional",
+      "tasks": ["summary_grounding"],
+      "claimed_results": null,
+      "notes": "Optional second grounding testbed after BioScope and ACI-Bench."
+    },
+    {
+      "dataset_id": "i2b2_2009_medication",
+      "display_name": "i2b2 2009 Medication Challenge",
+      "tier": 2,
+      "availability": "dua_required",
+      "profile_id": "discharge-summary",
+      "adapter_status": "planned_private",
+      "tasks": ["medication_extraction", "relation_extraction"],
+      "claimed_results": null,
+      "notes": "Do not publish data or case-level artifacts; report aggregate scores only after DUA review."
+    },
+    {
+      "dataset_id": "i2b2_2010_assertion",
+      "display_name": "i2b2 2010 Concept and Assertion Challenge",
+      "tier": 2,
+      "availability": "dua_required",
+      "profile_id": "discharge-summary",
+      "adapter_status": "planned_private",
+      "tasks": ["concept_extraction", "assertion_status"],
+      "claimed_results": null,
+      "notes": "Gold-standard target for assertion-status benchmarking once access is granted."
+    },
+    {
+      "dataset_id": "n2c2_2018_ade",
+      "display_name": "n2c2 2018 ADE and Medication Extraction",
+      "tier": 2,
+      "availability": "dua_required",
+      "profile_id": "discharge-summary",
+      "adapter_status": "planned_private",
+      "tasks": ["medication_extraction", "adverse_event_extraction", "relation_extraction"],
+      "claimed_results": null,
+      "notes": "Modern DUA-bound external comparison."
+    }
+  ]
+}

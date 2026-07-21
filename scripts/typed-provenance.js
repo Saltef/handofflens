@@ -1,23 +1,8 @@
 const { detectAssertionStatus } = require("./clinical-validation-signals");
+const { compileProfile, loadProfile } = require("./profile-config");
 
-const NORMALIZATION_PAIRS = [
-  ["bid", "twice daily"],
-  ["tid", "three times daily"],
-  ["qid", "four times daily"],
-  ["qhs", "nightly"],
-  ["qday", "daily"],
-  ["qd", "daily"],
-  ["po", "oral"],
-  ["aki", "acute kidney injury"],
-  ["ckd", "chronic kidney disease"],
-  ["copd", "chronic obstructive pulmonary disease"],
-  ["uti", "urinary tract infection"],
-  ["sob", "shortness of breath"],
-  ["htn", "hypertension"],
-  ["afib", "atrial fibrillation"],
-  ["debrided", "debridement"],
-  ["surgically", "surgical"],
-];
+const DEFAULT_PROFILE = compileProfile(loadProfile());
+const NORMALIZATION_PAIRS = DEFAULT_PROFILE.normalizationPairs;
 
 const PROVENANCE_THRESHOLDS = {
   normalizedDice: 0.72,
@@ -25,12 +10,7 @@ const PROVENANCE_THRESHOLDS = {
   domainInferenceDice: 0.25,
 };
 
-const LAB_INFERENCES = [
-  { label: /\bhypokalemia\b/, quote: /\bpotassium\b/, cue: /\b(?:low|decreased|repleted|replaced|corrected)\b/ },
-  { label: /\bhyperkalemia\b/, quote: /\bpotassium\b/, cue: /\b(?:high|elevated|increased|treated|corrected)\b/ },
-  { label: /\bacute kidney injury\b|\baki\b/, quote: /\b(?:creatinine|renal function|kidney function)\b/, cue: /\b(?:increased|elevated|rose|improved|resolved|recovered)\b/ },
-  { label: /\banemia\b/, quote: /\b(?:hemoglobin|hgb|hematocrit|hct)\b/, cue: /\b(?:low|decreased|dropped|transfused|improved)\b/ },
-];
+const LAB_INFERENCES = DEFAULT_PROFILE.labInferences;
 
 function classifyTypedProvenance({ sourceText, label, quote, domain }) {
   const assertion = detectAssertionStatus({ sourceText, quote, label });
@@ -193,3 +173,4 @@ function escapeRegex(value) {
 }
 
 module.exports = { classifyTypedProvenance, contentTokens, expandKnownTerms, PROVENANCE_THRESHOLDS };
+
