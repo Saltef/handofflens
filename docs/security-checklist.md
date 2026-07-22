@@ -25,7 +25,9 @@ Expected hits should be placeholders, documentation, or validator code only.
 
 - `.dockerignore` excludes `.env`, raw dataset files, generated samples, and results.
 - Docker demo target serves only static files.
-- Docker eval target can run local validation and scripts but should receive API keys only through local `.env` or runtime environment variables.
+- Docker eval target copies the full public repository artifact set and runs `npm run check:all` at build time.
+- Docker benchmark paths mount externally downloaded corpora from ignored `benchmark_data/`; benchmark corpora are not baked into the image.
+- Docker eval target can run local validation and scripts but should receive API keys only through explicit runtime environment variables, not baked image files.
 
 ## Local Validation
 

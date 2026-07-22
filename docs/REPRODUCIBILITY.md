@@ -10,6 +10,15 @@ npm run prompt:preview
 
 `npm run eval` uses only the committed synthetic fixtures unless another case file is explicitly supplied.
 
+The same public validation path is available through Docker:
+
+```bash
+docker compose --profile eval run --rm eval
+docker compose --profile benchmark run --rm benchmark
+```
+
+The `eval` service runs `npm run check:all` inside a clean image built from public repository contents. The `benchmark` service runs the public benchmark unit path and mounts ignored local benchmark/output directories for explicit corpus-backed runs.
+
 ## Local configuration
 
 Copy `.env.example` to `.env` and populate only the providers you intend to call. `.env` is ignored by Git and Docker.
@@ -32,6 +41,20 @@ Place the authorized local dataset at `clinical_cases.csv.gz`. Never commit it. 
 npm run sample:dataset
 npm run sample:dataset:200
 npm run sample:dataset:all
+```
+
+External benchmark corpora should be downloaded separately under the ignored local `benchmark_data/` directory. The Docker services mount that directory read-only at `/benchmarks`; no public or DUA-gated corpus files are copied into the image.
+
+Example BioScope conformal run:
+
+```bash
+docker compose --profile benchmark run --rm benchmark npm run benchmark:bioscope:conformal -- --input "/benchmarks/bioscope/abstracts.xml;/benchmarks/bioscope/full_papers.xml" --alpha 0.10 --out results/bioscope-conformal-public-text.json
+```
+
+Example ACI adapter run:
+
+```bash
+docker compose --profile benchmark run --rm benchmark npm run benchmark:adapt:aci -- --input /benchmarks/aci/aci-valid.json --split valid --out results/aci-valid-records.json
 ```
 
 ## Architecture experiments
@@ -77,4 +100,4 @@ Case-level provider outputs are intentionally absent from Git. Aggregate numbers
 
 ## Platform notes
 
-The repository is tested on Windows PowerShell with Node.js 20+. Scripts use Node APIs and are generally platform-independent; shell examples may require syntax changes on macOS/Linux.
+The repository is tested on Windows PowerShell with Node.js 20+. Scripts use Node APIs and are generally platform-independent; shell examples may require syntax changes on macOS/Linux. Docker runs use Linux containers and quote semicolon-separated benchmark input paths as a single argument.

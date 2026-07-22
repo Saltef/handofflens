@@ -12,12 +12,17 @@ services:
     build:
       context: .
       target: eval
-    env_file:
-      - .env
-    volumes:
-      - ./results:/app/results
-      - ./eval:/app/eval
-      - ./clinical_cases.csv.gz:/app/clinical_cases.csv.gz:ro
     profiles:
       - eval
-    command: ["npm", "run", "check"]
+    command: ["npm", "run", "check:all"]
+
+  benchmark:
+    build:
+      context: .
+      target: eval
+    volumes:
+      - ./results:/app/results
+      - ./benchmark_data:/benchmarks:ro
+    profiles:
+      - benchmark
+    command: ["npm", "run", "benchmark:public:test"]

@@ -18,6 +18,8 @@ eval/internal_validation_*
 eval/source_fidelity_pilot_*.json
 results/
 outputs/
+benchmark_data/*
+!benchmark_data/.gitkeep
 node_modules/
 npm-debug.log*
 *.log

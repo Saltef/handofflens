@@ -70,6 +70,28 @@ It also includes precomputed synthetic pipeline snapshots that illustrate the fu
 
 The full LLM/provenance pipeline is represented in the validation reports and can be run locally only with private inputs and API credentials.
 
+## Docker
+
+The public artifact is containerized for both the static demo and reproducible validation.
+
+```bash
+docker compose --profile demo up --build
+docker compose --profile eval run --rm eval
+docker compose --profile benchmark run --rm benchmark
+```
+
+- `demo` serves the browser-only synthetic demo at `http://localhost:8080`.
+- `eval` builds a clean Node validation image and runs `npm run check:all` without local result mounts.
+- `benchmark` runs the public benchmark unit path and can mount ignored local benchmark/output directories.
+
+External benchmark files should be placed under the ignored local `benchmark_data/` directory and mounted read-only at `/benchmarks`. For example, after placing BioScope XML files under `benchmark_data/bioscope/`, run:
+
+```bash
+docker compose --profile benchmark run --rm benchmark npm run benchmark:bioscope:conformal -- --input "/benchmarks/bioscope/abstracts.xml;/benchmarks/bioscope/full_papers.xml" --alpha 0.10 --out results/bioscope-conformal-public-text.json
+```
+
+The Docker image does not copy `.env`, raw clinical data, benchmark corpora, generated samples, or `results/`.
+
 ## Validation summary
 
 | Component | Status | Interpretation |
@@ -102,6 +124,7 @@ The evidence supports engineering claims about schema reliability, source proven
 - `eval/` - public schemas, rubrics, manifests, and synthetic fixtures
 - `profiles/` - note-type/domain profiles used by candidate-first extraction
 - `docs/` - scientific write-up, validation snapshot, status, claims, and appendix material
+- `benchmark_data/` - ignored local mount point for externally downloaded public benchmark files
 - `app.js`, `index.html`, `styles.css` - static synthetic demo
 - `review.*` - local blinded-review interface
 - `MODEL_CARD.md` - intended use, non-use, and limitations
