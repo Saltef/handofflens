@@ -55,7 +55,10 @@ Example ACI adapter run:
 
 ```bash
 docker compose --profile benchmark run --rm benchmark npm run benchmark:adapt:aci -- --input /benchmarks/aci/aci-valid.json --split valid --out results/aci-valid-records.json
+docker compose --profile benchmark run --rm benchmark npm run benchmark:score:aci-note -- --records results/aci-valid-records.json --prediction-field src --bootstrap-repeats 1000 --out results/aci-valid-note-score.json
 ```
+
+For a model note-generation run, write model outputs into a text field such as `generated_note` and use that field instead of `src`. The `src` setting is only a transcript/reference overlap baseline and ingestion diagnostic.
 
 ## Architecture experiments
 

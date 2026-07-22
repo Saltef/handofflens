@@ -3,6 +3,7 @@
 const assert = require("node:assert/strict");
 const { adaptAciBenchRows, parseCsvRows } = require("./adapt-aci-bench");
 const { scoreBenchmarkRecords } = require("./score-benchmark-records");
+const { scoreAciNoteGeneration, rougeN, rougeL } = require("./score-aci-note-generation");
 
 const csvRows = parseCsvRows('id,dialogue,note\n"case-1","Doctor: Start aspirin. Follow up in one week.","Start aspirin; follow up in one week."\n');
 assert.equal(csvRows.length, 2);
@@ -69,4 +70,17 @@ const unscored = scoreBenchmarkRecords({ records: { records: [{ record_id: "no-g
 assert.equal(unscored.summary.cases, 0);
 assert.match(unscored.interpretation, /No scored cases/);
 
-console.log("PASS benchmark adapter and scoring checks (15 assertions)");
+const rougeOne = rougeN("start aspirin today", "start aspirin daily", 1);
+assert.equal(rougeOne.precision, 2 / 3);
+assert.equal(rougeOne.recall, 2 / 3);
+const rougeLongest = rougeL("start aspirin today", "start aspirin daily");
+assert.equal(rougeLongest.f1, 2 / 3);
+const noteScore = scoreAciNoteGeneration([
+  { file: "n1", src: "Doctor: Start aspirin today.", tgt: "Start aspirin today." },
+  { file: "n2", src: "Doctor: Follow up next week.", tgt: "Follow up next week." },
+], { split: "unit", predictionField: "src", bootstrapRepeats: 20 });
+assert.equal(noteScore.summary.cases, 2);
+assert.ok(noteScore.summary.metrics.rouge1.f1 > 0.75);
+assert.ok(Array.isArray(noteScore.summary.metrics.rougeL.f1_bootstrap_ci95));
+
+console.log("PASS benchmark adapter and scoring checks (22 assertions)");

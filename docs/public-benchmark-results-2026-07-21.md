@@ -1,26 +1,57 @@
-# Public Benchmark Run Results - 2026-07-21
+# Public Benchmark Run Results - 2026-07-22
 
-This note records the first public benchmark execution after the profile/adapter refactor. It contains aggregate results only; no downloaded corpus files or case-level records are committed.
+This note records the public benchmark execution after the profile/adapter and Docker refactor. It contains aggregate results only; no downloaded corpus files or case-level records are committed.
 
 ## Data Access
 
-- ACI-Bench was downloaded from the public GitHub JSON files under CC BY 4.0.
+- ACI-Bench was downloaded from the public GitHub JSON files under CC BY 4.0. All 30 public challenge JSON files were ingested: train, validation, three held-out challenge splits, their `_full` aliases, and four section-specific files for each split.
 - BioScope was downloaded from the public BioScope corpus zip for research use.
 - i2b2 and n2c2 datasets were not present locally and remain DUA-gated. No i2b2/n2c2 scores are claimed here.
 
-## ACI-Bench Reference-Derived Alignment
+## ACI-Bench Ingestion and Note-Shape Diagnostic
 
-ACI-Bench JSON records contain `src` conversations, `tgt` expert reference notes, and `file` ids. The public JSON does not contain HandoffLens-native item-level `gold_items`, so two measurements were separated:
+ACI-Bench JSON records contain `src` conversations, `tgt` expert reference notes, and `file` ids. The adapter maps those fields into HandoffLens benchmark records as `source_text`, `reference_text`, and stable ids. A separate note-generation scorer computes ROUGE-1, ROUGE-2, ROUGE-L, token counts, compression ratio, and case-bootstrap confidence intervals.
 
-1. Native adapter pass-through: confirms available records/reference notes.
-2. Reference-derived alignment: derives item-like targets from the expert `tgt` note with the same profile-based candidate index, then scores source-conversation candidates against those derived targets.
+The current run scores the source transcript (`src`) against the reference note (`tgt`). This is a task-shape baseline and ingestion check, not a model note-generation result. It answers: after ingesting the complete public JSON corpus, how much lexical overlap exists between the conversation and expert note before any summarizer is applied?
 
-This is a reproducible public alignment diagnostic, not an official ACI-Bench leaderboard metric.
+Canonical full-note splits:
+
+| Split | Records | Mean source tokens | Mean reference tokens | Compression ratio | ROUGE-1 F1 | ROUGE-2 F1 | ROUGE-L F1 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| train | 67 | 1,189.1 | 421.4 | 2.97 | 0.3318 [0.3155, 0.3483] | 0.1292 [0.1170, 0.1412] | 0.1946 [0.1815, 0.2081] |
+| valid | 20 | 1,133.0 | 433.3 | 2.81 | 0.3484 [0.3192, 0.3776] | 0.1418 [0.1180, 0.1658] | 0.2053 [0.1837, 0.2270] |
+| clinicalnlp_taskB_test1 | 40 | 1,140.1 | 415.9 | 2.91 | 0.3349 [0.3122, 0.3572] | 0.1275 [0.1114, 0.1430] | 0.1916 [0.1745, 0.2094] |
+| clinicalnlp_taskC_test2 | 40 | 1,281.8 | 437.6 | 3.02 | 0.3295 [0.3055, 0.3529] | 0.1329 [0.1151, 0.1532] | 0.1963 [0.1756, 0.2183] |
+| clef_taskC_test3 | 40 | 1,239.3 | 438.8 | 2.91 | 0.3342 [0.3132, 0.3561] | 0.1303 [0.1147, 0.1455] | 0.1940 [0.1767, 0.2103] |
+
+Section-file aggregate means across the five public split families:
+
+| Section | Files | Records | Mean ROUGE-1 F1 | Mean ROUGE-L F1 |
+| --- | ---: | ---: | ---: | ---: |
+| assessment_and_plan | 5 | 207 | 0.1710 | 0.1043 |
+| subjective | 5 | 207 | 0.1749 | 0.1051 |
+| objective_exam | 5 | 207 | 0.0609 | 0.0469 |
+| objective_results | 5 | 207 | 0.0234 | 0.0189 |
+
+Interpretation: the full-note transcript/reference baseline is stable across train, validation, and held-out public splits. Section files have much lower lexical overlap because each reference section compresses and normalizes a narrow portion of the dialogue. That is useful engineering evidence for the next ACI step: model note generation should be scored with summarization metrics and factuality/source-support checks, while item extraction should use explicit item-level gold rather than note-derived pseudo-items.
+
+## ACI-Bench Reference-Derived Item Alignment
+
+The public JSON does not contain HandoffLens-native item-level `gold_items`, so the item-level scorer was also run as a harness diagnostic:
+
+1. derive item-like targets from the expert `tgt` note with the same profile-based candidate index;
+2. predict source-conversation candidates with the clinical-dialogue profile;
+3. score exact and relaxed item alignment.
+
+This is a reproducible public alignment diagnostic, not an official ACI-Bench leaderboard metric and not an expert item-extraction F1.
 
 | Split | Records | Reference-derived items | Source candidates | Exact F1 | Relaxed F1 | Relaxed precision | Relaxed recall | F1 bootstrap 95% CI |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | valid | 20 | 185 | 190 | 0.000 | 0.016 | 0.0158 | 0.0162 | [0.000, 0.0416] |
 | train | 67 | 599 | 640 | 0.000 | 0.0113 | 0.0109 | 0.0117 | [0.0043, 0.0190] |
+| clinicalnlp_taskB_test1 | 40 | 331 | 336 | 0.000 | 0.0090 | 0.0089 | 0.0091 | [0.0000, 0.0199] |
+| clinicalnlp_taskC_test2 | 40 | 395 | 414 | 0.000 | 0.0000 | 0.0000 | 0.0000 | [0.0000, 0.0000] |
+| clef_taskC_test3 | 40 | 397 | 367 | 0.000 | 0.0183 | 0.0191 | 0.0176 | [0.0025, 0.0392] |
 
 Interpretation: current `clinical-dialogue` candidate extraction does not align well with note-derived targets. The gap is expected because conversation evidence and clinical-note wording are not section-isomorphic. This argues for an ACI-specific transformation layer or an official note-generation metric, not for presenting these as item-level extraction benchmark scores.
 
@@ -84,10 +115,11 @@ ACI-Bench is intentionally not conformalized in the current public report. The e
 ## Commands Run
 
 ```bash
-npm run benchmark:adapt:aci -- --input <aci-valid.json> --split valid --out <aci-valid-records.json>
-npm run benchmark:derive-reference-gold -- --records <aci-valid-records.json> --out <aci-valid-reference-gold.json>
-npm run benchmark:predict:candidates -- --records <aci-valid-records.json> --out <aci-valid-predictions.json>
-npm run benchmark:score -- --records <aci-valid-reference-gold.json> --predictions <aci-valid-predictions.json> --bootstrap-repeats 1000 --out <aci-valid-score.json>
+npm run benchmark:adapt:aci -- --input <aci-json-file> --split <split-name> --out <split-records.json>
+npm run benchmark:score:aci-note -- --records <split-records.json> --prediction-field src --bootstrap-repeats 1000 --out <split-note-score.json>
+npm run benchmark:derive-reference-gold -- --records <split-records.json> --out <split-reference-gold.json>
+npm run benchmark:predict:candidates -- --records <split-records.json> --out <split-predictions.json>
+npm run benchmark:score -- --records <split-reference-gold.json> --predictions <split-predictions.json> --bootstrap-repeats 1000 --out <split-item-score.json>
 npm run benchmark:bioscope -- --input <bioscope>/abstracts.xml;<bioscope>/full_papers.xml --out <bioscope-assertions-public-text-v2.json>
 npm run benchmark:bioscope:conformal -- --input <bioscope>/abstracts.xml;<bioscope>/full_papers.xml --alpha 0.10 --out <bioscope-conformal-public-text.json>
 ```
@@ -96,6 +128,7 @@ npm run benchmark:bioscope:conformal -- --input <bioscope>/abstracts.xml;<biosco
 
 - These ACI numbers are not official ACI-Bench summarization scores.
 - These ACI numbers are not native expert entity-extraction F1.
+- The ACI note-shape baseline is not a HandoffLens model-generation score.
 - ACI conformal prediction is not claimed until the ACI task is reframed around note generation or claim-level source support.
 - BioScope scores evaluate sentence-level assertion cue classification, not exact scope-boundary extraction.
 - BioScope conformal coverage is marginal prediction-set coverage for the assertion subtask, not clinical safety coverage.

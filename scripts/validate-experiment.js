@@ -84,6 +84,7 @@ const requiredFiles = [
   "profiles/clinical-dialogue.json",
   "scripts/profile-config.js",
   "scripts/adapt-aci-bench.js",
+  "scripts/score-aci-note-generation.js",
   "scripts/score-benchmark-records.js",
   "scripts/derive-reference-gold.js",
   "scripts/predict-benchmark-candidates.js",
@@ -183,7 +184,7 @@ check("Evaluator interleaves paired configurations", evaluatorSource.includes("o
 check("Evaluator records per-attempt telemetry", ["attempt_audit", "provider_request_id", "returned_model", "finish_reason", "request_hash", "source_hash"].every((item) => evaluatorSource.includes(item)));
 check("Model evidence validator rejects credential and provider-error runs", ["Missing\\s+(COHERE|OPENROUTER)_API_KEY", "\\b401\\b", "\\b403\\b", "provider_error", "no_selected_results", "zero_scored"].every((item) => modelEvidenceValidatorSource.includes(item)));
 check("Provider-specific eval validation script is wired", readJson("package.json").scripts?.["eval:cohere-plus:validate"]?.includes("validate-model-evidence.js --input results/cohere-plus-eval.json"));
-check("Benchmark adapter and scoring scripts are wired", ["benchmark:adapt:aci", "benchmark:score", "benchmark:test", "benchmark:public:test", "benchmark:bioscope", "benchmark:bioscope:conformal", "benchmark:derive-reference-gold", "benchmark:predict:candidates", "benchmark:validate"].every((key) => readJson("package.json").scripts?.[key]));
+check("Benchmark adapter and scoring scripts are wired", ["benchmark:adapt:aci", "benchmark:score:aci-note", "benchmark:score", "benchmark:test", "benchmark:public:test", "benchmark:bioscope", "benchmark:bioscope:conformal", "benchmark:derive-reference-gold", "benchmark:predict:candidates", "benchmark:validate"].every((key) => readJson("package.json").scripts?.[key]));
 check("Private confirmatory cohorts are ignored", /^eval\/confirmatory_\*\.json$/m.test(gitignore) && /^eval\/confirmatory_\*\.json$/m.test(dockerignore));
 check("LLM judge is blinded by default", judgeSource.includes("const blind = !Boolean(args.unblinded)"));
 
