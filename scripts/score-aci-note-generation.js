@@ -180,11 +180,12 @@ function mean(values) {
 
 function main() {
   const args = parseArgs(process.argv.slice(2));
-  if (!args.input) {
-    console.error("--input is required");
+  const input = args.input || args.records;
+  if (!input) {
+    console.error("--input or --records is required");
     process.exit(1);
   }
-  const report = scoreAciNoteGeneration(readRows(args.input), {
+  const report = scoreAciNoteGeneration(readRows(input), {
     split: args.split,
     predictionField: args["prediction-field"],
     bootstrapRepeats: args["bootstrap-repeats"],

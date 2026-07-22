@@ -5,7 +5,7 @@ const path = require("node:path");
 const { detectAssertionStatus } = require("./clinical-validation-signals");
 
 function parseArgs(argv) {
-  const args = { out: "results/bioscope-assertions.json", corpus: "all" };
+  const args = { out: "results/bioscope-assertions.json", corpus: "all", "target-mode": "sentence" };
   for (let i = 0; i < argv.length; i += 1) {
     const item = argv[i];
     if (!item.startsWith("--")) continue;
@@ -20,14 +20,16 @@ function parseArgs(argv) {
 function evaluateBioScopeAssertions(inputs, options = {}) {
   const files = expandInputs(inputs);
   const examples = options.examples || files.flatMap((filePath) => parseBioScopeXml(fs.readFileSync(filePath, "utf8"), filePath));
+  const targetMode = options.targetMode || options["target-mode"] || "sentence";
   const filtered = options.corpus && options.corpus !== "all"
     ? examples.filter((example) => example.corpus === options.corpus)
     : examples;
   const evaluated = filtered.map((example) => {
+    const assertionInput = assertionInputForExample(example, targetMode);
     const detectedRaw = detectAssertionStatus({
-      sourceText: example.text,
-      quote: example.scope_text || example.text,
-      label: example.scope_text || example.text,
+      sourceText: assertionInput.sourceText,
+      quote: assertionInput.quote,
+      label: assertionInput.label,
       windowChars: 220,
     }).status;
     return {
@@ -41,12 +43,24 @@ function evaluateBioScopeAssertions(inputs, options = {}) {
     generated_at: new Date().toISOString(),
     schema_version: "bioscope-assertion-eval-v1",
     corpus: options.corpus || "all",
+    target_mode: targetMode,
+    uses_gold_scope_text: targetMode === "scope",
     files: files.map((filePath) => path.basename(filePath)),
     summary: summarize(evaluated, labels),
     by_corpus: Object.fromEntries([...new Set(evaluated.map((item) => item.corpus))].sort().map((corpus) => [corpus, summarize(evaluated.filter((item) => item.corpus === corpus), labels)])),
     confusion: confusion(evaluated, labels),
-    interpretation: "Sentence-level BioScope cue benchmark. Gold labels collapse negation to absent, speculation to possible, and unmarked sentences to present. This evaluates assertion cue behavior, not full scope boundary detection.",
+    interpretation: targetMode === "scope"
+      ? "Scope-assisted BioScope cue diagnostic. Gold labels collapse negation to absent, speculation to possible, and unmarked sentences to present; the detector receives the BioScope xcope text as its quote. This is not a standard BioScope scope-boundary result and is not the primary sentence-only benchmark."
+      : "Sentence-only BioScope cue benchmark. Gold labels collapse negation to absent, speculation to possible, and unmarked sentences to present. This evaluates assertion cue behavior from sentence text, not full scope boundary detection.",
   };
+}
+
+function assertionInputForExample(example, targetMode = "sentence") {
+  if (targetMode === "scope") {
+    const target = example.scope_text || example.text;
+    return { sourceText: example.text, quote: target, label: target };
+  }
+  return { sourceText: example.text, quote: example.text, label: example.text };
 }
 
 function expandInputs(inputs) {
@@ -191,11 +205,11 @@ function main() {
     console.error("--input is required; use semicolon-separated XML paths or directories");
     process.exit(1);
   }
-  const report = evaluateBioScopeAssertions(inputs, { corpus: args.corpus });
+  const report = evaluateBioScopeAssertions(inputs, { corpus: args.corpus, targetMode: args["target-mode"] });
   fs.mkdirSync(path.dirname(args.out), { recursive: true });
   fs.writeFileSync(args.out, `${JSON.stringify(report, null, 2)}\n`);
   console.log(JSON.stringify(report.summary, null, 2));
 }
 
 if (require.main === module) main();
-module.exports = { evaluateBioScopeAssertions, parseBioScopeXml, collapseStatus };
+module.exports = { evaluateBioScopeAssertions, parseBioScopeXml, collapseStatus, assertionInputForExample };

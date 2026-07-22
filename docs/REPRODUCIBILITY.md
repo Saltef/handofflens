@@ -45,10 +45,12 @@ npm run sample:dataset:all
 
 External benchmark corpora should be downloaded separately under the ignored local `benchmark_data/` directory. The Docker services mount that directory read-only at `/benchmarks`; no public or DUA-gated corpus files are copied into the image.
 
-Example BioScope conformal run:
+Example BioScope assertion, baseline, and conformal runs:
 
 ```bash
-docker compose --profile benchmark run --rm benchmark npm run benchmark:bioscope:conformal -- --input "/benchmarks/bioscope/abstracts.xml;/benchmarks/bioscope/full_papers.xml" --alpha 0.10 --out results/bioscope-conformal-public-text.json
+docker compose --profile benchmark run --rm benchmark npm run benchmark:bioscope -- --input "/benchmarks/bioscope/abstracts.xml;/benchmarks/bioscope/full_papers.xml" --target-mode sentence --out results/bioscope-assertions-public-text.json
+docker compose --profile benchmark run --rm benchmark npm run benchmark:bioscope:baselines -- --input "/benchmarks/bioscope/abstracts.xml;/benchmarks/bioscope/full_papers.xml" --target-mode sentence --out results/bioscope-baselines-public-text.json
+docker compose --profile benchmark run --rm benchmark npm run benchmark:bioscope:conformal -- --input "/benchmarks/bioscope/abstracts.xml;/benchmarks/bioscope/full_papers.xml" --target-mode sentence --alpha 0.10 --out results/bioscope-conformal-public-text.json
 ```
 
 Example ACI adapter run:
@@ -56,6 +58,7 @@ Example ACI adapter run:
 ```bash
 docker compose --profile benchmark run --rm benchmark npm run benchmark:adapt:aci -- --input /benchmarks/aci/aci-valid.json --split valid --out results/aci-valid-records.json
 docker compose --profile benchmark run --rm benchmark npm run benchmark:score:aci-note -- --records results/aci-valid-records.json --prediction-field src --bootstrap-repeats 1000 --out results/aci-valid-note-score.json
+docker compose --profile benchmark run --rm benchmark npm run benchmark:aci-note:baselines -- --records results/aci-valid-records.json --split valid --bootstrap-repeats 1000 --out results/aci-valid-note-baselines.json
 ```
 
 For a model note-generation run, write model outputs into a text field such as `generated_note` and use that field instead of `src`. The `src` setting is only a transcript/reference overlap baseline and ingestion diagnostic.

@@ -22,14 +22,35 @@ Important limitation: ACI-Bench reference notes are not item-level extraction go
 npm run benchmark:score:aci-note -- --records eval/aci_bench_records.json --prediction-field generated_note --out results/aci-note-score.json
 ```
 
-It reports per-case and aggregate ROUGE-1, ROUGE-2, ROUGE-L precision/recall/F1, mean prediction/reference token counts, mean compression ratio, and case-bootstrap F1 intervals. The requested `--prediction-field` is strict: rows missing that field are skipped rather than silently falling back to the transcript.
+It reports per-case and aggregate ROUGE-1, ROUGE-2, ROUGE-L precision/recall/F1, mean prediction/reference token counts, mean compression ratio, and case-bootstrap F1 intervals. The requested `--prediction-field` is strict: rows missing that field are skipped rather than silently falling back to the transcript. The runner accepts either `--records` or `--input`.
 
 Two usage modes should remain separate:
 
 - `--prediction-field src` is a transcript/reference overlap baseline and ingestion diagnostic.
 - `--prediction-field generated_note` or another model-output field is the benchmark-shaped path for actual note-generation evaluation.
 
-The scorer does not judge clinical factuality, hallucination, or source support. Those need separate groundedness and review checks.
+The ROUGE scorer does not judge clinical factuality, hallucination, or source support. Those need separate groundedness and review checks.
+
+## ACI Extractive Baselines and Source Support
+
+The public repo includes deterministic ACI note baselines:
+
+```bash
+npm run benchmark:generate:aci-note -- --records eval/aci_bench_records.json --method tail_reference_length --out results/aci-tail-records.json
+npm run benchmark:score:aci-factuality -- --records results/aci-tail-records.json --prediction-field generated_note --out results/aci-tail-source-support.json
+npm run benchmark:aci-note:baselines -- --records eval/aci_bench_records.json --split valid --out results/aci-note-baseline-comparison.json
+```
+
+The comparison runner evaluates:
+
+- `source_full`: full transcript diagnostic only;
+- `lead_reference_length`: first source tokens up to the reference-note length;
+- `tail_reference_length`: final source tokens up to the reference-note length;
+- `cue_sentence_extractive`: source sentences with medication, follow-up, result, assessment, and procedure cues.
+
+It reports ROUGE plus lexical source-support proxies: source-token support, source-bigram support, novel-token rate, and extractive-sentence rate. These are groundedness diagnostics, not clinical factuality metrics.
+
+Current design implication: full-note ACI splits favor `tail_reference_length`, but section files are position-dependent. A model-based ACI result should beat the compressed deterministic baseline for the same split while maintaining high source support.
 
 ## Item-Level Scorer
 
@@ -50,3 +71,17 @@ The scorer reports:
 - per-domain exact and relaxed summaries.
 
 If no `gold_items` are present, the scorer exits unscored rather than producing fake benchmark numbers.
+
+## BioScope Assertion Runners
+
+BioScope assertion evaluation is intentionally a collapsed sentence-label task, not the standard BioScope scope-boundary task.
+
+```bash
+npm run benchmark:bioscope -- --input "<bioscope>/abstracts.xml;<bioscope>/full_papers.xml" --target-mode sentence --out results/bioscope-assertions.json
+npm run benchmark:bioscope:baselines -- --input "<bioscope>/abstracts.xml;<bioscope>/full_papers.xml" --target-mode sentence --out results/bioscope-baselines.json
+npm run benchmark:bioscope:conformal -- --input "<bioscope>/abstracts.xml;<bioscope>/full_papers.xml" --target-mode sentence --alpha 0.10 --out results/bioscope-conformal.json
+```
+
+Use `--target-mode sentence` for the primary public result. `--target-mode scope` is a scope-assisted diagnostic because it supplies BioScope `xcope` text to the detector. Do not use the scope-assisted number as the headline assertion benchmark.
+
+The baseline runner compares majority-present, NegEx-style, ConText-style, and HandoffLens assertion methods on the same collapsed task. The included NegEx/ConText rows are transparent approximations, not official pyConTextNLP package results.

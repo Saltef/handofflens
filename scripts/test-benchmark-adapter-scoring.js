@@ -4,6 +4,9 @@ const assert = require("node:assert/strict");
 const { adaptAciBenchRows, parseCsvRows } = require("./adapt-aci-bench");
 const { scoreBenchmarkRecords } = require("./score-benchmark-records");
 const { scoreAciNoteGeneration, rougeN, rougeL } = require("./score-aci-note-generation");
+const { scoreAciNoteFactuality } = require("./score-aci-note-factuality");
+const { generateAciNoteBaselineRows } = require("./generate-aci-note-baselines");
+const { evaluateAciNoteBaselines } = require("./evaluate-aci-note-baselines");
 
 const csvRows = parseCsvRows('id,dialogue,note\n"case-1","Doctor: Start aspirin. Follow up in one week.","Start aspirin; follow up in one week."\n');
 assert.equal(csvRows.length, 2);
@@ -83,4 +86,21 @@ assert.equal(noteScore.summary.cases, 2);
 assert.ok(noteScore.summary.metrics.rouge1.f1 > 0.75);
 assert.ok(Array.isArray(noteScore.summary.metrics.rougeL.f1_bootstrap_ci95));
 
-console.log("PASS benchmark adapter and scoring checks (22 assertions)");
+const generated = generateAciNoteBaselineRows([
+  {
+    record_id: "g1",
+    source_text: "Doctor: Start aspirin today. Doctor: Follow up next week. Patient: Thank you.",
+    reference_text: "Start aspirin today. Follow up next week.",
+  },
+], { method: "cue_sentence_extractive", predictionField: "generated_note" });
+assert.equal(generated.records.length, 1);
+assert.match(generated.records[0].generated_note, /Start aspirin/);
+const factuality = scoreAciNoteFactuality(generated.records, { split: "unit", predictionField: "generated_note" });
+assert.equal(factuality.summary.cases, 1);
+assert.equal(factuality.summary.mean_source_token_support_rate, 1);
+const noteBaselines = evaluateAciNoteBaselines(generated.records, { split: "unit", methods: ["source_full", "tail_reference_length"], bootstrapRepeats: 20 });
+assert.equal(noteBaselines.schema_version, "aci-note-baseline-comparison-v1");
+assert.equal(noteBaselines.ranking.length, 2);
+assert.ok(noteBaselines.selected_method);
+
+console.log("PASS benchmark adapter and scoring checks (31 assertions)");

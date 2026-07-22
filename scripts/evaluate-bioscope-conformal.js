@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const crypto = require("node:crypto");
 const { detectAssertionStatus } = require("./clinical-validation-signals");
-const { parseBioScopeXml, collapseStatus } = require("./evaluate-bioscope-assertions");
+const { parseBioScopeXml, collapseStatus, assertionInputForExample } = require("./evaluate-bioscope-assertions");
 
 const LABELS = ["present", "absent", "possible"];
 
@@ -15,6 +15,7 @@ function parseArgs(argv) {
     alpha: "0.10",
     "calibration-fraction": "0.50",
     seed: "handofflens-bioscope-conformal-v1",
+    "target-mode": "sentence",
   };
   for (let i = 0; i < argv.length; i += 1) {
     const item = argv[i];
@@ -31,13 +32,14 @@ function evaluateBioScopeConformal(inputs, options = {}) {
   const alpha = numberOption(options.alpha, 0.10);
   const calibrationFraction = numberOption(options.calibrationFraction ?? options["calibration-fraction"], 0.50);
   const seed = String(options.seed || "handofflens-bioscope-conformal-v1");
+  const targetMode = options.targetMode || options["target-mode"] || "sentence";
   const files = expandInputs(inputs);
   const examples = options.examples || files.flatMap((filePath) => parseBioScopeXml(fs.readFileSync(filePath, "utf8"), filePath));
   const filtered = (options.corpus && options.corpus !== "all")
     ? examples.filter((example) => example.corpus === options.corpus)
     : examples;
   const rows = filtered.map((example) => {
-    const scores = assertionScores(example);
+    const scores = assertionScores(example, { targetMode });
     const prediction = bestLabel(scores);
     return {
       ...example,
@@ -59,6 +61,8 @@ function evaluateBioScopeConformal(inputs, options = {}) {
     generated_at: new Date().toISOString(),
     schema_version: "bioscope-conformal-assertion-v1",
     corpus: options.corpus || "all",
+    target_mode: targetMode,
+    uses_gold_scope_text: targetMode === "scope",
     files: files.map((filePath) => path.basename(filePath)),
     alpha,
     target_coverage: 1 - alpha,
@@ -83,7 +87,9 @@ function evaluateBioScopeConformal(inputs, options = {}) {
     },
     baseline: summarizeHardLabels(split.test),
     by_corpus: Object.fromEntries([...new Set(split.test.map((item) => item.corpus))].sort().map((corpus) => [corpus, summarizeConformal(labelConditionalRows.filter((item) => item.corpus === corpus))])),
-    interpretation: "Split-conformal assertion prediction sets over BioScope sentence labels. This controls marginal prediction-set coverage under exchangeability of the calibration and test examples. Singleton sets are automatically accepted; multi-label sets are abstentions/escalations. This is not a clinical safety guarantee.",
+    interpretation: targetMode === "scope"
+      ? "Scope-assisted split-conformal assertion prediction sets over collapsed BioScope labels. The detector receives BioScope xcope text, so this is a diagnostic for calibrated abstention behavior, not the primary sentence-only benchmark and not a standard BioScope scope-boundary result."
+      : "Sentence-only split-conformal assertion prediction sets over collapsed BioScope labels. This controls marginal prediction-set coverage under exchangeability of the calibration and test examples. Singleton sets are automatically accepted; multi-label sets are abstentions/escalations. This is not a clinical safety guarantee.",
     score_model: "Transparent lexical assertion score derived from the same cue families as the hard assertion detector, with lower confidence for conflicting or weak cue evidence.",
   };
 }
@@ -102,15 +108,17 @@ function applyPredictionSets(rows, quantileForLabel, method) {
   });
 }
 
-function assertionScores(example) {
+function assertionScores(example, options = {}) {
+  const targetMode = options.targetMode || "sentence";
+  const assertionInput = assertionInputForExample(example, targetMode);
   const detectedRaw = detectAssertionStatus({
-    sourceText: example.text,
-    quote: example.scope_text || example.text,
-    label: example.scope_text || example.text,
+    sourceText: assertionInput.sourceText,
+    quote: assertionInput.quote,
+    label: assertionInput.label,
     windowChars: 220,
   }).status;
   const detected = collapseStatus(detectedRaw);
-  const text = normalize(`${example.scope_text || ""} ${example.text || ""}`);
+  const text = normalize(targetMode === "scope" ? `${example.scope_text || ""}` : `${example.text || ""}`);
   const neg = cueStrength(text, [
     /\bno\b/g, /\bnot\b/g, /\bwithout\b/g, /\bdenies?\b/g, /\bdenied\b/g,
     /\bnegative for\b/g, /\bno evidence of\b/g, /\bruled out\b/g, /\babsence of\b/g,
@@ -287,6 +295,7 @@ function main() {
     alpha: args.alpha,
     calibrationFraction: args["calibration-fraction"],
     seed: args.seed,
+    targetMode: args["target-mode"],
   });
   fs.mkdirSync(path.dirname(args.out), { recursive: true });
   fs.writeFileSync(args.out, `${JSON.stringify(report, null, 2)}\n`);

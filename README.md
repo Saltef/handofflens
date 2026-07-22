@@ -54,7 +54,7 @@ This public repository contains:
 - ongoing selective-routing/conformal experiments using proxy labels;
 - config-driven extraction profiles for discharge summaries and dialogue-like records;
 - a benchmark manifest scaffold that blocks unsupported public benchmark claims;
-- ACI-Bench and BioScope public benchmark adapters/scorers that refuse unsupported headline results.
+- ACI-Bench and BioScope public benchmark adapters/scorers, including ACI extractive note baselines, source-support proxies, BioScope same-task baselines, and explicit non-claim boundaries.
 
 It does not contain source clinical records, private cohorts, case-level private outputs, reviewer packets, API keys, or completed human annotations.
 
@@ -103,7 +103,7 @@ The Docker image does not copy `.env`, raw clinical data, benchmark corpora, gen
 | Source-fidelity review packets | Prepared | Human factual review is pending |
 | Handoff atoms and safety typing | Added | Repairs atom/category projection failures and exposes typed safety misses |
 | Conformal/selective routing | Ongoing appendix | Uses proxy labels for escalation-policy research, not clinical safety |
-| Benchmark/profile close-out | Public benchmark path added | ACI public JSON ingestion and note-shape diagnostics are reported; BioScope assertion and conformal results are reported; no clinical-performance claim is made |
+| Benchmark/profile close-out | Public benchmark path added | ACI public JSON ingestion, compressed note baselines, and source-support checks are reported; BioScope sentence-only assertion, same-task baselines, and conformal results are reported; no clinical-performance claim is made |
 
 The public figure set is reproducible from `eval/public_results_summary.json` by running `python3 scripts/make-results-figure.py` after `python3 -m pip install -r requirements.txt`.
 

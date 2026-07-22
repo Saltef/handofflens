@@ -1,6 +1,6 @@
 # Public Benchmark Run Results - 2026-07-22
 
-This note records the public benchmark execution after the profile/adapter and Docker refactor. It contains aggregate results only; no downloaded corpus files or case-level records are committed.
+This note records the current public benchmark execution after the benchmark, Docker, and assertion-baseline refactor. It contains aggregate results only. No downloaded corpus files, raw case records, private provider outputs, API keys, or reviewer packets are committed.
 
 ## Data Access
 
@@ -8,13 +8,13 @@ This note records the public benchmark execution after the profile/adapter and D
 - BioScope was downloaded from the public BioScope corpus zip for research use.
 - i2b2 and n2c2 datasets were not present locally and remain DUA-gated. No i2b2/n2c2 scores are claimed here.
 
-## ACI-Bench Ingestion and Note-Shape Diagnostic
+## ACI-Bench Note Generation
 
-ACI-Bench JSON records contain `src` conversations, `tgt` expert reference notes, and `file` ids. The adapter maps those fields into HandoffLens benchmark records as `source_text`, `reference_text`, and stable ids. A separate note-generation scorer computes ROUGE-1, ROUGE-2, ROUGE-L, token counts, compression ratio, and case-bootstrap confidence intervals.
+ACI-Bench JSON records contain `src` conversations, `tgt` expert reference notes, and `file` ids. The adapter maps those fields into HandoffLens benchmark records as `source_text`, `reference_text`, and stable ids. The note-generation scorer computes ROUGE-1, ROUGE-2, ROUGE-L, token counts, compression ratio, and case-bootstrap confidence intervals.
 
-The current run scores the source transcript (`src`) against the reference note (`tgt`). This is a task-shape baseline and ingestion check, not a model note-generation result. It answers: after ingesting the complete public JSON corpus, how much lexical overlap exists between the conversation and expert note before any summarizer is applied?
+The transcript/reference baseline scores the full source transcript (`src`) against the reference note (`tgt`). This is an ingestion and task-shape diagnostic, not a generated-note model score.
 
-Canonical full-note splits:
+Canonical full-note transcript/reference baseline:
 
 | Split | Records | Mean source tokens | Mean reference tokens | Compression ratio | ROUGE-1 F1 | ROUGE-2 F1 | ROUGE-L F1 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -24,16 +24,39 @@ Canonical full-note splits:
 | clinicalnlp_taskC_test2 | 40 | 1,281.8 | 437.6 | 3.02 | 0.3295 [0.3055, 0.3529] | 0.1329 [0.1151, 0.1532] | 0.1963 [0.1756, 0.2183] |
 | clef_taskC_test3 | 40 | 1,239.3 | 438.8 | 2.91 | 0.3342 [0.3132, 0.3561] | 0.1303 [0.1147, 0.1455] | 0.1940 [0.1767, 0.2103] |
 
+### Extractive Generated-Note Baselines
+
+The new ACI baseline runner evaluates compressed deterministic note candidates, then scores both ROUGE and lexical source support. `source_full` remains visible as a diagnostic baseline, but the selected method must be a compressed generated-note baseline.
+
+Methods:
+
+- `lead_reference_length`: first source tokens up to the reference-note token count.
+- `tail_reference_length`: final source tokens up to the reference-note token count.
+- `cue_sentence_extractive`: source sentences with medication, follow-up, result, assessment, and procedure cues up to the reference-note token count.
+- `source_full`: full transcript diagnostic only.
+
+Canonical full-note compressed baseline result:
+
+| Split | Selected compressed method | Records | ROUGE-1 F1 | ROUGE-2 F1 | ROUGE-L F1 | Source-full ROUGE-L F1 | Mean generated tokens | Source token support |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| train | tail_reference_length | 67 | 0.3632 | 0.1126 | 0.1863 | 0.1946 | 421.4 | 1.000 |
+| valid | tail_reference_length | 20 | 0.3895 | 0.1340 | 0.2023 | 0.2053 | 433.3 | 1.000 |
+| clinicalnlp_taskB_test1 | tail_reference_length | 40 | 0.3545 | 0.1027 | 0.1725 | 0.1916 | 416.0 | 1.000 |
+| clinicalnlp_taskC_test2 | tail_reference_length | 40 | 0.3692 | 0.1113 | 0.1781 | 0.1963 | 437.6 | 1.000 |
+| clef_taskC_test3 | tail_reference_length | 40 | 0.3668 | 0.1131 | 0.1827 | 0.1940 | 438.8 | 1.000 |
+
 Section-file aggregate means across the five public split families:
 
-| Section | Files | Records | Mean ROUGE-1 F1 | Mean ROUGE-L F1 |
-| --- | ---: | ---: | ---: | ---: |
-| assessment_and_plan | 5 | 207 | 0.1710 | 0.1043 |
-| subjective | 5 | 207 | 0.1749 | 0.1051 |
-| objective_exam | 5 | 207 | 0.0609 | 0.0469 |
-| objective_results | 5 | 207 | 0.0234 | 0.0189 |
+| Section | Files | Best compressed method pattern | Mean selected ROUGE-L F1 | Mean source-full ROUGE-L F1 |
+| --- | ---: | --- | ---: | ---: |
+| assessment_and_plan | 5 | tail_reference_length: 5/5 | 0.2027 | 0.1043 |
+| subjective | 5 | lead_reference_length: 5/5 | 0.1806 | 0.1051 |
+| objective_exam | 5 | cue_sentence_extractive: 5/5 | 0.1055 | 0.0469 |
+| objective_results | 5 | cue_sentence_extractive: 3/5; tail_reference_length: 2/5 | 0.0584 | 0.0189 |
 
-Interpretation: the full-note transcript/reference baseline is stable across train, validation, and held-out public splits. Section files have much lower lexical overlap because each reference section compresses and normalizes a narrow portion of the dialogue. That is useful engineering evidence for the next ACI step: model note generation should be scored with summarization metrics and factuality/source-support checks, while item extraction should use explicit item-level gold rather than note-derived pseudo-items.
+Interpretation: for full-note ACI files, the final reference-length slice is the strongest compressed deterministic baseline. It is close to the full-transcript ROUGE-L baseline, has higher ROUGE-1, and stays lexically source-supported. For section files, the best baseline changes by section: subjective content is early, assessment/plan content is late, and objective sections benefit from cue-based extraction. A model-based ACI result should beat these simple baselines while preserving source support. If it cannot, the model path is not adding enough value.
+
+Trade-off: extractive baselines have excellent lexical groundedness by construction, but they are not clinically adequate notes. They copy source wording, cannot normalize or reorganize like an expert note, and ROUGE does not establish factual correctness.
 
 ## ACI-Bench Reference-Derived Item Alignment
 
@@ -53,7 +76,7 @@ This is a reproducible public alignment diagnostic, not an official ACI-Bench le
 | clinicalnlp_taskC_test2 | 40 | 395 | 414 | 0.000 | 0.0000 | 0.0000 | 0.0000 | [0.0000, 0.0000] |
 | clef_taskC_test3 | 40 | 397 | 367 | 0.000 | 0.0183 | 0.0191 | 0.0176 | [0.0025, 0.0392] |
 
-Interpretation: current `clinical-dialogue` candidate extraction does not align well with note-derived targets. The gap is expected because conversation evidence and clinical-note wording are not section-isomorphic. This argues for an ACI-specific transformation layer or an official note-generation metric, not for presenting these as item-level extraction benchmark scores.
+Interpretation: current `clinical-dialogue` candidate extraction does not align well with note-derived targets. The gap is expected because conversation evidence and clinical-note wording are not section-isomorphic. This result should not be used as the core extraction claim.
 
 ## BioScope Assertion Benchmark
 
@@ -63,73 +86,75 @@ BioScope XML includes gold negation/speculation cues and scopes. The evaluator c
 - `possible` for speculation cues;
 - `present` for unmarked sentences.
 
-The public clinical XML is lexically redacted with `*`, so it is not a fair cue-word benchmark for a lexical assertion detector. The fair public-text headline below uses `abstracts.xml` plus `full_papers.xml`.
+The primary result is now sentence-only: the detector receives sentence text, not BioScope `xcope` text. The previous scope-assisted result is retained only as a diagnostic because it gives the detector gold-derived scope text.
 
-| Corpus slice | Sentences | Accuracy | Macro-F1 | Present F1 | Absent F1 | Possible F1 |
+| Corpus slice / target mode | Sentences | Accuracy | Macro-F1 | Present F1 | Absent F1 | Possible F1 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| abstracts + full papers | 14,541 | 0.8955 | 0.8326 | 0.9360 | 0.7642 | 0.7977 |
-| all XML, including redacted clinical | 20,924 | 0.8528 | 0.7336 | 0.9100 | 0.6066 | 0.6842 |
+| abstracts + full papers, sentence-only | 14,541 | 0.8669 | 0.7719 | 0.9176 | 0.6394 | 0.7587 |
+| abstracts + full papers, scope-assisted diagnostic | 14,541 | 0.8955 | 0.8326 | 0.9360 | 0.7642 | 0.7977 |
+| redacted clinical XML, sentence-only diagnostic | 6,383 | 0.7556 | 0.2869 | 0.8608 | 0.0000 | 0.0000 |
 
-BioScope public-text per-class intervals:
+The redacted clinical XML is not a valid clinical assertion benchmark for this lexical detector. The cue-bearing clinical text is masked with `*`, so all transparent methods collapse to majority-class behavior.
+
+BioScope public-text sentence-only per-class intervals:
 
 | Class | Precision | Precision 95% CI | Recall | Recall 95% CI | F1 |
 | --- | ---: | --- | ---: | --- | ---: |
-| present | 0.9170 | [0.9116, 0.9220] | 0.9559 | [0.9518, 0.9597] | 0.9360 |
-| absent | 0.8796 | [0.8597, 0.8969] | 0.6756 | [0.6517, 0.6985] | 0.7642 |
-| possible | 0.8110 | [0.7953, 0.8258] | 0.7847 | [0.7686, 0.8000] | 0.7977 |
+| present | 0.8823 | [0.8762, 0.8882] | 0.9559 | [0.9518, 0.9597] | 0.9176 |
+| absent | 0.8584 | [0.8343, 0.8795] | 0.5094 | [0.4844, 0.5344] | 0.6394 |
+| possible | 0.7973 | [0.7807, 0.8130] | 0.7237 | [0.7062, 0.7405] | 0.7587 |
 
-Interpretation: the expanded uncertainty cue vocabulary materially improves speculation detection while preserving existing tests. Remaining weakness is negation recall, especially nonlocal or structurally scoped negation.
+### Same-Task Baselines
+
+The same collapsed BioScope task was run against transparent baselines:
+
+| Method | Accuracy | Macro-F1 | Absent recall | Possible recall | Interpretation |
+| --- | ---: | ---: | ---: | ---: | --- |
+| present_majority | 0.7143 | 0.2778 | 0.0000 | 0.0000 | Dominant-class anchor. |
+| negex_style | 0.7975 | 0.5587 | 0.8502 | 0.0000 | Negation-only cue baseline; no uncertainty class. |
+| handofflens_assertion | 0.8669 | 0.7719 | 0.5094 | 0.7237 | Current detector in fair sentence-only mode. |
+| context_style | 0.9255 | 0.8823 | 0.8235 | 0.7954 | Transparent ConText-style cue baseline, not official pyConTextNLP. |
+
+Interpretation: this is the most important design finding from the new run. The current HandoffLens assertion detector is meaningfully above majority and negation-only baselines, but it does not beat a simpler ConText-style cue baseline on this collapsed public-text task. The best fix is to make the production assertion layer hybrid: use the simple cue baseline as a high-recall front end for BioScope-like negation/speculation cues, then apply HandoffLens target-aware context checks for extracted item quotes and assertion conflicts.
+
+Trade-off: the ConText-style baseline is stronger on this adjacent-domain cue task because BioScope labels are cue-driven. It may over-trigger in clinical notes with pseudo-negation, templated lists, family history, historical context, or multiple findings in the same sentence. It should improve the assertion detector, not replace source-grounded item review.
 
 ## BioScope Conformal Assertion Layer
 
-The benchmark path now includes a split-conformal wrapper for BioScope assertion labels:
-
-```bash
-npm run benchmark:bioscope:conformal -- --input <bioscope>/abstracts.xml;<bioscope>/full_papers.xml --alpha 0.10 --out <bioscope-conformal-public-text.json>
-```
-
-What it measures:
-
-- A transparent lexical score is assigned to each assertion label: `present`, `absent`, and `possible`.
-- A document-hash split separates calibration examples from held-out test examples when document ids are available.
-- The calibration split chooses a conformal nonconformity threshold for the requested alpha.
-- Test examples receive prediction sets. Singleton sets are accepted; multi-label sets are abstentions/escalations.
-
-The resulting report includes target coverage, empirical held-out coverage, prediction-set size, singleton acceptance rate, abstention rate, accepted accuracy, and class-conditional coverage. The runner reports both a pooled global conformal threshold and a label-conditional threshold.
-
-Public-text BioScope conformal run at alpha 0.10:
+The split-conformal wrapper was rerun in sentence-only mode at alpha 0.10:
 
 | Method | Test sentences | Empirical coverage | Mean set size | Singleton accept rate | Abstention rate | Accepted accuracy | Present coverage | Absent coverage | Possible coverage |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Global split conformal | 7,606 | 0.9105 | 1.022 | 0.9780 | 0.0220 | 0.9095 | 0.9556 | 0.7888 | 0.8053 |
-| Label-conditional split conformal | 7,606 | 0.9511 | 2.452 | 0.2648 | 0.7352 | 0.7726 | 0.9488 | 0.9488 | 0.9613 |
+| Global split conformal | 7,606 | 0.9097 | 1.066 | 0.9336 | 0.0664 | 0.9072 | 0.9556 | 0.8088 | 0.7895 |
+| Label-conditional split conformal | 7,606 | 0.9508 | 2.456 | 0.2637 | 0.7363 | 0.6715 | 0.9488 | 0.9500 | 0.9592 |
 
-Calibration/test split: document-hash split, 6,935 calibration sentences across 641 documents and 7,606 test sentences across 641 documents.
+Hard-label held-out baseline: accuracy 0.8654, macro-F1 0.7715.
 
-This is a useful reliability layer for the BioScope assertion subtask, but it should be read narrowly. It controls marginal prediction-set coverage under the exchangeability assumption for the calibration/test split. It does not provide conditional per-class guarantees, does not repair scope-boundary errors, and does not establish clinical safety. The main trade-off is yield: stronger coverage targets generally increase abstention and reduce the fraction of automatically accepted assertion labels.
-
-Interpretation: the global threshold is operationally attractive because it preserves high singleton yield and improves accepted accuracy relative to the hard-label baseline on the held-out split, but it badly undercovers the minority `absent` and `possible` classes. The label-conditional threshold fixes that coverage gap, but only by returning large prediction sets and abstaining on most examples. For safety-facing clinical use, the label-conditional result is the more honest coverage audit; for automation, neither result is sufficient without a stronger calibrated assertion model.
-
-ACI-Bench is intentionally not conformalized in the current public report. The existing ACI path is a reference-derived alignment diagnostic rather than the native ACI-Bench note-generation task. Conformal prediction should be added to ACI only after the benchmark is reframed around note generation or a well-defined claim-support task; otherwise the conformal layer would calibrate the wrong target.
+Interpretation: the global threshold is operationally attractive but undercovers minority assertion classes. Label-conditional conformal calibration repairs the minority-class coverage problem, but abstains on most examples. For HandoffLens, this supports using conformal sets as an audit/escalation layer, not as a stand-alone safety guarantee.
 
 ## Commands Run
 
 ```bash
 npm run benchmark:adapt:aci -- --input <aci-json-file> --split <split-name> --out <split-records.json>
 npm run benchmark:score:aci-note -- --records <split-records.json> --prediction-field src --bootstrap-repeats 1000 --out <split-note-score.json>
+npm run benchmark:aci-note:baselines -- --records <split-records.json> --split <split-name> --bootstrap-repeats 1000 --out <split-aci-note-baseline-comparison.json>
 npm run benchmark:derive-reference-gold -- --records <split-records.json> --out <split-reference-gold.json>
 npm run benchmark:predict:candidates -- --records <split-records.json> --out <split-predictions.json>
 npm run benchmark:score -- --records <split-reference-gold.json> --predictions <split-predictions.json> --bootstrap-repeats 1000 --out <split-item-score.json>
-npm run benchmark:bioscope -- --input <bioscope>/abstracts.xml;<bioscope>/full_papers.xml --out <bioscope-assertions-public-text-v2.json>
-npm run benchmark:bioscope:conformal -- --input <bioscope>/abstracts.xml;<bioscope>/full_papers.xml --alpha 0.10 --out <bioscope-conformal-public-text.json>
+npm run benchmark:bioscope -- --input <bioscope>/abstracts.xml;<bioscope>/full_papers.xml --target-mode sentence --out <bioscope-assertions-public-text-sentence.json>
+npm run benchmark:bioscope:baselines -- --input <bioscope>/abstracts.xml;<bioscope>/full_papers.xml --target-mode sentence --out <bioscope-baselines-public-text-sentence.json>
+npm run benchmark:bioscope:conformal -- --input <bioscope>/abstracts.xml;<bioscope>/full_papers.xml --target-mode sentence --alpha 0.10 --out <bioscope-conformal-public-text-sentence.json>
 ```
 
 ## Non-Claims
 
-- These ACI numbers are not official ACI-Bench summarization scores.
-- These ACI numbers are not native expert entity-extraction F1.
-- The ACI note-shape baseline is not a HandoffLens model-generation score.
-- ACI conformal prediction is not claimed until the ACI task is reframed around note generation or claim-level source support.
-- BioScope scores evaluate sentence-level assertion cue classification, not exact scope-boundary extraction.
+- These ACI numbers are not official ACI-Bench model-generation leaderboard scores.
+- The compressed ACI baselines are not clinically adequate notes.
+- The ACI item-alignment numbers are not native expert entity-extraction F1.
+- BioScope scores evaluate a collapsed sentence-level assertion cue task, not exact scope-boundary extraction.
+- The BioScope 0.8326 scope-assisted diagnostic must not be used as the primary assertion result.
+- The public BioScope text result is adjacent-domain biomedical literature, not in-domain clinical-note validation.
+- The redacted BioScope clinical XML result is a data-redaction diagnostic, not clinical assertion performance.
 - BioScope conformal coverage is marginal prediction-set coverage for the assertion subtask, not clinical safety coverage.
+- The small transformer comparator was not run because no suitable local model/runtime was available in the public repo.
 - No i2b2 or n2c2 result is claimed without DUA-controlled data.

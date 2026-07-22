@@ -26,7 +26,7 @@ After external critique of the lexical-provenance metric, the automated semantic
 
 After a fresh credential-blocked public eval attempt, the repo also includes a model-evidence validity checker. It fails runs with missing provider keys, authorization failures, row errors, zero completed cases, unscored selected rows, or provider-error attempt audits. This makes the reporting boundary enforceable: a script run can exercise the evaluation path without becoming valid model-performance evidence.
 
-The public benchmark path now ingests the complete public ACI-Bench JSON release and the public BioScope XML files without committing corpus data. ACI-Bench is reported as an adapter and note-shape diagnostic until model-generated notes or item-level expert labels are available. BioScope is reported as a gold-label assertion benchmark with both hard-label and conformal prediction-set metrics.
+The public benchmark path now ingests the complete public ACI-Bench JSON release and the public BioScope XML files without committing corpus data. ACI-Bench now has native note-generation scoring, deterministic compressed baselines, and lexical source-support checks. BioScope now has sentence-only assertion scoring, same-task transparent baselines, scope-assisted diagnostics, and conformal prediction-set metrics.
 
 ## Architecture history
 
@@ -67,7 +67,7 @@ Levels 1-4 are represented in the current public artifact. Level-5 review packet
 - A source-grounded `handoff_atoms` layer that preserves atomic actions, targets, timing, thresholds, owners, instruction kind, safety type, and derived views before checking compatibility fields.
 - Deterministic atom/view canonicalization that reports raw-model F1 separately from post-canonicalization system F1.
 - A public demonstration of how to distinguish schema validity from evidence fidelity.
-- Public benchmark infrastructure for ACI-Bench note-generation scoring and BioScope assertion/conformal evaluation, with raw corpora kept out of Git.
+- Public benchmark infrastructure for ACI-Bench note-generation scoring, extractive baselines, source-support checks, and BioScope assertion/baseline/conformal evaluation, with raw corpora kept out of Git.
 - Ongoing proxy-risk routing work for escalation and review policies.
 
 ## What is not supportable today
@@ -79,6 +79,7 @@ Levels 1-4 are represented in the current public artifact. Level-5 review packet
 - Generalization to external hospitals.
 - Autonomous use.
 - Model superiority as a clinical conclusion.
+- In-domain clinical assertion performance, because public BioScope clinical text is redacted and i2b2/n2c2 data are DUA-gated.
 
 ## Next validation step
 

@@ -7,6 +7,7 @@ const { predictBenchmarkCandidates } = require("./predict-benchmark-candidates")
 const { scoreBenchmarkRecords } = require("./score-benchmark-records");
 const { evaluateBioScopeAssertions, parseBioScopeXml } = require("./evaluate-bioscope-assertions");
 const { evaluateBioScopeConformal } = require("./evaluate-bioscope-conformal");
+const { evaluateBioScopeBaselines } = require("./evaluate-bioscope-baselines");
 
 const aci = adaptAciBenchRows([
   {
@@ -33,13 +34,21 @@ assert.deepEqual(examples.slice(0, 3).map((item) => item.gold_status), ["absent"
 assert.equal(new Set(examples.map((item) => item.document_id)).size, 2);
 const report = evaluateBioScopeAssertions([], { corpus: "all", examples });
 assert.equal(report.summary.examples, 6);
+assert.equal(report.target_mode, "sentence");
 assert.ok(report.summary.macro_f1 > 0.6);
 const conformal = evaluateBioScopeConformal([], { corpus: "all", examples, alpha: 0.20, calibrationFraction: 0.50, seed: "unit-test" });
 assert.equal(conformal.schema_version, "bioscope-conformal-assertion-v1");
+assert.equal(conformal.target_mode, "sentence");
 assert.equal(conformal.split.strategy, "document_hash_split");
 assert.ok(conformal.split.calibration_examples > 0);
 assert.ok(conformal.split.test_examples > 0);
 assert.ok(conformal.summary.empirical_coverage >= 0 && conformal.summary.empirical_coverage <= 1);
 assert.ok(conformal.summary.singleton_acceptance_rate >= 0 && conformal.summary.singleton_acceptance_rate <= 1);
+const baselines = evaluateBioScopeBaselines([], { corpus: "all", examples });
+assert.equal(baselines.schema_version, "bioscope-baseline-comparison-v1");
+assert.equal(baselines.target_mode, "sentence");
+assert.ok(baselines.methods.present_majority.summary.accuracy >= 0);
+assert.ok(baselines.methods.context_style.summary.macro_f1 >= baselines.methods.present_majority.summary.macro_f1);
+assert.equal(baselines.comparators_not_run.length, 2);
 
 console.log("PASS public benchmark runner checks");
