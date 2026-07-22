@@ -7,6 +7,7 @@ const { scoreAciNoteGeneration, rougeN, rougeL } = require("./score-aci-note-gen
 const { scoreAciNoteFactuality } = require("./score-aci-note-factuality");
 const { generateAciNoteBaselineRows } = require("./generate-aci-note-baselines");
 const { evaluateAciNoteBaselines } = require("./evaluate-aci-note-baselines");
+const { evaluateAciNoteAttributionRepair, repairAciNoteAttributionRows } = require("./repair-aci-note-attribution");
 
 const csvRows = parseCsvRows('id,dialogue,note\n"case-1","Doctor: Start aspirin. Follow up in one week.","Start aspirin; follow up in one week."\n');
 assert.equal(csvRows.length, 2);
@@ -103,4 +104,41 @@ assert.equal(noteBaselines.schema_version, "aci-note-baseline-comparison-v1");
 assert.equal(noteBaselines.ranking.length, 2);
 assert.ok(noteBaselines.selected_method);
 
-console.log("PASS benchmark adapter and scoring checks (31 assertions)");
+const unsupportedGenerationRows = [
+  {
+    record_id: "repair-1",
+    source_text: [
+      "Doctor: Chest pain has resolved.",
+      "Doctor: Start aspirin 81 mg daily.",
+      "Doctor: Check potassium and creatinine in 3 days.",
+      "Patient: I am not taking warfarin.",
+    ].join(" "),
+    reference_text: "Chest pain has resolved. Start aspirin 81 mg daily. Check potassium and creatinine in 3 days.",
+    generated_note: "Chest pain has resolved. Start aspirin 81 mg daily. Start warfarin 5 mg nightly. Check potassium and creatinine in 3 days.",
+  },
+];
+const repaired = repairAciNoteAttributionRows(unsupportedGenerationRows, {
+  method: "guided_extractive",
+  minOverlap: 0.28,
+});
+assert.doesNotMatch(repaired[0].repaired_note, /Start warfarin 5 mg nightly/);
+assert.match(repaired[0].repaired_note, /Start aspirin 81 mg daily/);
+assert.match(repaired[0].repaired_note, /Check potassium and creatinine in 3 days/);
+assert.ok(repaired[0].attribution_repair.dropped_sentence_count >= 1);
+
+const beforeRepairSupport = scoreAciNoteFactuality(unsupportedGenerationRows, { split: "unit", predictionField: "generated_note" }).summary;
+const afterRepairSupport = scoreAciNoteFactuality(repaired, { split: "unit", predictionField: "repaired_note" }).summary;
+assert.ok(afterRepairSupport.mean_source_token_support_rate > beforeRepairSupport.mean_source_token_support_rate);
+assert.equal(afterRepairSupport.cases, 1);
+
+const repairReport = evaluateAciNoteAttributionRepair(unsupportedGenerationRows, {
+  split: "unit",
+  methods: "drop_unsupported,replace_unsupported,compact_extractive,guided_extractive",
+  bootstrapRepeats: 20,
+});
+assert.equal(repairReport.schema_version, "aci-note-attribution-repair-v1");
+assert.equal(repairReport.ranking.length, 4);
+assert.ok(repairReport.ranking.every((item) => item.scored_case_rate === 1));
+assert.ok(repairReport.selected_method);
+
+console.log("PASS benchmark adapter and scoring checks (42 assertions)");

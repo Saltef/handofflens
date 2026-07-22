@@ -58,6 +58,25 @@ Interpretation: for full-note ACI files, the final reference-length slice is the
 
 Trade-off: extractive baselines have excellent lexical groundedness by construction, but they are not clinically adequate notes. They copy source wording, cannot normalize or reorganize like an expert note, and ROUGE does not establish factual correctness.
 
+### Command A+ Generated Notes and Attribution Repair
+
+Command A+ was run over the five canonical full-note ACI splits (`207/207` rows completed). The run used the public ACI `src` conversation only as model input and scored generated notes against the expert `tgt` note. Provider outputs and raw rows are kept outside the public repo.
+
+The model-generated notes beat the compressed deterministic baselines on ROUGE, but had weak lexical source support by the repository's current source-support proxy. This does not prove hallucination: a concise clinical paraphrase can be correct while lexically novel. It does, however, show why citation-level or schema-level validity alone is too weak for a source-grounded clinical handoff system.
+
+An attribution-repair diagnostic was then run over the same generated notes. The selected repair method, `compact_extractive`, uses the model note as a salience query, replaces generated sentences with compact source-token spans, and ranks repair methods by scored-case coverage, source-token support, token balance, then ROUGE. Reference notes are used only for scoring, not for content selection.
+
+Aggregate full-note results across train, validation, and the three public held-out split files:
+
+| Method | Cases | ROUGE-1 F1 | ROUGE-2 F1 | ROUGE-L F1 | Source token support | Source bigram support | Unsupported-sentence case rate | Mean prediction tokens |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Command A+ generated note | 207 | 0.4355 | 0.1651 | 0.2550 | 0.6945 | 0.2201 | 1.0000 | 250.6 |
+| `compact_extractive` attribution repair | 207 | 0.4078 | 0.1576 | 0.2324 | 1.0000 | 0.9344 | 0.2464 | 435.9 |
+| `tail_reference_length` extractive baseline | 207 | 0.3659 | 0.1126 | 0.1829 | 1.0000 | 1.0000 | 0.0000 | 428.0 |
+| `source_full` transcript baseline | 207 | 0.3340 | 0.1310 | 0.1953 | 1.0000 | 1.0000 | 0.0000 | 1,201.8 |
+
+Interpretation: the best current public design is not plain model generation and not pure extraction. It is a two-stage, source-grounded note compiler: use the model for salience and organization, then force the final auditable artifact through compact source-span repair. This improves substantially over deterministic extractive baselines while making overstatement measurable. The trade-off is real: ROUGE-L drops from `0.2550` to `0.2324`, and repaired notes remain longer and less polished than the model notes. The unresolved engineering target is semantic source support: compact lexical spans should be replaced or augmented with entailment-backed, assertion-aware evidence atoms before making stronger clinical claims.
+
 ## ACI-Bench Reference-Derived Item Alignment
 
 The public JSON does not contain HandoffLens-native item-level `gold_items`, so the item-level scorer was also run as a harness diagnostic:
@@ -90,7 +109,7 @@ The primary result is now sentence-only: the detector receives sentence text, no
 
 | Corpus slice / target mode | Sentences | Accuracy | Macro-F1 | Present F1 | Absent F1 | Possible F1 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| abstracts + full papers, sentence-only | 14,541 | 0.8669 | 0.7719 | 0.9176 | 0.6394 | 0.7587 |
+| abstracts + full papers, sentence-only | 14,541 | 0.9254 | 0.8821 | 0.9553 | 0.8461 | 0.8451 |
 | abstracts + full papers, scope-assisted diagnostic | 14,541 | 0.8955 | 0.8326 | 0.9360 | 0.7642 | 0.7977 |
 | redacted clinical XML, sentence-only diagnostic | 6,383 | 0.7556 | 0.2869 | 0.8608 | 0.0000 | 0.0000 |
 
@@ -100,9 +119,9 @@ BioScope public-text sentence-only per-class intervals:
 
 | Class | Precision | Precision 95% CI | Recall | Recall 95% CI | F1 |
 | --- | ---: | --- | ---: | --- | ---: |
-| present | 0.8823 | [0.8762, 0.8882] | 0.9559 | [0.9518, 0.9597] | 0.9176 |
-| absent | 0.8584 | [0.8343, 0.8795] | 0.5094 | [0.4844, 0.5344] | 0.6394 |
-| possible | 0.7973 | [0.7807, 0.8130] | 0.7237 | [0.7062, 0.7405] | 0.7587 |
+| present | 0.9380 | [0.9333, 0.9424] | 0.9732 | [0.9699, 0.9762] | 0.9553 |
+| absent | 0.8699 | [0.8516, 0.8862] | 0.8235 | [0.8036, 0.8417] | 0.8461 |
+| possible | 0.9014 | [0.8886, 0.9129] | 0.7954 | [0.7795, 0.8104] | 0.8451 |
 
 ### Same-Task Baselines
 
@@ -112,10 +131,10 @@ The same collapsed BioScope task was run against transparent baselines:
 | --- | ---: | ---: | ---: | ---: | --- |
 | present_majority | 0.7143 | 0.2778 | 0.0000 | 0.0000 | Dominant-class anchor. |
 | negex_style | 0.7975 | 0.5587 | 0.8502 | 0.0000 | Negation-only cue baseline; no uncertainty class. |
-| handofflens_assertion | 0.8669 | 0.7719 | 0.5094 | 0.7237 | Current detector in fair sentence-only mode. |
+| handofflens_assertion | 0.9254 | 0.8821 | 0.8235 | 0.7954 | Hybrid detector: sentence-level cue front end for sentence benchmarks, target-aware context checks for extracted item quotes. |
 | context_style | 0.9255 | 0.8823 | 0.8235 | 0.7954 | Transparent ConText-style cue baseline, not official pyConTextNLP. |
 
-Interpretation: this is the most important design finding from the new run. The current HandoffLens assertion detector is meaningfully above majority and negation-only baselines, but it does not beat a simpler ConText-style cue baseline on this collapsed public-text task. The best fix is to make the production assertion layer hybrid: use the simple cue baseline as a high-recall front end for BioScope-like negation/speculation cues, then apply HandoffLens target-aware context checks for extracted item quotes and assertion conflicts.
+Interpretation: the assertion layer is now hybrid. On sentence-level BioScope-style inputs it behaves like the transparent ConText-style cue comparator, closing the previous negation-recall gap. On extracted clinical item quotes, it preserves HandoffLens' target-aware checks for family history, historical conditions, conditional precautions, and assertion conflicts. This is an improvement over the previous detector, but it is still not an official BioScope scope-boundary result and not in-domain clinical-note validation.
 
 Trade-off: the ConText-style baseline is stronger on this adjacent-domain cue task because BioScope labels are cue-driven. It may over-trigger in clinical notes with pseudo-negation, templated lists, family history, historical context, or multiple findings in the same sentence. It should improve the assertion detector, not replace source-grounded item review.
 
@@ -138,6 +157,8 @@ Interpretation: the global threshold is operationally attractive but undercovers
 npm run benchmark:adapt:aci -- --input <aci-json-file> --split <split-name> --out <split-records.json>
 npm run benchmark:score:aci-note -- --records <split-records.json> --prediction-field src --bootstrap-repeats 1000 --out <split-note-score.json>
 npm run benchmark:aci-note:baselines -- --records <split-records.json> --split <split-name> --bootstrap-repeats 1000 --out <split-aci-note-baseline-comparison.json>
+npm run benchmark:aci-note:cohere -- --records <split-records.json> --split <split-name> --model command-a-plus-05-2026 --resume --out <split-command-a-plus-note-eval.json>
+npm run benchmark:aci-note:repair -- --input <split-command-a-plus-note-eval.json> --split <split-name> --out <split-attribution-repair.json>
 npm run benchmark:derive-reference-gold -- --records <split-records.json> --out <split-reference-gold.json>
 npm run benchmark:predict:candidates -- --records <split-records.json> --out <split-predictions.json>
 npm run benchmark:score -- --records <split-reference-gold.json> --predictions <split-predictions.json> --bootstrap-repeats 1000 --out <split-item-score.json>
@@ -150,6 +171,8 @@ npm run benchmark:bioscope:conformal -- --input <bioscope>/abstracts.xml;<biosco
 
 - These ACI numbers are not official ACI-Bench model-generation leaderboard scores.
 - The compressed ACI baselines are not clinically adequate notes.
+- The Command A+ and attribution-repair numbers are benchmark-shaped diagnostics, not official ACI-Bench leaderboard submissions.
+- Lexical source support is not semantic entailment; high source-token support can still miss clinical meaning, negation, or temporal scope.
 - The ACI item-alignment numbers are not native expert entity-extraction F1.
 - BioScope scores evaluate a collapsed sentence-level assertion cue task, not exact scope-boundary extraction.
 - The BioScope 0.8326 scope-assisted diagnostic must not be used as the primary assertion result.

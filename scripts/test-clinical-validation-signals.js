@@ -21,6 +21,13 @@ assert.equal(detectAssertionStatus({ sourceText: source, quote: "Acute kidney in
 assert.equal(detectAssertionStatus({ sourceText: "No fever but has pneumonia.", quote: "pneumonia", label: "pneumonia" }).status, "present");
 assert.equal(detectAssertionStatus({ sourceText: source, quote: "missing target", label: "pneumonia" }).status, "present");
 
+const sentenceNegation = "No association was observed between treatment and response in the adjusted analysis.";
+assert.equal(detectAssertionStatus({ sourceText: sentenceNegation, quote: sentenceNegation, label: sentenceNegation }).status, "absent");
+const sentenceSpeculation = "These findings may indicate improved adherence after discharge.";
+assert.equal(detectAssertionStatus({ sourceText: sentenceSpeculation, quote: sentenceSpeculation, label: sentenceSpeculation }).status, "possible");
+const pseudoNegation = "The intervention was not only feasible but associated with better follow-up completion.";
+assert.equal(detectAssertionStatus({ sourceText: pseudoNegation, quote: pseudoNegation, label: pseudoNegation }).status, "present");
+
 const extraction = {
   medication_changes: { started: [], stopped: [], changed: [], continued: [], uncertain: [] },
   diagnosis_changes: {
@@ -70,4 +77,4 @@ assert.equal(safetyValidation.issues.filter((issue) => issue.code === "monitorin
 assert.equal(safetyValidation.issues.some((issue) => issue.path === "safety_flags[0]" && /safety/.test(issue.code)), false);
 assert.equal(safetyValidation.issues.some((issue) => issue.path === "safety_flags[1]" && /safety|return/.test(issue.code)), false);
 
-console.log("PASS clinical validation assertion-status and safety-flag checks (15 assertions)");
+console.log("PASS clinical validation assertion-status and safety-flag checks (18 assertions)");

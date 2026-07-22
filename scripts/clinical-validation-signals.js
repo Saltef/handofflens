@@ -125,7 +125,9 @@ function detectAssertionStatus({ sourceText, quote, label, windowChars = 140 }) 
   const normalizedQuote = normalize(rawQuote);
   const normalizedLabel = normalize(label);
 
-  const status = classifyAssertionContext(normalizedContext, normalizedQuote, normalizedLabel);
+  const status = isSentenceLevelAssertionTarget(normalizedQuote, normalizedLabel)
+    ? classifySentenceAssertionContext(normalizedContext)
+    : classifyAssertionContext(normalizedContext, normalizedQuote, normalizedLabel);
   return {
     version: "assertion-context-window-v1",
     status,
@@ -146,6 +148,20 @@ function narrowAssertionContext(context, target) {
   return sentences.find((sentence) => normalize(sentence).includes(normalizedNeedle)) || text;
 }
 
+function isSentenceLevelAssertionTarget(normalizedQuote, normalizedLabel) {
+  if (!normalizedQuote || !normalizedLabel) return false;
+  if (normalizedQuote !== normalizedLabel) return false;
+  return normalizedLabel.split(/\s+/).filter(Boolean).length >= 8;
+}
+
+function classifySentenceAssertionContext(context) {
+  if (!context.trim()) return "present";
+  const cleaned = removePseudoAssertionCues(context);
+  if (hasSentenceSpeculationCue(cleaned)) return "possible";
+  if (hasSentenceNegationCue(cleaned)) return "absent";
+  return "present";
+}
+
 function classifyAssertionContext(context, quote, label) {
   const target = quote || label;
   if (!context.trim()) return "present";
@@ -156,6 +172,22 @@ function classifyAssertionContext(context, quote, label) {
   if (hasPossibleCue(context, target)) return "possible";
   if (hasNegationCue(context, target)) return "absent";
   return "present";
+}
+
+function hasSentenceNegationCue(context) {
+  return /\b(?:no|not|never|without|denies?|denied|negative for|no evidence of|ruled out|free of|absence of)\b/.test(context);
+}
+
+function hasSentenceSpeculationCue(context) {
+  return /\b(?:possible|possibly|probable|probably|suspected|concern for|question of|may(?:\s+have)?|might(?:\s+have)?|could|cannot exclude|rule out|r\/o|suggests?|suggested|suggesting|indicates?|indicated|indicating|appears?|appeared|likely|possibility|potentially|putative|whether)\b/.test(context);
+}
+
+function removePseudoAssertionCues(context) {
+  return String(context || "")
+    .replace(/\bnot only\b/g, " ")
+    .replace(/\bnot necessarily\b/g, " ")
+    .replace(/\bnot uncommon\b/g, " ")
+    .replace(/\bwithout doubt\b/g, " ");
 }
 
 function hasNegationCue(context, target) {

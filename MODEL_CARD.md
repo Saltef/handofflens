@@ -35,6 +35,8 @@ The project has three main public engineering findings:
 - Evidence-pointer v2 provided a conservative source-grounded comparator, but it was less robust than candidate-first v4 in the final development rerun.
 - Candidate-first v4 passed deterministic provenance gates on 19 of 20 development cases in the June 23 rerun, with one abstention. Extractive rematerialization reduced unsupported-summary numeric leakage in the source-fidelity proxy audit.
 - The current atom/view bridge adds source-grounded `handoff_atoms`, deterministic compatibility-field canonicalization, raw-model versus system-score reporting, and typed safety-flag evaluation.
+- Public ACI-Bench diagnostics now include deterministic note baselines, Command A+ generated-note scoring, lexical source-support scoring, and compact attribution repair. Command A+ improves ROUGE over extractive baselines, while compact repair improves lexical source support with measured ROUGE and length trade-offs.
+- Public BioScope diagnostics now include same-task transparent baselines and a hybrid assertion detector on the collapsed sentence-level cue task. This is adjacent-domain assertion evidence, not clinical-note validation or official BioScope scope-boundary performance.
 
 These are engineering results. They are not clinical accuracy estimates.
 
@@ -48,6 +50,8 @@ These are engineering results. They are not clinical accuracy estimates.
 - No external validation cohort is available.
 - LLM-as-judge outputs are development proxies, not ground truth.
 - Two-case synthetic fixture scores are regression signals, not stable benchmarks or clinical performance estimates.
+- Lexical source-support metrics do not prove semantic factuality, entailment, temporal correctness, or clinical completeness.
+- ACI-Bench and BioScope public diagnostics are benchmark-shaped evidence with explicit task caveats, not clinical validation.
 
 ## Allowed claims
 
@@ -59,7 +63,9 @@ The current evidence supports claims about:
 - extractive rematerialization;
 - stability under small perturbations;
 - cost and latency telemetry;
-- review-readiness and routing design.
+- review-readiness and routing design;
+- public benchmark adapter/scorer reproducibility;
+- measured trade-offs between model fluency, extractive source support, and attribution repair.
 
 ## Claims not supported
 
