@@ -44,8 +44,8 @@
   },
   "frozen_artifacts": {
     "prompts/system.md": "052227c30dfec107ef2aa5acfba7e08e6c52d289f3ab6c07f0454dbf27061ed4",
-    "prompts/clinical-extraction.md": "081c4dec3c654ad1d0c39addd19a51aa785da408033ced26531d7cadacc6f839",
-    "eval/schema.json": "41689d673cc77edddb756523be639ea4ba638bfd41a053c1a952d78a8d58d89a",
+    "prompts/clinical-extraction.md": "1e47f6dcdfcf7e1c51c028556b34bafdb1fd841f63e03aeeb87c08f6186df590",
+    "eval/schema.json": "94f8c66a4f4194247e7b6e6d7d8d2a3e8fb2e8cecf441e018724d9ed5e4c9021",
     "eval/atomic_clinician_review_schema.json": "b9cd3c1c86d1dd345046b7967ed560f51b35d327c0ef2b4722497546fe812c66",
     "eval/source_fidelity_review_schema.json": "ea46372eb987a6a5a9e05f38ef01b60bcaf0bc6db070888e620825109db59a6a"
   },

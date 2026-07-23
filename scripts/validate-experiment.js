@@ -19,6 +19,11 @@ function readText(filePath) {
   return fs.readFileSync(filePath, "utf8");
 }
 
+function stableTextDigest(filePath) {
+  const text = fs.readFileSync(filePath, "utf8").replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n");
+  return crypto.createHash("sha256").update(text).digest("hex");
+}
+
 const requiredFiles = [
   ".env.example",
   ".gitignore",
@@ -181,7 +186,10 @@ check("Manifest uses patient-level analysis", ["sampling", "splitting", "inferen
 check("Manifest freezes the two primary configurations", manifest.primary_configurations?.map((item) => item.id).join(",") === "cohere-aplus-routed-v1,claude-haiku45-strict-v1");
 check("Safety ablation uses nested prespecified policies", ablationManifest.policies?.map((item) => item.id).join(",") === "accept_all,raw_schema_gate,first_pass_raw_schema_gate,quote_coverage_90_gate,quote_coverage_95_gate,literal_quote_gate,atomic_consistency_gate,atomic_plus_high_risk_guard");
 check("Safety ablation makes yield and selective risk explicit", /automation yield/i.test(ablationManifest.research_question) && ablationManifest.primary_metrics?.includes("automation_yield"));
-check("Frozen artifact hashes match current files", Object.entries(manifest.frozen_artifacts || {}).every(([filePath, expected]) => crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex") === expected));
+const frozenArtifactMismatches = Object.entries(manifest.frozen_artifacts || {})
+  .map(([filePath, expected]) => ({ filePath, expected, actual: stableTextDigest(filePath) }))
+  .filter((item) => item.actual !== item.expected);
+check("Frozen artifact hashes match current files", frozenArtifactMismatches.length === 0, frozenArtifactMismatches.map((item) => `${item.filePath}: expected ${item.expected}, got ${item.actual}`).join("; "));
 check("Evaluator defaults match frozen primary configurations", evaluatorSource.includes("const FROZEN_MODELS = [\"cohere-aplus:command-a-plus-05-2026\", \"anthropic/claude-haiku-4.5\"]"));
 check("Environment model override requires exploratory mode", evaluatorSource.includes("process.env.EXPERIMENT_MODE === \"exploratory\""));
 check("Confirmatory runtime ignores tuning overrides", evaluatorSource.includes("function runtimeNumber(name, frozenValue)") && evaluatorSource.includes("if (!IS_EXPLORATORY"));
