@@ -64,7 +64,7 @@ Command A+ was run over the five canonical full-note ACI splits (`207/207` rows 
 
 The model-generated notes beat the compressed deterministic baselines on ROUGE, but had weak lexical source support by the repository's current source-support proxy. This does not prove hallucination: a concise clinical paraphrase can be correct while lexically novel. It does, however, show why citation-level or schema-level validity alone is too weak for a source-grounded clinical handoff system.
 
-An attribution-repair diagnostic was then run over the same generated notes. The selected repair method, `compact_extractive`, uses the model note as a salience query, replaces generated sentences with compact source-token spans, and ranks repair methods by scored-case coverage, source-token support, token balance, then ROUGE. Reference notes are used only for scoring, not for content selection.
+An attribution-repair diagnostic was then run over the same generated notes. The selected repair method, `compact_extractive`, uses the model note as a salience query and replaces generated sentences with compact source-token spans. Repair methods are ranked by scored-case coverage, token-balance score, ROUGE-L retention, unsupported-sentence case-rate reduction, source-bigram support, then ROUGE-2. Source-token support is reported as a gate-style lexical diagnostic, not the primary ranking target. Reference notes are used only for scoring, not for content selection.
 
 Aggregate full-note results across train, validation, and the three public held-out split files:
 

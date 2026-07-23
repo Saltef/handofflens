@@ -23,7 +23,7 @@ Model identities are reproducibly randomized between `Model A` and `Model B` fro
 
 Up to 12 claims are selected from each output. Selection prioritizes medication changes, machine-flagged claims, safety/follow-up claims, diagnoses, procedures, and laboratory results. This is a risk-enriched failure-analysis sample, not a probability sample. Claim-level error percentages must not be described as population prevalence.
 
-This 50-review packet is development evidence. It may refine the taxonomy, annotation guide, judge, and routing hypotheses. It is not the confirmatory test cohort. The confirmatory cohort size is determined by the simulation procedure in `docs/statistical-analysis-plan.md` and remains untouched until the protocol is locked.
+This 50-review packet is development evidence. It may refine the taxonomy, annotation guide, judge, and routing hypotheses. It is not the confirmatory test cohort. The confirmatory cohort size is determined by the simulation procedure in `statistical-analysis-plan.md` and remains untouched until the protocol is locked.
 
 At least 20% of confirmatory output reviews are independently labeled by two clinicians. Report raw agreement, positive and negative agreement for the binary primary endpoint, and a prespecified chance-adjusted statistic. Preserve both original annotations and record adjudication separately.
 

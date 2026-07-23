@@ -62,21 +62,23 @@ const requiredFiles = [
   "scripts/analyze-atomic-clinician-review.js",
   "scripts/validate-judge-against-clinicians.js",
   "scripts/serve-review.js",
-  "docs/protocol-freeze.md",
-  "docs/statistical-analysis-plan.md",
+  "docs/README.md",
+  "docs/archive/README.md",
+  "docs/archive/protocol-freeze.md",
+  "docs/archive/statistical-analysis-plan.md",
   "docs/claims-register.md",
-  "docs/experiment-runbook.md",
-  "docs/safety-ablation-design.md",
-  "docs/evaluation-plan.md",
-  "docs/handoff-atoms-design.md",
-  "docs/clinical-handover-evaluation.md",
-  "docs/human-ai-collaboration-framework.md",
-  "docs/probabilistic-model-boundaries.md",
-  "docs/human-in-the-loop-map.md",
-  "docs/atomic-clinician-review-protocol.md",
+  "docs/archive/experiment-runbook.md",
+  "docs/archive/safety-ablation-design.md",
+  "docs/archive/evaluation-plan.md",
+  "docs/archive/handoff-atoms-design.md",
+  "docs/archive/clinical-handover-evaluation.md",
+  "docs/archive/human-ai-collaboration-framework.md",
+  "docs/archive/probabilistic-model-boundaries.md",
+  "docs/archive/human-in-the-loop-map.md",
+  "docs/archive/atomic-clinician-review-protocol.md",
   "docs/benchmark-adapter-scoring.md",
   "docs/public-benchmark-results-2026-07-21.md",
-  "docs/benchmark-closeout-plan.md",
+  "docs/archive/benchmark-closeout-plan.md",
   "docs/records-adapter-contract.md",
   "eval/benchmark_manifest.example.json",
   "eval/aci_bench_adapter_fixture.json",
@@ -116,11 +118,11 @@ const manifest = readJson(path.join("eval", "experiment_manifest.json"));
 const ablationManifest = readJson(path.join("eval", "safety_ablation_manifest.json"));
 const systemPrompt = readText(path.join("prompts", "system.md"));
 const extractionPrompt = readText(path.join("prompts", "clinical-extraction.md"));
-const protocolFreeze = readText(path.join("docs", "protocol-freeze.md"));
-const boundaryDoc = readText(path.join("docs", "probabilistic-model-boundaries.md"));
-const hitlDoc = readText(path.join("docs", "human-in-the-loop-map.md"));
-const atomicReviewDoc = readText(path.join("docs", "atomic-clinician-review-protocol.md"));
-const statisticalPlan = readText(path.join("docs", "statistical-analysis-plan.md"));
+const protocolFreeze = readText(path.join("docs", "archive", "protocol-freeze.md"));
+const boundaryDoc = readText(path.join("docs", "archive", "probabilistic-model-boundaries.md"));
+const hitlDoc = readText(path.join("docs", "archive", "human-in-the-loop-map.md"));
+const atomicReviewDoc = readText(path.join("docs", "archive", "atomic-clinician-review-protocol.md"));
+const statisticalPlan = readText(path.join("docs", "archive", "statistical-analysis-plan.md"));
 const claimsRegister = readText(path.join("docs", "claims-register.md"));
 const evaluatorSource = readText(path.join("scripts", "evaluate-models.js"));
 const modelEvidenceValidatorSource = readText(path.join("scripts", "validate-model-evidence.js"));

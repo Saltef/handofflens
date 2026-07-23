@@ -4,7 +4,7 @@ Public-facing note: this is a methods appendix. It records how the project separ
 
 ## Version And Scope
 
-Protocol version 1.0 applies prospectively to runs created after this document, `eval/experiment_manifest.json`, and `docs/statistical-analysis-plan.md` are committed and tagged. All earlier results are exploratory development evidence.
+Protocol version 1.0 applies prospectively to runs created after this document, `eval/experiment_manifest.json`, and `statistical-analysis-plan.md` are committed and tagged. All earlier results are exploratory development evidence.
 
 The study asks two separate questions:
 

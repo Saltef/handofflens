@@ -73,7 +73,7 @@ Manual handover review answers:
 
 The handover rubric evaluates clinical communication quality, accuracy, and safety. A separate human-AI collaboration layer evaluates whether the model output supports appropriate clinician judgment.
 
-That layer is adapted from Li and Tian's 2026 conceptual framework on AI-human collaborative decision-making and is documented in `docs/human-ai-collaboration-framework.md`.
+That layer is adapted from Li and Tian's 2026 conceptual framework on AI-human collaborative decision-making and is documented in `human-ai-collaboration-framework.md`.
 
 It asks whether the summary:
 
@@ -86,6 +86,6 @@ It asks whether the summary:
 
 ## Probabilistic Boundary Add-On
 
-The handover rubric should also be read alongside `docs/probabilistic-model-boundaries.md`. That layer asks whether the model is being used where probabilistic text systems are strong, while preserving safety boundaries where they are weak.
+The handover rubric should also be read alongside `probabilistic-model-boundaries.md`. That layer asks whether the model is being used where probabilistic text systems are strong, while preserving safety boundaries where they are weak.
 
 For clinical handoff review, the highest-probability summary is not necessarily the safest summary. Reviewers should therefore pay special attention to low-frequency high-harm omissions, such as anticoagulation decisions, antibiotic duration, oxygen requirements, renal dosing, pending cultures, wound care, and urgent follow-up.

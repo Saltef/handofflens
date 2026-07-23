@@ -26,4 +26,4 @@ This ledger records successful, unsuccessful, and superseded experiments. Develo
 6. Plausible medical interpretation must be separated from direct source support.
 7. Negative experiments should remain visible because they explain the final architecture.
 
-Detailed reports are linked from `docs/PROJECT_STATUS.md` and the root `README.md`.
+Detailed reports are summarized by the root `README.md` and the archived `PROJECT_STATUS.md` snapshot.

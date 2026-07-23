@@ -65,7 +65,7 @@ node scripts/sample-dataset.js --input clinical_cases.csv.gz --limit all --out e
 
 Unlabeled dataset runs should not report F1. They answer whether the workflow scales operationally. Strong extraction-quality claims require a blinded, trained-annotator-adjudicated source-fidelity reference set.
 
-For the current scaled experiment, use the 300-case representative feasibility cohort plus the 50-case clinician-review subset. See `docs/representative-300-matched-comparison.md` and `docs/human-in-the-loop-map.md`.
+For the current scaled experiment, use the 300-case representative feasibility cohort plus the 50-case clinician-review subset. See the archived representative-cohort notes and `human-in-the-loop-map.md`.
 
 ## Metrics
 
@@ -154,7 +154,7 @@ Trade-off: canonicalization can repair representation mismatches, but it cannot 
 
 ### Layer 2: Manual Clinical Handover Review
 
-The manual review rubric is stored in `eval/clinical_handover_rubric.json` and documented in `docs/clinical-handover-evaluation.md`.
+The manual review rubric is stored in `eval/clinical_handover_rubric.json` and documented in `clinical-handover-evaluation.md`.
 
 Before checking the source discharge summary, the reviewer scores:
 

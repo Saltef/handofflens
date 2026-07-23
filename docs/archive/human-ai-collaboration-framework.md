@@ -152,7 +152,7 @@ These dimensions are stored in:
 eval/human_ai_collaboration_review.json
 ```
 
-A related boundary-analysis layer is documented in `docs/probabilistic-model-boundaries.md`. It focuses on where probabilistic model output is useful and where clinician verification must remain central because clinical reasoning is risk-sensitive and not reducible to highest-probability text prediction.
+A related boundary-analysis layer is documented in `probabilistic-model-boundaries.md`. It focuses on where probabilistic model output is useful and where clinician verification must remain central because clinical reasoning is risk-sensitive and not reducible to highest-probability text prediction.
 
 ## How This Changes The Scientific Framing
 

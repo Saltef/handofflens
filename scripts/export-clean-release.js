@@ -35,29 +35,13 @@ const forbidden = [
 const portfolioDocAllowlist = new Set([
   "docs/README.md",
   "docs/SCIENTIFIC_WRITEUP.md",
-  "docs/FINAL_VALIDATION_2026_06_23.md",
-  "docs/PROJECT_STATUS.md",
   "docs/claims-register.md",
-  "docs/conformal-routing-ongoing.md",
   "docs/REPRODUCIBILITY.md",
+  "docs/benchmark-adapter-scoring.md",
+  "docs/public-benchmark-results-2026-07-21.md",
+  "docs/records-adapter-contract.md",
   "docs/data-exposure-attestation.md",
-  "docs/FINAL_TESTS_BEFORE_SHARING.md",
   "docs/security-checklist.md",
-  "docs/EXPERIMENT_HISTORY.md",
-  "docs/candidate-first-v4-final-report.md",
-  "docs/evidence-pointer-v2.md",
-  "docs/pipeline-v3-final-report.md",
-  "docs/PENDING_WORK.md",
-  "docs/protocol-freeze.md",
-  "docs/statistical-analysis-plan.md",
-  "docs/experiment-runbook.md",
-  "docs/safety-ablation-design.md",
-  "docs/evaluation-plan.md",
-  "docs/clinical-handover-evaluation.md",
-  "docs/human-ai-collaboration-framework.md",
-  "docs/probabilistic-model-boundaries.md",
-  "docs/human-in-the-loop-map.md",
-  "docs/atomic-clinician-review-protocol.md",
 ]);
 
 const copied = [];
@@ -72,7 +56,9 @@ for (const rel of tracked) {
     skipped.push(rel);
     continue;
   }
-  if (portfolioMode && normalized.startsWith("docs/") && !portfolioDocAllowlist.has(normalized)) {
+  const isPortfolioDocAsset = normalized.startsWith("docs/assets/");
+  const isPortfolioArchive = normalized.startsWith("docs/archive/");
+  if (portfolioMode && normalized.startsWith("docs/") && !portfolioDocAllowlist.has(normalized) && !isPortfolioDocAsset && !isPortfolioArchive) {
     skipped.push(rel);
     continue;
   }
