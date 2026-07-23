@@ -127,6 +127,13 @@ HandoffLens does not claim clinical accuracy, clinical safety, harmful-error red
 
 The evidence supports engineering claims about schema reliability, source provenance, abstention behavior, stability, cost/latency, and review readiness. Clinical claims would require independent factual labels, qualified clinical review, and external validation.
 
+## Highest-value next evidence
+
+Two measurements would most improve the project without expanding its scope into a product:
+
+1. Entailment-backed source support. The current ACI repair metric is lexical: it asks whether output text is recoverable from source tokens. A stronger faithfulness result would run an entailment or factual-consistency scorer, such as MiniCheck, AlignScore, or a clinical NLI model when available, over generated and repaired note claims, then manually review a small disagreement slice.
+2. In-domain clinical assertion validation. BioScope gives adjacent-domain assertion evidence on biomedical literature. The HandoffLens-specific target-aware item-quote checks still need an in-domain clinical benchmark or private adjudicated clinical gold, such as i2b2/n2c2 when data-use access permits.
+
 ## Repository map
 
 - `scripts/` - evaluation, gating, routing, review, and analysis programs

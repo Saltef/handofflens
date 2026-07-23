@@ -176,6 +176,13 @@ npm run benchmark:bioscope:baselines -- --input <bioscope>/abstracts.xml;<biosco
 npm run benchmark:bioscope:conformal -- --input <bioscope>/abstracts.xml;<bioscope>/full_papers.xml --target-mode sentence --alpha 0.10 --out <bioscope-conformal-public-text-sentence.json>
 ```
 
+## Highest-Value Follow-Up Measurements
+
+The remaining high-value work is evidence, not architecture polish:
+
+1. Run entailment-backed source support on the ACI generated and repaired notes. MiniCheck, AlignScore, or a clinical NLI comparator would test semantic faithfulness beyond lexical source overlap. A small human review of scorer disagreements should be retained so the automated scorer does not become hidden ground truth.
+2. Run an in-domain clinical assertion/source-fidelity benchmark when data access allows. i2b2/n2c2 or private adjudicated clinical gold would finally test the HandoffLens-specific target-aware item-quote checks on clinical note text.
+
 ## Non-Claims
 
 - These ACI numbers are not official ACI-Bench model-generation leaderboard scores.

@@ -53,6 +53,12 @@ These are engineering results. They are not clinical accuracy estimates.
 - Lexical source-support metrics do not prove semantic factuality, entailment, temporal correctness, or clinical completeness.
 - ACI-Bench and BioScope public diagnostics are benchmark-shaped evidence with explicit task caveats, not clinical validation.
 
+## Next validation priorities
+
+- Replace or augment lexical source support with entailment-backed faithfulness checks, such as MiniCheck, AlignScore, or a clinical NLI comparator when an appropriate local/runtime path is available.
+- Measure the target-aware item-quote assertion checks on in-domain clinical text, either through DUA-controlled i2b2/n2c2 access or a private adjudicated clinical gold set.
+- Human-review a small slice of entailment/scorer disagreements so automated factuality scores do not become hidden ground truth.
+
 ## Allowed claims
 
 The current evidence supports claims about:
