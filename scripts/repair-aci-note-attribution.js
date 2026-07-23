@@ -56,13 +56,20 @@ function evaluateAciNoteAttributionRepair(rows, options = {}) {
       minOverlap,
       backfillBudget: options.backfillBudget || options["backfill-budget"] || "prediction_plus_15pct",
     });
+    const repairSummary = summarizeRepair(repairedRows);
+    const rougeSummary = scoreAciNoteGeneration(repairedRows, { split, predictionField: repairedField, bootstrapRepeats }).summary;
+    const sourceSupportSummary = scoreAciNoteFactuality(repairedRows, { split, predictionField: repairedField }).summary;
     reports[method] = {
       description: methodDescription(method),
       records: repairedRows,
       summary: {
-        repair: summarizeRepair(repairedRows),
-        rouge: scoreAciNoteGeneration(repairedRows, { split, predictionField: repairedField, bootstrapRepeats }).summary,
-        source_support: scoreAciNoteFactuality(repairedRows, { split, predictionField: repairedField }).summary,
+        repair: repairSummary,
+        rouge: rougeSummary,
+        source_support: sourceSupportSummary,
+        tradeoff: summarizeRepairTradeoff(before, {
+          rouge: rougeSummary,
+          source_support: sourceSupportSummary,
+        }),
       },
     };
   }
@@ -77,15 +84,18 @@ function evaluateAciNoteAttributionRepair(rows, options = {}) {
       source_token_support_rate: report.summary.source_support.mean_source_token_support_rate,
       source_bigram_support_rate: report.summary.source_support.mean_source_bigram_support_rate,
       unsupported_sentence_case_rate: ratio(report.summary.source_support.cases_with_unsupported_sentences, report.summary.source_support.cases),
+      unsupported_sentence_case_rate_reduction: report.summary.tradeoff.unsupported_sentence_case_rate_reduction,
+      rougeL_retention_rate: report.summary.tradeoff.rougeL_retention_rate,
       mean_repaired_tokens: report.summary.source_support.mean_prediction_tokens,
       token_yield_rate: ratio(report.summary.source_support.mean_prediction_tokens, before.source_support.mean_prediction_tokens),
       token_balance_score: tokenBalanceScore(ratio(report.summary.source_support.mean_prediction_tokens, before.source_support.mean_prediction_tokens)),
     }))
     .sort((left, right) => (
       (right.scored_case_rate - left.scored_case_rate)
-      || (right.source_token_support_rate - left.source_token_support_rate)
       || (right.token_balance_score - left.token_balance_score)
-      || (right.rougeL_f1 - left.rougeL_f1)
+      || (right.rougeL_retention_rate - left.rougeL_retention_rate)
+      || (right.unsupported_sentence_case_rate_reduction - left.unsupported_sentence_case_rate_reduction)
+      || (right.source_bigram_support_rate - left.source_bigram_support_rate)
       || (right.rouge2_f1 - left.rouge2_f1)
     ));
 
@@ -104,8 +114,8 @@ function evaluateAciNoteAttributionRepair(rows, options = {}) {
     methods: reports,
     ranking,
     selected_method: ranking[0]?.method || null,
-    selection_rule: "Rank by scored-case rate, source-token support, token-balance score, ROUGE-L F1, then ROUGE-2 F1. Token-balance rewards repaired notes close to the original prediction length, so empty or bloated source-only outputs do not win just by being extractive. Reference notes are used only for post-hoc scoring, not content selection.",
-    interpretation: "Deterministic attribution-repair diagnostic. The repair uses generated notes as salience queries and emits only source-dialogue text spans. This can improve lexical source support, but may reduce note polish and does not prove semantic factuality.",
+    selection_rule: "Rank by scored-case rate, token-balance score, ROUGE-L retention, unsupported-sentence case-rate reduction, source-bigram support, then ROUGE-2 F1. Source-token support is retained as a gate-style lexical diagnostic, not the primary contribution, because source-span repair makes high token support expected by construction.",
+    interpretation: "Deterministic attribution-repair diagnostic. The repair uses generated notes as salience queries and emits only source-dialogue text spans. The meaningful trade-off is ROUGE retention and unsupported-sentence reduction under source-span constraints; high lexical source support does not prove semantic factuality.",
   };
 }
 
@@ -356,6 +366,42 @@ function summarizeRepair(rows) {
   };
 }
 
+function summarizeRepairTradeoff(before, after) {
+  const beforeUnsupportedCaseRate = ratio(
+    before.source_support.cases_with_unsupported_sentences,
+    before.source_support.cases,
+  );
+  const afterUnsupportedCaseRate = ratio(
+    after.source_support.cases_with_unsupported_sentences,
+    after.source_support.cases,
+  );
+  const beforeRougeL = before.rouge.metrics.rougeL.f1;
+  const afterRougeL = after.rouge.metrics.rougeL.f1;
+  const beforeTokens = before.source_support.mean_prediction_tokens;
+  const afterTokens = after.source_support.mean_prediction_tokens;
+  return {
+    scored_case_rate: ratio(after.source_support.cases, before.source_support.cases),
+    rouge1_retention_rate: ratio(after.rouge.metrics.rouge1.f1, before.rouge.metrics.rouge1.f1),
+    rouge2_retention_rate: ratio(after.rouge.metrics.rouge2.f1, before.rouge.metrics.rouge2.f1),
+    rougeL_retention_rate: ratio(afterRougeL, beforeRougeL),
+    rougeL_f1_delta: numericDelta(afterRougeL, beforeRougeL),
+    unsupported_sentence_case_rate_before: beforeUnsupportedCaseRate,
+    unsupported_sentence_case_rate_after: afterUnsupportedCaseRate,
+    unsupported_sentence_case_rate_reduction: numericDelta(beforeUnsupportedCaseRate, afterUnsupportedCaseRate),
+    source_token_support_delta: numericDelta(
+      after.source_support.mean_source_token_support_rate,
+      before.source_support.mean_source_token_support_rate,
+    ),
+    source_bigram_support_delta: numericDelta(
+      after.source_support.mean_source_bigram_support_rate,
+      before.source_support.mean_source_bigram_support_rate,
+    ),
+    token_yield_rate: ratio(afterTokens, beforeTokens),
+    token_growth_rate: numericDelta(ratio(afterTokens, beforeTokens), 1),
+    caveat: "Source-span repair makes high lexical source support expected. ROUGE retention, unsupported-sentence reduction, and token growth are the more informative repair trade-off metrics.",
+  };
+}
+
 function pushSelected(selected, selectedKeys, candidate) {
   const key = normalizeForSubstring(candidate.text);
   if (!key || selectedKeys.has(key)) return false;
@@ -514,6 +560,9 @@ function numberOption(value, fallback) {
 }
 
 function ratio(numerator, denominator) { return denominator ? numerator / denominator : null; }
+function numericDelta(after, before) {
+  return Number.isFinite(after) && Number.isFinite(before) ? after - before : null;
+}
 function tokenBalanceScore(tokenYieldRate) {
   if (!Number.isFinite(tokenYieldRate) || tokenYieldRate <= 0) return 0;
   return Math.min(tokenYieldRate, 1 / tokenYieldRate);
@@ -557,6 +606,7 @@ function main() {
     },
     ranking: report.ranking,
     selected_method: report.selected_method,
+    selected_tradeoff: report.selected_method ? report.methods[report.selected_method].summary.tradeoff : null,
   }, null, 2));
 }
 

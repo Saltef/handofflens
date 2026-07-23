@@ -24,10 +24,10 @@ The public repo now supports that claim as a reproducible method and includes fi
 - ACI native note-generation scoring is implemented with ROUGE and bootstrap intervals.
 - ACI deterministic generated-note baselines are implemented and run. Full-note splits favor `tail_reference_length`; section files require section-aware methods.
 - ACI Command A+ generated-note evaluation is implemented and run over the five canonical full-note public splits. The model beats deterministic compressed baselines on ROUGE, but lexical source support remains weak.
-- ACI attribution repair is implemented and run. The selected `compact_extractive` method preserves full scored-case coverage, raises lexical source-token support to `1.0000`, and remains above deterministic extractive baselines on ROUGE-L, but it is longer and less polished than raw model output.
+- ACI attribution repair is implemented and run. The selected `compact_extractive` method preserves full scored-case coverage, retains 91.2% of raw Command A+ ROUGE-L, reduces unsupported-sentence case rate by 75.4 percentage points, and remains above deterministic extractive baselines on ROUGE-L. Its lexical source-token support is `1.0000` by construction and should be treated as a gate-style diagnostic, not proof of semantic factuality.
 - ACI item-style scoring is retained only as a diagnostic because public ACI-Bench does not ship HandoffLens-native `gold_items`.
 - BioScope sentence-only assertion scoring is implemented and run on public abstracts plus full papers.
-- BioScope same-task baselines are implemented. The assertion detector is now hybrid: it matches the transparent ConText-style cue comparator on the collapsed sentence task while preserving target-aware checks for extracted clinical item quotes.
+- BioScope same-task baselines are implemented. The assertion detector is now hybrid: it incorporates the transparent ConText-style cue comparator on the collapsed sentence task while preserving target-aware checks for extracted clinical item quotes. The target-aware item-quote behavior remains unmeasured on an in-domain clinical assertion benchmark.
 - BioScope conformal prediction sets are implemented. Label-conditional calibration improves class coverage but abstains heavily.
 - The public BioScope clinical XML is redacted and does not support a valid clinical-note assertion score.
 
@@ -52,7 +52,7 @@ A benchmark result is publishable only when it includes:
 - BioScope sentence-level assertion F1 is not BioScope scope-boundary performance.
 - ACI extractive baselines are not clinically adequate notes.
 - Command A+ ACI results are benchmark-shaped diagnostics, not official leaderboard submissions.
-- Attribution repair is lexical evidence control, not proof of semantic factuality.
+- Attribution repair is lexical evidence control, not proof of semantic factuality. Source-token support of `1.0000` after source-span repair is expected by construction; ROUGE retention, unsupported-sentence reduction, token growth, and entailment checks are the meaningful next evidence.
 - DUA-bound data and non-public held-out findings must remain outside the public repo.
 
 ## Near-Term Priority

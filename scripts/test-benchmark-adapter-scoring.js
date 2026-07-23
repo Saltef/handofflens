@@ -140,5 +140,9 @@ assert.equal(repairReport.schema_version, "aci-note-attribution-repair-v1");
 assert.equal(repairReport.ranking.length, 4);
 assert.ok(repairReport.ranking.every((item) => item.scored_case_rate === 1));
 assert.ok(repairReport.selected_method);
+assert.ok(repairReport.ranking.every((item) => Number.isFinite(item.rougeL_retention_rate)));
+assert.ok(repairReport.methods.compact_extractive.summary.tradeoff.rougeL_retention_rate > 0);
+assert.ok(repairReport.methods.compact_extractive.summary.tradeoff.unsupported_sentence_case_rate_reduction >= 0);
+assert.match(repairReport.methods.compact_extractive.summary.tradeoff.caveat, /lexical source support expected/);
 
-console.log("PASS benchmark adapter and scoring checks (42 assertions)");
+console.log("PASS benchmark adapter and scoring checks (46 assertions)");
