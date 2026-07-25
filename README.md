@@ -49,7 +49,6 @@ For a quick review, these are the most useful files:
 5. [Benchmark Adapter and Scoring](docs/benchmark-adapter-scoring.md) - ACI adapter, scoring, source-support proxies, and BioScope runners.
 6. [Records Adapter Contract](docs/records-adapter-contract.md) - dataset adapter input schema and publishing rules.
 7. [Model Card](MODEL_CARD.md) - intended use, non-use, and limitations.
-8. [Documentation Archive](docs/archive/README.md) - historical reports, exploratory frameworks, and process notes retained as an audit trail.
 
 ## What is included
 

@@ -70,23 +70,9 @@ const requiredFiles = [
   "scripts/analyze-atomic-clinician-review.js",
   "scripts/validate-judge-against-clinicians.js",
   "scripts/serve-review.js",
-  "docs/README.md",
-  "docs/archive/README.md",
-  "docs/archive/protocol-freeze.md",
-  "docs/archive/statistical-analysis-plan.md",
   "docs/claims-register.md",
-  "docs/archive/experiment-runbook.md",
-  "docs/archive/safety-ablation-design.md",
-  "docs/archive/evaluation-plan.md",
-  "docs/archive/handoff-atoms-design.md",
-  "docs/archive/clinical-handover-evaluation.md",
-  "docs/archive/human-ai-collaboration-framework.md",
-  "docs/archive/probabilistic-model-boundaries.md",
-  "docs/archive/human-in-the-loop-map.md",
-  "docs/archive/atomic-clinician-review-protocol.md",
   "docs/benchmark-adapter-scoring.md",
   "docs/public-benchmark-results-2026-07-21.md",
-  "docs/archive/benchmark-closeout-plan.md",
   "docs/records-adapter-contract.md",
   "eval/benchmark_manifest.example.json",
   "eval/aci_bench_adapter_fixture.json",
@@ -126,11 +112,6 @@ const manifest = readJson(path.join("eval", "experiment_manifest.json"));
 const ablationManifest = readJson(path.join("eval", "safety_ablation_manifest.json"));
 const systemPrompt = readText(path.join("prompts", "system.md"));
 const extractionPrompt = readText(path.join("prompts", "clinical-extraction.md"));
-const protocolFreeze = readText(path.join("docs", "archive", "protocol-freeze.md"));
-const boundaryDoc = readText(path.join("docs", "archive", "probabilistic-model-boundaries.md"));
-const hitlDoc = readText(path.join("docs", "archive", "human-in-the-loop-map.md"));
-const atomicReviewDoc = readText(path.join("docs", "archive", "atomic-clinician-review-protocol.md"));
-const statisticalPlan = readText(path.join("docs", "archive", "statistical-analysis-plan.md"));
 const claimsRegister = readText(path.join("docs", "claims-register.md"));
 const evaluatorSource = readText(path.join("scripts", "evaluate-models.js"));
 const modelEvidenceValidatorSource = readText(path.join("scripts", "validate-model-evidence.js"));
@@ -228,15 +209,12 @@ check("Human-AI rubric cites Li and Tian", /Li H, Tian F/.test(JSON.stringify(co
 check("Human-AI rubric includes automation risk", JSON.stringify(collaborationRubric).includes("automation_risk"));
 check("Probabilistic boundary rubric includes safety-critical recall", JSON.stringify(boundaryRubric).includes("safety_critical_recall"));
 check("Probabilistic boundary rubric includes abstention quality", JSON.stringify(boundaryRubric).includes("abstention_quality"));
-check("Boundary doc rejects highest-probability-only framing", /highest-probability/i.test(boundaryDoc) && /low-probability high-harm/i.test(boundaryDoc));
-check("Human-in-the-loop map defines clinician sign-off", /Human sign-off required/.test(hitlDoc) && /Medication reconciliation/.test(hitlDoc));
-check("Human-in-the-loop map rejects autonomous clinical use", /must not be treated as deciding/i.test(hitlDoc) && /clinician verification/i.test(hitlDoc));
-check("Protocol freeze defines allowed claims", /Allowed Claims/.test(protocolFreeze) && /Disallowed Claims/.test(protocolFreeze));
-check("Protocol freeze rejects autonomous care claims", /must not claim/i.test(protocolFreeze) && /replace clinician/i.test(protocolFreeze));
-check("Atomic review protocol preserves blinding", /separate ignored key file/i.test(atomicReviewDoc) && /Do not unblind/i.test(atomicReviewDoc));
-check("Atomic review protocol rejects prevalence claims from enriched sampling", /not a probability sample/i.test(atomicReviewDoc) && /must not be described as population prevalence/i.test(atomicReviewDoc));
-check("Statistical plan defines a paired patient-level source-fidelity endpoint", /paired difference/i.test(statisticalPlan) && /subject_id/i.test(statisticalPlan) && /semantic source-fidelity error/i.test(statisticalPlan));
-check("Statistical plan requires intervals and independent fidelity labels", /Wilson intervals/i.test(statisticalPlan) && /held-out adjudicated source-fidelity labels/i.test(statisticalPlan));
+check("Claims register rejects highest-probability-only framing", /highest-probability/i.test(claimsRegister) && /low-probability high-harm/i.test(claimsRegister));
+check("Claims register requires human verification boundaries", /clinician verification/i.test(claimsRegister) && /must not be treated as autonomous care guidance/i.test(claimsRegister));
+check("Claims register preserves blinded review protocol", /separate ignored key file/i.test(claimsRegister) && /Do not unblind/i.test(claimsRegister));
+check("Claims register rejects prevalence claims from enriched sampling", /not probability samples/i.test(claimsRegister) && /population prevalence/i.test(claimsRegister));
+check("Claims register defines paired source-fidelity endpoint", /paired difference/i.test(claimsRegister) && /subject_id/i.test(claimsRegister) && /semantic source-fidelity error/i.test(claimsRegister));
+check("Claims register requires intervals and independent fidelity labels", /Wilson intervals/i.test(claimsRegister) && /held-out adjudicated source-fidelity labels/i.test(claimsRegister));
 check("Claims register separates synthetic, proxy, and source-fidelity evidence", /Synthetic two-case fixture/.test(claimsRegister) && /Proxy-calibrated conformal/.test(claimsRegister) && /independent source-fidelity test cohort/i.test(claimsRegister));
 
 check(".env is ignored", /^\.env$/m.test(gitignore));

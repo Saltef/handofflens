@@ -33,15 +33,12 @@ const forbidden = [
 ];
 
 const portfolioDocAllowlist = new Set([
-  "docs/README.md",
   "docs/SCIENTIFIC_WRITEUP.md",
   "docs/claims-register.md",
   "docs/REPRODUCIBILITY.md",
   "docs/benchmark-adapter-scoring.md",
   "docs/public-benchmark-results-2026-07-21.md",
   "docs/records-adapter-contract.md",
-  "docs/data-exposure-attestation.md",
-  "docs/security-checklist.md",
 ]);
 
 const copied = [];
@@ -57,8 +54,7 @@ for (const rel of tracked) {
     continue;
   }
   const isPortfolioDocAsset = normalized.startsWith("docs/assets/");
-  const isPortfolioArchive = normalized.startsWith("docs/archive/");
-  if (portfolioMode && normalized.startsWith("docs/") && !portfolioDocAllowlist.has(normalized) && !isPortfolioDocAsset && !isPortfolioArchive) {
+  if (portfolioMode && normalized.startsWith("docs/") && !portfolioDocAllowlist.has(normalized) && !isPortfolioDocAsset) {
     skipped.push(rel);
     continue;
   }

@@ -18,6 +18,15 @@
 
 All existing results generated before protocol version 1.0 are exploratory.
 
+## Review And Governance Guardrails
+
+- Human verification remains central. HandoffLens can prioritize source-grounded review work, but clinician verification is required for clinical use and the system must not be treated as autonomous care guidance.
+- Risk-sensitive handoff review is not reducible to highest-probability text. Low-probability high-harm omissions can matter more than many correctly extracted routine facts.
+- Blinded review packets must keep the model key in a separate ignored key file. Do not unblind model identity before annotations are complete.
+- Risk-enriched claim samples are not probability samples and must not be used for population prevalence estimates.
+- Source-fidelity analysis should report a paired difference at the `subject_id` level for outputs with at least one semantic source-fidelity error.
+- Stronger source-fidelity claims require Wilson intervals and held-out adjudicated source-fidelity labels.
+
 ## Evidence Needed For Stronger Claims
 
 - Entailment-backed source support: lexical overlap should be replaced or supplemented with a factuality/entailment scorer, such as MiniCheck, AlignScore, or a clinical NLI comparator, followed by manual review of disagreements.
