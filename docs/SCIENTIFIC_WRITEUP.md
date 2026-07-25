@@ -4,7 +4,7 @@
 
 HandoffLens is an engineering research project on source-grounded extraction from discharge-summary-style clinical text. The practical goal is to make LLM-generated handoff evidence auditable: every extracted item should be tied to an exact source quote, every summary should be derived from accepted evidence, and failures should be visible rather than silently converted into plausible clinical prose.
 
-The current result is deliberately bounded. The project supports an engineering conclusion, not a clinical one: candidate-first extraction with deterministic provenance checks is more defensible than single-pass generation for this task because it makes unsupported claims, missing evidence, abstentions, cost, latency, and instability measurable. The strongest public benchmark-shaped result is the 207-row ACI-Bench Command A+ note run plus compact attribution repair: repaired notes retain 91.2% of raw ROUGE-L while reducing unsupported-sentence case rate by 75.4 percentage points under a lexical source-support proxy. Human factual review, entailment-backed source support, and in-domain clinical validation remain pending.
+The current result is deliberately bounded. The project supports an engineering conclusion, not a clinical one: candidate-first extraction with deterministic provenance checks is more defensible than single-pass generation for this task because it makes unsupported claims, missing evidence, abstentions, cost, latency, and instability measurable. The strongest public benchmark-shaped result is the 207-row ACI-Bench Command A+ note run plus pre-specified compact attribution repair: repaired notes retain 91.2% of raw ROUGE-L while reducing unsupported-sentence case rate by 75.4 percentage points under a lexical source-support proxy. This is a repository-scorer diagnostic, not an official ACI-Bench leaderboard result. Human factual review, entailment-backed source support, official-scorer reproduction, and in-domain clinical validation remain pending.
 
 ## Dataset summary
 
@@ -74,7 +74,7 @@ The latest public extraction schema also adds a source-grounded `handoff_atoms` 
 | Extractive rematerialization | Can final labels and summaries avoid unsupported details? | Reduced proxy audit issues from 15/20 records to 3/20. | Final narrative text should be extractive or separately verified. |
 | Assertion-aware and typed provenance | Can lexical provenance be separated from semantic assertion support? | Tooling implemented and covered by synthetic regression tests. | Enables run-level lexical-overstatement and typed-provenance reports; still proxy evidence until human review. |
 | Handoff atoms and atom/view bridge | Can one source fact be represented once and projected into overlapping clinical views? | Implemented with raw-model versus system-score reporting. | Better diagnostic architecture, but two-case pilot scores are not clinical benchmarks. |
-| ACI-Bench Command A+ and repair | Can model-generated notes beat simple extractive baselines while preserving auditable source support? | Command A+ beat compressed extractive baselines on ROUGE; compact repair retained most ROUGE-L and reduced unsupported-sentence flags. | Strong public benchmark-shaped result, but lexical support is not semantic entailment. |
+| ACI-Bench Command A+ and repair | Can model-generated notes beat simple extractive baselines while preserving auditable source support? | Command A+ beat compressed extractive baselines under the repository scorer; pre-specified compact repair retained most ROUGE-L and reduced unsupported-sentence flags. | Strong public benchmark-shaped result, but not leaderboard-comparable without official-scorer reproduction, and lexical support is not semantic entailment. |
 | BioScope assertion benchmark | Can the assertion layer be compared to transparent baselines? | Hybrid assertion detector matched the ConText-style cue comparator on the collapsed sentence-level task. | Adjacent-domain cue validation; target-aware item-quote behavior remains unmeasured on clinical notes. |
 | Reviewer workflow | Can non-clinician factual review be prepared? | Prepared, not completed. | Suitable for source-entailment checks, not clinical severity. |
 
@@ -113,6 +113,7 @@ The limitations are substantial and should be stated plainly:
 - Candidate-first v4's higher item yield should be interpreted through factual review to distinguish recovered evidence from over-extraction.
 - The current atom/view pilot uses only two synthetic cases; pilot F1 is useful for regression testing and failure analysis, not performance ranking.
 - ACI source-support repair is currently evaluated with lexical overlap and unsupported-sentence proxies, not semantic entailment.
+- ACI ROUGE values are repository-scorer diagnostics and should not be compared directly to published full-note scores until official preprocessing, scorer, split handling, and baseline sanity checks are reproduced.
 - BioScope public text is biomedical literature, not clinical notes; the clinical XML is redacted and not a valid clinical assertion benchmark.
 
 ## Highest-value remaining validation

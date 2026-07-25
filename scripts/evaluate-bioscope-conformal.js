@@ -7,6 +7,7 @@ const { detectAssertionStatus } = require("./clinical-validation-signals");
 const { parseBioScopeXml, collapseStatus, assertionInputForExample } = require("./evaluate-bioscope-assertions");
 
 const LABELS = ["present", "absent", "possible"];
+const SCORE_EPSILON = 1e-12;
 
 function parseArgs(argv) {
   const args = {
@@ -91,6 +92,11 @@ function evaluateBioScopeConformal(inputs, options = {}) {
       ? "Scope-assisted split-conformal assertion prediction sets over collapsed BioScope labels. The detector receives BioScope xcope text, so this is a diagnostic for calibrated abstention behavior, not the primary sentence-only benchmark and not a standard BioScope scope-boundary result."
       : "Sentence-only split-conformal assertion prediction sets over collapsed BioScope labels. This controls marginal prediction-set coverage under exchangeability of the calibration and test examples. Singleton sets are automatically accepted; multi-label sets are abstentions/escalations. This is not a clinical safety guarantee.",
     score_model: "Transparent lexical assertion score derived from the same cue families as the hard assertion detector, with lower confidence for conflicting or weak cue evidence.",
+    score_normalization: {
+      method: "nonnegative_linear_normalization_without_probability_clipping",
+      epsilon: SCORE_EPSILON,
+      caveat: "Scores are transparent lexical confidence weights, not calibrated model probabilities. Conformal validity depends on exchangeability of calibration and test examples; the lexical score shape affects set size and abstention behavior.",
+    },
   };
 }
 
@@ -236,9 +242,16 @@ function cueStrength(text, patterns) {
 }
 
 function normalizeScores(scores) {
-  const clipped = Object.fromEntries(LABELS.map((label) => [label, Math.max(0.01, Math.min(0.98, scores[label]))]));
-  const total = LABELS.reduce((sum, label) => sum + clipped[label], 0);
-  return Object.fromEntries(LABELS.map((label) => [label, clipped[label] / total]));
+  const cleaned = Object.fromEntries(LABELS.map((label) => {
+    const value = Number(scores[label]);
+    return [label, Number.isFinite(value) && value > 0 ? value : 0];
+  }));
+  const total = LABELS.reduce((sum, label) => sum + cleaned[label], 0);
+  if (!Number.isFinite(total) || total <= SCORE_EPSILON) {
+    const uniform = 1 / LABELS.length;
+    return Object.fromEntries(LABELS.map((label) => [label, uniform]));
+  }
+  return Object.fromEntries(LABELS.map((label) => [label, cleaned[label] / total]));
 }
 
 function f1ForLabel(rows, label) {
@@ -303,4 +316,4 @@ function main() {
 }
 
 if (require.main === module) main();
-module.exports = { evaluateBioScopeConformal, assertionScores, conformalQuantile };
+module.exports = { evaluateBioScopeConformal, assertionScores, conformalQuantile, normalizeScores };

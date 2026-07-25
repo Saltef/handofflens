@@ -64,7 +64,18 @@ Command A+ was run over the five canonical full-note ACI splits (`207/207` rows 
 
 The model-generated notes beat the compressed deterministic baselines on ROUGE, but had weak lexical source support by the repository's current source-support proxy. This does not prove hallucination: a concise clinical paraphrase can be correct while lexically novel. It does, however, show why citation-level or schema-level validity alone is too weak for a source-grounded clinical handoff system.
 
-An attribution-repair diagnostic was then run over the same generated notes. The selected repair method, `compact_extractive`, uses the model note as a salience query and replaces generated sentences with compact source-token spans. Repair methods are ranked by scored-case coverage, token-balance score, ROUGE-L retention, unsupported-sentence case-rate reduction, source-bigram support, then ROUGE-2. Source-token support is reported as a gate-style lexical diagnostic, not the primary ranking target. Reference notes are used only for scoring, not for content selection.
+Comparability caveat: the `0.2550` ROUGE-L F1 should be read as `25.50` on a percentage scale, but it is still far below published full-note ACI-Bench numbers such as `48.62`. Ranked by likely contribution, the gap is:
+
+1. Official-protocol mismatch. These numbers use the repository's reproduced public-JSON scorer, not the official leaderboard package, split policy, preprocessing, or any hidden challenge submission path. This is the largest confound until the official scorer is reproduced locally.
+2. Prompt/objective mismatch. The run used a conservative source-grounded HandoffLens note prompt, not an ACI-tuned full-note generator optimized for reference-note ROUGE.
+3. Coverage and length mismatch. Command A+ outputs average `250.6` tokens against expert references averaging roughly `429` tokens across the full-note splits, so recall-heavy ROUGE is structurally penalized.
+4. No ACI-specific tuning loop. There is no prompt selection, model selection, or decoding search on a held-out ACI development split.
+5. Split aggregation. The table aggregates train, validation, and three public held-out split files for a benchmark-shaped diagnostic; it is not a single official test submission.
+6. ROUGE implementation drift. Tokenization, stemming, casing, newline handling, and section formatting can move ROUGE by several points even when the task is otherwise matched.
+
+The correct engineering response is not to hide the low number. It is to keep it as a reproduced scorer result, add an official-scorer reproduction as a named follow-up, and avoid claiming leaderboard comparability until the transcript-copy baseline and at least one published-system sanity check match under the same scorer.
+
+An attribution-repair diagnostic was then run over the same generated notes. The primary repair method, `compact_extractive`, was pre-specified as the reporting policy because it targets compact source-span auditability and bounded token growth. The four-method table below is an ablation and sensitivity analysis on the 207 rows, not a clean winner-selection protocol. Repair methods are still ranked descriptively by scored-case coverage, token-balance score, ROUGE-L retention, unsupported-sentence case-rate reduction, source-bigram support, then ROUGE-2. Source-token support is reported as a gate-style lexical diagnostic, not the primary ranking target. Reference notes are used only for scoring, not for content selection.
 
 Aggregate full-note results across train, validation, and the three public held-out split files:
 
@@ -83,6 +94,8 @@ The source-token support of `1.0000` for repair and extractive baselines is expe
 | `guided_extractive` | 91.7% | 83.1 percentage points | +128.3% | no, too verbose |
 | `replace_unsupported` | 91.5% | 83.1 percentage points | +119.8% | no, too verbose |
 | `drop_unsupported` | 14.0% | 100.0 percentage points | -95.8% | no, mostly deletes the note |
+
+Method-selection caveat: choosing `compact_extractive` because it ranks best on this same table would be optimistic selection on the test rows. With only 207 cases, the defensible protocol is either to pre-specify one repair policy before final scoring, as done here, or to use repeated/cross-fit splits for selection and then report the locked policy on held-out challenge rows. The table is useful because it exposes the trade-off: `guided_extractive` and `replace_unsupported` reduce more unsupported-sentence flags, but more than double output length; `drop_unsupported` proves that perfect lexical grounding can be obtained by deleting the note.
 
 Interpretation: the best current public design is not plain model generation and not pure extraction. It is a two-stage, source-grounded note compiler: use the model for salience and organization, then force the final auditable artifact through compact source-span repair. This improves substantially over deterministic extractive baselines while making overstatement measurable. The trade-off is real: ROUGE-L drops from `0.2550` to `0.2324`, and repaired notes remain longer and less polished than the model notes. The unresolved engineering target is semantic source support: compact lexical spans should be replaced or augmented with entailment-backed, assertion-aware evidence atoms before making stronger clinical claims.
 
@@ -160,6 +173,8 @@ Hard-label held-out baseline: accuracy 0.8654, macro-F1 0.7715.
 
 Interpretation: the global threshold is operationally attractive but undercovers minority assertion classes. Label-conditional conformal calibration repairs the minority-class coverage problem, but abstains on most examples. For HandoffLens, this supports using conformal sets as an audit/escalation layer, not as a stand-alone safety guarantee.
 
+Calibration caveat: the conformal runner now normalizes nonnegative lexical confidence weights without the previous `[0.01, 0.98]` clipping. Clipping compressed high-confidence scores and inflated near-zero labels before calibration, which could change prediction-set sizes for scoring reasons rather than evidence reasons. The historical table above should be regenerated before using conformal set size or abstention rate as a headline result.
+
 ## Commands Run
 
 ```bash
@@ -188,6 +203,8 @@ The remaining high-value work is evidence, not architecture polish:
 - These ACI numbers are not official ACI-Bench model-generation leaderboard scores.
 - The compressed ACI baselines are not clinically adequate notes.
 - The Command A+ and attribution-repair numbers are benchmark-shaped diagnostics, not official ACI-Bench leaderboard submissions.
+- The `0.2550` Command A+ ROUGE-L score must not be compared directly to published ACI-Bench full-note scores without reproducing the official scorer, preprocessing, split, and baseline sanity checks.
+- The attribution-repair ablation table is not a same-row method-selection proof; `compact_extractive` is treated as a pre-specified policy, and the four-method ranking is descriptive.
 - Lexical source support is not semantic entailment; high source-token support can still miss clinical meaning, negation, or temporal scope.
 - Source-token support of `1.0000` after source-span repair is expected by construction and is not the headline result. ROUGE retention, unsupported-sentence reduction, token growth, and future entailment checks are more informative.
 - The ACI item-alignment numbers are not native expert entity-extraction F1.
@@ -197,5 +214,6 @@ The remaining high-value work is evidence, not architecture polish:
 - The public BioScope text result is adjacent-domain biomedical literature, not in-domain clinical-note validation.
 - The redacted BioScope clinical XML result is a data-redaction diagnostic, not clinical assertion performance.
 - BioScope conformal coverage is marginal prediction-set coverage for the assertion subtask, not clinical safety coverage.
+- BioScope conformal set-size and abstention numbers should be regenerated after score-normalization changes before being used as headline metrics.
 - The small transformer comparator was not run because no suitable local model/runtime was available in the public repo.
 - No i2b2 or n2c2 result is claimed without DUA-controlled data.

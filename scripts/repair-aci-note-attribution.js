@@ -7,6 +7,8 @@ const { scoreAciNoteGeneration } = require("./score-aci-note-generation");
 const { scoreAciNoteFactuality } = require("./score-aci-note-factuality");
 
 const DEFAULT_METHODS = ["drop_unsupported", "replace_unsupported", "compact_extractive", "guided_extractive"];
+const DEFAULT_SELECTION_POLICY = "prespecified";
+const DEFAULT_SELECTION_METHOD = "compact_extractive";
 
 function parseArgs(argv) {
   const args = {
@@ -18,6 +20,8 @@ function parseArgs(argv) {
     "min-overlap": "0.28",
     "backfill-budget": "prediction_plus_15pct",
     "bootstrap-repeats": "1000",
+    "selection-policy": DEFAULT_SELECTION_POLICY,
+    "selection-method": DEFAULT_SELECTION_METHOD,
   };
   for (let index = 0; index < argv.length; index += 1) {
     const item = argv[index];
@@ -40,6 +44,8 @@ function evaluateAciNoteAttributionRepair(rows, options = {}) {
   const methods = methodList(options.methods);
   const minOverlap = numberOption(options.minOverlap ?? options["min-overlap"], 0.28);
   const bootstrapRepeats = numberOption(options.bootstrapRepeats ?? options["bootstrap-repeats"], 1000);
+  const selectionPolicy = String(options.selectionPolicy || options["selection-policy"] || DEFAULT_SELECTION_POLICY);
+  const selectionMethod = String(options.selectionMethod || options["selection-method"] || DEFAULT_SELECTION_METHOD);
   const beforeRows = rows.filter((row) => firstValue(row, [predictionField]));
   const before = {
     rouge: scoreAciNoteGeneration(beforeRows, { split, predictionField, bootstrapRepeats }).summary,
@@ -98,6 +104,11 @@ function evaluateAciNoteAttributionRepair(rows, options = {}) {
       || (right.source_bigram_support_rate - left.source_bigram_support_rate)
       || (right.rouge2_f1 - left.rouge2_f1)
     ));
+  const methodSelection = selectRepairMethod(ranking, {
+    methods,
+    selectionPolicy,
+    selectionMethod,
+  });
 
   return {
     generated_at: new Date().toISOString(),
@@ -109,13 +120,45 @@ function evaluateAciNoteAttributionRepair(rows, options = {}) {
       min_overlap: minOverlap,
       backfill_budget: options.backfillBudget || options["backfill-budget"] || "prediction_plus_15pct",
       methods,
+      selection_policy: selectionPolicy,
+      selection_method: selectionMethod,
     },
     before,
     methods: reports,
     ranking,
-    selected_method: ranking[0]?.method || null,
-    selection_rule: "Rank by scored-case rate, token-balance score, ROUGE-L retention, unsupported-sentence case-rate reduction, source-bigram support, then ROUGE-2 F1. Source-token support is retained as a gate-style lexical diagnostic, not the primary contribution, because source-span repair makes high token support expected by construction.",
+    selected_method: methodSelection.selected_method,
+    method_selection: methodSelection,
+    selection_rule: methodSelection.selection_rule,
     interpretation: "Deterministic attribution-repair diagnostic. The repair uses generated notes as salience queries and emits only source-dialogue text spans. The meaningful trade-off is ROUGE retention and unsupported-sentence reduction under source-span constraints; high lexical source support does not prove semantic factuality.",
+  };
+}
+
+function selectRepairMethod(ranking, options = {}) {
+  const available = new Set(ranking.map((item) => item.method));
+  const policy = options.selectionPolicy || DEFAULT_SELECTION_POLICY;
+  const prespecified = options.selectionMethod || DEFAULT_SELECTION_METHOD;
+  if (policy === "ranked_same_rows") {
+    return {
+      policy,
+      selected_method: ranking[0]?.method || null,
+      prespecified_method: prespecified,
+      ranking_is_descriptive: false,
+      leakage_caveat: "This policy selects the apparent winner on the same rows used for reporting and should be treated as exploratory model-selection evidence, not a clean held-out estimate.",
+      recommended_207_case_protocol: "With only 207 cases, pre-register one repair policy before final scoring, or use repeated/cross-fit splits for method selection and report the locked winner on held-out challenge rows.",
+      selection_rule: "Exploratory ranking on the reported rows: scored-case rate, token-balance score, ROUGE-L retention, unsupported-sentence case-rate reduction, source-bigram support, then ROUGE-2 F1. Use only for sensitivity analysis.",
+    };
+  }
+  const selected = available.has(prespecified) ? prespecified : null;
+  return {
+    policy: "prespecified",
+    selected_method: selected,
+    prespecified_method: prespecified,
+    ranking_is_descriptive: true,
+    leakage_caveat: "The four-method table is an ablation over the reported rows. It is not used to choose the primary repair method, because same-row selection would overfit the 207-case result.",
+    recommended_207_case_protocol: "With 207 cases, lock compact_extractive from prior design constraints or select on a small development fold, then report only the locked policy on held-out challenge rows with bootstrap intervals.",
+    selection_rule: selected
+      ? `Primary method is pre-specified as ${selected}. Ranking is descriptive only: scored-case rate, token-balance score, ROUGE-L retention, unsupported-sentence case-rate reduction, source-bigram support, then ROUGE-2 F1.`
+      : `No primary method selected because the pre-specified method ${prespecified} was not among the evaluated methods. Ranking is descriptive only.`,
   };
 }
 
@@ -591,6 +634,8 @@ function main() {
     minOverlap: args["min-overlap"],
     backfillBudget: args["backfill-budget"],
     bootstrapRepeats: args["bootstrap-repeats"],
+    selectionPolicy: args["selection-policy"],
+    selectionMethod: args["selection-method"],
   });
   fs.mkdirSync(path.dirname(args.out), { recursive: true });
   fs.writeFileSync(args.out, `${JSON.stringify(report, null, 2)}\n`);

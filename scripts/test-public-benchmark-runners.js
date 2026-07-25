@@ -6,7 +6,7 @@ const { deriveReferenceGold } = require("./derive-reference-gold");
 const { predictBenchmarkCandidates } = require("./predict-benchmark-candidates");
 const { scoreBenchmarkRecords } = require("./score-benchmark-records");
 const { evaluateBioScopeAssertions, parseBioScopeXml } = require("./evaluate-bioscope-assertions");
-const { evaluateBioScopeConformal } = require("./evaluate-bioscope-conformal");
+const { evaluateBioScopeConformal, normalizeScores } = require("./evaluate-bioscope-conformal");
 const { evaluateBioScopeBaselines } = require("./evaluate-bioscope-baselines");
 
 const aci = adaptAciBenchRows([
@@ -44,6 +44,11 @@ assert.ok(conformal.split.calibration_examples > 0);
 assert.ok(conformal.split.test_examples > 0);
 assert.ok(conformal.summary.empirical_coverage >= 0 && conformal.summary.empirical_coverage <= 1);
 assert.ok(conformal.summary.singleton_acceptance_rate >= 0 && conformal.summary.singleton_acceptance_rate <= 1);
+assert.equal(conformal.score_normalization.method, "nonnegative_linear_normalization_without_probability_clipping");
+const normalizedScores = normalizeScores({ present: 100, absent: 0, possible: -5 });
+assert.equal(normalizedScores.present, 1);
+assert.equal(normalizedScores.absent, 0);
+assert.equal(normalizedScores.possible, 0);
 const baselines = evaluateBioScopeBaselines([], { corpus: "all", examples });
 assert.equal(baselines.schema_version, "bioscope-baseline-comparison-v1");
 assert.equal(baselines.target_mode, "sentence");

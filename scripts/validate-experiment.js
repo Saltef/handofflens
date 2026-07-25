@@ -28,6 +28,8 @@ const requiredFiles = [
   ".env.example",
   ".gitignore",
   ".dockerignore",
+  ".github/pull_request_template.md",
+  ".github/workflows/check.yml",
   "Dockerfile",
   "docker-compose.yml",
   "README.md",
@@ -50,6 +52,7 @@ const requiredFiles = [
   "review.js",
   "scripts/evaluate-models.js",
   "scripts/validate-model-evidence.js",
+  "scripts/check-syntax.js",
   "scripts/schema-utils.js",
   "scripts/judge-handoffs.js",
   "scripts/run-batches.js",
@@ -138,6 +141,9 @@ const duplicateClusterSource = readText(path.join("scripts", "cluster-near-dupli
 const envExample = readText(".env.example");
 const gitignore = readText(".gitignore");
 const dockerignore = readText(".dockerignore");
+const ciWorkflow = readText(path.join(".github", "workflows", "check.yml"));
+const prTemplate = readText(path.join(".github", "pull_request_template.md"));
+const packageJson = readJson("package.json");
 
 check("Schema root is object", schema.type === "object");
 check("Schema forbids root extra keys", schema.additionalProperties === false);
@@ -199,8 +205,11 @@ check("Duplicate-cluster script parses", (() => { try { new Function(duplicateCl
 check("Evaluator interleaves paired configurations", evaluatorSource.includes("orderedModelsForCase(models, testCase.case_id)") && evaluatorSource.includes("execution_design"));
 check("Evaluator records per-attempt telemetry", ["attempt_audit", "provider_request_id", "returned_model", "finish_reason", "request_hash", "source_hash"].every((item) => evaluatorSource.includes(item)));
 check("Model evidence validator rejects credential and provider-error runs", ["Missing\\s+(COHERE|OPENROUTER)_API_KEY", "\\b401\\b", "\\b403\\b", "provider_error", "no_selected_results", "zero_scored"].every((item) => modelEvidenceValidatorSource.includes(item)));
-check("Provider-specific eval validation script is wired", readJson("package.json").scripts?.["eval:cohere-plus:validate"]?.includes("validate-model-evidence.js --input results/cohere-plus-eval.json"));
-check("Benchmark adapter and scoring scripts are wired", ["benchmark:adapt:aci", "benchmark:score:aci-note", "benchmark:score:aci-factuality", "benchmark:generate:aci-note", "benchmark:aci-note:baselines", "benchmark:aci-note:cohere", "benchmark:aci-note:repair", "benchmark:score", "benchmark:test", "benchmark:public:test", "benchmark:bioscope", "benchmark:bioscope:conformal", "benchmark:bioscope:baselines", "benchmark:derive-reference-gold", "benchmark:predict:candidates", "benchmark:validate"].every((key) => readJson("package.json").scripts?.[key]));
+check("Provider-specific eval validation script is wired", packageJson.scripts?.["eval:cohere-plus:validate"]?.includes("validate-model-evidence.js --input results/cohere-plus-eval.json"));
+check("Benchmark adapter and scoring scripts are wired", ["benchmark:adapt:aci", "benchmark:score:aci-note", "benchmark:score:aci-factuality", "benchmark:generate:aci-note", "benchmark:aci-note:baselines", "benchmark:aci-note:cohere", "benchmark:aci-note:repair", "benchmark:score", "benchmark:test", "benchmark:public:test", "benchmark:bioscope", "benchmark:bioscope:conformal", "benchmark:bioscope:baselines", "benchmark:derive-reference-gold", "benchmark:predict:candidates", "benchmark:validate"].every((key) => packageJson.scripts?.[key]));
+check("Syntax check is file-discovery based", packageJson.scripts?.check === "node scripts/check-syntax.js && node scripts/validate-experiment.js");
+check("CI runs the full public verification gate", /pull_request/.test(ciWorkflow) && /npm run check:all/.test(ciWorkflow));
+check("PR template requires evidence and privacy review", /Evidence/.test(prTemplate) && /Claim Boundary/.test(prTemplate) && /Privacy Sweep/.test(prTemplate));
 check("Private confirmatory cohorts are ignored", /^eval\/confirmatory_\*\.json$/m.test(gitignore) && /^eval\/confirmatory_\*\.json$/m.test(dockerignore));
 check("LLM judge is blinded by default", judgeSource.includes("const blind = !Boolean(args.unblinded)"));
 

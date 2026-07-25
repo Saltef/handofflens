@@ -21,6 +21,8 @@ The current public benchmark result is a 207-row ACI-Bench note-generation run w
 
 The selected repair keeps 91.2% of the raw Command A+ ROUGE-L score while reducing unsupported-sentence case rate by 75.4 percentage points. The tradeoff is output length: repaired notes are 73.9% longer on average. The 1.0000 lexical support score is expected by construction because the repair emits source-dialogue spans; it is a useful gate diagnostic, not proof of semantic factuality.
 
+Two caveats matter. First, this `0.2550` ROUGE-L result is a reproduced public-JSON diagnostic, not an official ACI-Bench leaderboard submission; it should not be compared directly to published full-note scores without matching the official scorer, preprocessing, and split protocol. Second, `compact_extractive` is treated as a pre-specified repair policy. The four-method repair table is an ablation over the reported rows, not a same-row winner-selection proof.
+
 Earlier development runs explain why this matters. In a 400-case engineering run, roughly 88% of baseline LLM outputs passed JSON schema validation, but only about 10% survived an exact-source provenance check. The baseline produced 5,467 generated quotations that could not be found verbatim in the source text.
 
 That low provenance pass rate is the finding: valid-looking structured output can still be ungrounded.
@@ -105,7 +107,7 @@ The Docker image does not copy `.env`, raw clinical data, benchmark corpora, gen
 | Component | Status | Interpretation |
 | --- | --- | --- |
 | ACI-Bench Command A+ note run | Public benchmark-shaped result | 207/207 rows completed; generated notes beat deterministic extractive baselines on ROUGE but still contain unsupported lexical content |
-| Attribution repair diagnostic | Public benchmark-shaped result | `compact_extractive` retains most ROUGE-L while reducing unsupported-sentence case rate; high lexical support is by construction, not semantic factuality proof |
+| Attribution repair diagnostic | Public benchmark-shaped result | Pre-specified `compact_extractive` retains most ROUGE-L while reducing unsupported-sentence case rate; high lexical support is by construction, not semantic factuality proof |
 | BioScope assertion evaluation | Adjacent-domain component result | Sentence-level cue classification on biomedical literature, not clinical notes or BioScope scope-boundary resolution |
 | Structured-output baseline | Completed | High schema validity, poor exact-source provenance |
 | Candidate-first v4 | Strongest current architecture | 19/20 deterministic-gate pass on fresh rerun; one abstention |
