@@ -88,6 +88,22 @@ npm run evidence:pipeline:v3:pilot
 npm run candidate:v4:pilot
 ```
 
+Exact-source-provenance misses can be decomposed and tested for deterministic span-ID recovery without weakening the strict gate:
+
+```bash
+npm run provenance:misses -- --input results/model-eval.json --cases eval/pilot_reference_cases.json --out results/model-eval-provenance-misses.json
+```
+
+For private held-out runs, use the same command with authorized local result and case files, and keep the generated case-level JSON/Markdown outputs ignored. The taxonomy reports strict exact-span support, recovered single-span and multi-span support, provenance abstentions, lowest-performing records, source-size buckets, and entailment-ready span/hypothesis pairs. It is a triage diagnostic, not a hallucination, clinical factuality, or semantic-entailment label.
+
+The lowest-performing evidence items can then be stress-tested with alternative parsing policies:
+
+```bash
+npm run decomposition:stress -- --input results/model-eval.json --cases eval/pilot_reference_cases.json --out results/model-eval-decomposition-stress.json --task-limit 20 --case-limit 20
+```
+
+This compares exact full-note matching, normalized full-note matching, line-span retrieval, section-filtered retrieval, and query-aware multi-span retrieval on failed exact-provenance items. For private held-out runs, commit only aggregate counts and keep the case-level output ignored.
+
 ## Human-review workflow
 
 Review packets and method keys contain source excerpts and remain under ignored local output directories. Commit only blank schemas, protocols, and aggregate analyses.

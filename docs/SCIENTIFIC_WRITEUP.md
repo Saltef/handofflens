@@ -39,7 +39,9 @@ flowchart TD
     K --> L["Clinical review if clinical claims are pursued"]
 ```
 
-The initial 400-case engineering run tested structured output under several configurations. JSON/schema completion was much better than source grounding: many outputs that looked structurally valid failed post hoc provenance checks because selected quotes could not be verified exactly in the source. This is the central negative result of the project: schema compliance is not the same thing as evidence fidelity.
+The initial 400-case engineering run tested structured output under several configurations. JSON/schema completion was much better than strict source grounding: many outputs that looked structurally valid failed post hoc provenance checks because selected quotes could not be verified exactly in the source. A later miss-taxonomy and deterministic span-ID recovery pass narrowed the interpretation: many exact-match failures appear to be quote-format, non-contiguous citation, or pointer-drift artifacts rather than direct evidence of fabrication. In the selected JSON-schema cell, item-level support improves from 54.4% exact-contiguous quotes to 82.9% span-supported items, while 37.5% of exact misses still abstain. The central negative result still holds, but it is more precise: schema compliance carried little information about auditable source anchoring.
+
+Because the lowest-performing cases were also dense in extracted claims, HandoffLens added a small decomposition stress diagnostic rather than claiming a broad causal length effect. The diagnostic selected 20 failed exact-provenance evidence items from each of three held-out Cohere cells and compared five support policies: exact full-note matching, normalized full-note matching, line-span retrieval, section-filtered retrieval, and query-aware multi-span retrieval. Across 60 deliberately difficult items, exact matching supported 0, normalized full-note matching supported 8, line-span retrieval supported 15, section-filtered retrieval supported 10, and query-aware multi-span retrieval supported 15. Full-note normalization consumed about 1,792 source words when it succeeded; targeted line and query-aware retrieval consumed about 9.8 and 11.9 words. The design implication is not "long notes cause failure." It is narrower: some failures are recoverable by decomposing dense notes into auditable spans, but many low-overlap items remain unsupported and should abstain or route to review.
 
 The evidence-span v2 design then moved toward stricter source pointers. The multi-stage v3 pipeline was tested and rejected because it increased complexity without sufficient stability. Candidate-first v4 became the current strongest engineering direction: deterministic section/candidate discovery first, model classification second, deterministic materialization last.
 
@@ -59,6 +61,8 @@ flowchart LR
 
 The key design choice is to restrict generation. The model is not asked to freely summarize the whole note. It is asked to classify or organize candidate evidence, while deterministic code preserves source quotes, identifiers, and section provenance. This is less glamorous than a single clever prompt, but scientifically much cleaner.
 
+This direction is also consistent with recent clinical NLP work. CLEAR reports that entity-aware retrieval can outperform embedding RAG and full-note prompting while using fewer tokens [6]. CLINES, a recent preprint, uses semantic chunking, extraction, normalization, date handling, and cross-chunk aggregation, while still emphasizing manual review for residual hallucination [7]. FactEHR frames clinical factuality around fact decomposition and entailment pairs, showing why source support should eventually move beyond lexical span checks [8]. Earlier clinical sectioning work also supports treating section detection as a first-class preprocessing problem rather than an afterthought [9].
+
 After critique of the original lexical-provenance framing, the audit layer now treats provenance as typed rather than monolithic. Evidence can be classified as direct quotation, supported normalization, inferential support, unsupported, or assertion-conflicting. This matters because exact substring containment is necessary but not sufficient: a quote can be present while the surrounding source states the item is absent, possible, conditional, historical, or associated with someone else.
 
 The latest public extraction schema also adds a source-grounded `handoff_atoms` layer. Atoms preserve action, target, timing, threshold, owner, instruction kind, safety type, derived views, rationale, and source quote before the item is projected into compatibility fields such as `follow_up_actions` and `safety_flags`. The evaluator then runs deterministic atom/view canonicalization: source-quoted atoms can project into missing category fields, and source-quoted category items can backfill atoms. Reports show both raw-model F1 and post-canonicalization system F1 so model behavior is not confused with deterministic repair.
@@ -67,7 +71,8 @@ The latest public extraction schema also adds a source-grounded `handoff_atoms` 
 
 | Stage | What it tested | Result | Interpretation |
 | --- | --- | --- | --- |
-| 400-case structured-output baseline | Can an instruction model produce valid JSON-like extractions at scale? | High schema validity but poor post hoc quote provenance. | Structured output alone is insufficient. |
+| 400-case structured-output baseline | Can an instruction model produce valid JSON-like extractions at scale? | High schema validity but poor strict quote provenance; span-ID recovery improves item-level auditability while leaving many abstentions. | Structured output alone is insufficient, and exact-span failure should not be reported as hallucination without review or entailment scoring. |
+| Decomposition stress diagnostic | Do parsing/chunking policies help on the lowest exact-provenance items? | Targeted line/query-aware retrieval supported 15/60 worst selected items, versus 8/60 for normalized full-note matching and 0/60 for exact full-note matching. | Parsing helps the recoverable subset with far less context, but it does not solve low-overlap or semantic-fidelity failures. |
 | Evidence-span v2 | Can stricter source spans improve grounding? | More conservative and more auditable. | Better scientific direction, but may miss items. |
 | Multi-stage v3 | Can staged extraction/recovery improve robustness? | Rejected after development testing. | More calls did not automatically mean better evidence fidelity. |
 | Candidate-first v4 | Can deterministic candidates plus model classification improve yield? | 19/20 final development cases passed deterministic gates, with one abstention. | Strongest current engineering architecture; over-extraction risk remains unresolved. |
@@ -115,6 +120,7 @@ The limitations are substantial and should be stated plainly:
 - ACI source-support repair is currently evaluated with lexical overlap and unsupported-sentence proxies, not semantic entailment.
 - ACI ROUGE values are repository-scorer diagnostics and should not be compared directly to published full-note scores until official preprocessing, scorer, split handling, and baseline sanity checks are reproduced.
 - BioScope public text is biomedical literature, not clinical notes; the clinical XML is redacted and not a valid clinical assertion benchmark.
+- The decomposition stress diagnostic is selected from the worst exact-provenance items. It is a targeted failure-analysis experiment, not a population estimate or proof that note length causally drives errors.
 
 ## Highest-value remaining validation
 
@@ -143,4 +149,12 @@ This project, in its current iteration, does not claim clinical safety, clinical
 [4] Liu, Y., Iter, D., Xu, Y., Wang, S., Xu, R., & Zhu, C. (2023). G-Eval: NLG Evaluation using GPT-4 with Better Human Alignment. arXiv:2303.16634.
 
 [5] Wei, J., Wang, X., Schuurmans, D., Bosma, M., Ichter, B., Xia, F., Chi, E., Le, Q., & Zhou, D. (2022). Chain-of-Thought Prompting Elicits Reasoning in Large Language Models. arXiv:2201.11903.
+
+[6] Lopez, I., Swaminathan, A., Vedula, K., et al. (2025). Clinical entity augmented retrieval for clinical information extraction. *npj Digital Medicine*, 8, 45. https://doi.org/10.1038/s41746-024-01377-1
+
+[7] CLINES: Clinical LLM-based Information Extraction and Structuring Agent. medRxiv preprint. https://www.medrxiv.org/content/10.64898/2025.12.01.25341355v2
+
+[8] Munnangi, M., Swaminathan, A., Fries, J. A., et al. (2025). FactEHR: A Dataset for Evaluating Factuality in Clinical Notes Using LLMs. *Proceedings of Machine Learning Research*, 298. https://proceedings.mlr.press/v298/munnangi25a.html
+
+[9] Zhang, F., Laish, I., Benjamini, A., & Feder, A. (2022). Section Classification in Clinical Notes with Multi-task Transformers. *Proceedings of LOUHI*. https://aclanthology.org/2022.louhi-1.7/
 

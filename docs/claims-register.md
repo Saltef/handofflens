@@ -4,6 +4,8 @@
 | --- | --- | --- |
 | Synthetic two-case fixture | The pipeline parses, validates, and scores known fixtures | Clinical accuracy |
 | Unlabeled study cohort | Completion, schema validity, route-specific latency, cost, repair burden | Precision, recall, safety, or model superiority |
+| 400-case structured-output exact-provenance baseline | Schema-valid output and exact source anchoring are separable; miss taxonomy and deterministic span-ID recovery can prioritize review of normalization, non-contiguous quote, pointer-drift, weak-overlap, low-overlap, and abstain cases | Hallucination rate, clinical factuality, semantic entailment, or proof that low-overlap cases are fabricated without manual review |
+| Decomposition stress diagnostic on lowest exact-provenance items | Alternative parsing policies can be compared on deliberately difficult failed-provenance evidence items; targeted line/query-aware retrieval can recover additional auditable spans with much lower context cost than full-note normalization | Population performance, causal proof that note length causes failure, semantic factuality, or proof that chunking solves low-overlap unsupported items |
 | LLM-judge review | Exploratory failure taxonomy and review prioritization hypotheses | Clinician ground truth or clinical accuracy |
 | Risk-enriched clinician development cohort | Failure modes, annotation refinement, judge/routing development | Population prevalence or confirmatory comparison |
 | Probability-sampled independent source-fidelity test cohort | Prespecified paired semantic-fidelity endpoints with intervals | Clinical safety, appropriateness, harmfulness, or generalization beyond the study population |

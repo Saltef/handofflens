@@ -1,9 +1,9 @@
 {
-  "generated_on": "2026-06-23",
+  "generated_on": "2026-08-07",
   "status": "development_evidence_only",
   "clinical_validation_complete": false,
   "human_factual_review_complete": false,
-  "headline": "Schema-valid extraction is not evidence fidelity. A naive structured-output baseline frequently produced valid-looking but ungrounded quotations; candidate-first extraction was built to make that failure visible and reduce it through deterministic provenance.",
+  "headline": "Schema-valid extraction is not evidence fidelity. A naive structured-output baseline frequently produced valid-looking fields whose attached source quotes did not resolve exactly; candidate-first extraction was built to make that failure visible and reduce it through deterministic provenance.",
   "heldout_engineering_run": {
     "cases": 400,
     "json_schema_reasoning_128_valid": 352,
@@ -11,7 +11,63 @@
     "strict_tools_reasoning_512_valid": 299,
     "posthoc_provenance_gate_passed": 40,
     "generated_quote_not_found_issues": 5467,
-    "how_to_read_this": "The low provenance pass rate is the baseline finding, not a defect in the repository. It quantifies how often schema-valid output was not exactly grounded in the source text."
+    "selected_json_schema_512_exact_quote_item_rate": 0.5443417436922309,
+    "selected_json_schema_512_span_supported_item_rate": 0.8290448830044134,
+    "selected_json_schema_512_exact_miss_span_supported_items": 3419,
+    "selected_json_schema_512_provenance_abstain_items": 2053,
+    "selected_json_schema_512_span_case_gate_passed": 31,
+    "selected_json_schema_512_span_case_gate_rate_among_completed": 0.08857142857142856,
+    "how_to_read_this": "The low exact-provenance pass rate is the baseline finding, not a defect in the repository. It quantifies how often schema-valid output lacked an attached quote that resolved verbatim. Deterministic span-ID recovery improves item-level auditability, but remaining abstentions and low case-level full-pass rates show this is not a solved grounding or semantic-entailment result.",
+    "decomposition_stress_diagnostic": {
+      "date": "2026-08-07",
+      "private_case_level_outputs_committed": false,
+      "task_selection": "20 failed exact-provenance evidence items from each of three held-out Cohere cells, selected from the lowest exact-provenance records.",
+      "total_tasks": 60,
+      "aggregate_supported_tasks": {
+        "exact_full_note": 0,
+        "normalized_full_note": 8,
+        "line_span_id": 15,
+        "section_filtered_span": 10,
+        "query_aware_multispan": 15
+      },
+      "aggregate_support_rates": {
+        "exact_full_note": 0,
+        "normalized_full_note": 0.13333333333333333,
+        "line_span_id": 0.25,
+        "section_filtered_span": 0.16666666666666666,
+        "query_aware_multispan": 0.25
+      },
+      "mean_context_words_on_supported_items": {
+        "normalized_full_note": 1792.1,
+        "line_span_id": 9.8,
+        "section_filtered_span": 10.1,
+        "query_aware_multispan": 11.9
+      },
+      "cells": [
+        {
+          "cell": "json_schema_thinking_128",
+          "tasks": 20,
+          "line_span_id_supported": 3,
+          "query_aware_multispan_supported": 3,
+          "best_support_rate": 0.15
+        },
+        {
+          "cell": "json_schema_thinking_512",
+          "tasks": 20,
+          "line_span_id_supported": 5,
+          "query_aware_multispan_supported": 5,
+          "best_support_rate": 0.25
+        },
+        {
+          "cell": "strict_tool_thinking_512",
+          "tasks": 20,
+          "line_span_id_supported": 7,
+          "query_aware_multispan_supported": 7,
+          "best_support_rate": 0.35
+        }
+      ],
+      "interpretation": "Targeted decomposition helps recover a subset of source anchors with far less context than full-note normalization, but most deliberately difficult items still abstain. This is parsing-policy failure analysis, not semantic factuality or proof that note length causally drives errors."
+    }
   },
   "architecture_development": {
     "evidence_span_v2_final_rerun": {

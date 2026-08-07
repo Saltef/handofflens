@@ -23,9 +23,11 @@ The selected repair keeps 91.2% of the raw Command A+ ROUGE-L score while reduci
 
 Two caveats matter. First, this `0.2550` ROUGE-L result is a reproduced public-JSON diagnostic, not an official ACI-Bench leaderboard submission; it should not be compared directly to published full-note scores without matching the official scorer, preprocessing, and split protocol. Second, `compact_extractive` is treated as a pre-specified repair policy. The four-method repair table is an ablation over the reported rows, not a same-row winner-selection proof.
 
-Earlier development runs explain why this matters. In a 400-case engineering run, roughly 88% of baseline LLM outputs passed JSON schema validation, but only about 10% survived an exact-source provenance check. The baseline produced 5,467 generated quotations that could not be found verbatim in the source text.
+Earlier development runs explain why this matters. In a 400-case engineering run, roughly 88% of baseline LLM outputs passed JSON schema validation, but only a small minority survived an exact-source provenance check. The selected JSON-schema cell produced 5,467 generated `source_quote` strings that could not be found verbatim in the source text.
 
-That low provenance pass rate is the finding: valid-looking structured output can still be ungrounded.
+That number is not a hallucination rate. A follow-up miss-taxonomy and span-ID recovery pass separates exact-match failures into normalization/punctuation artifacts, non-contiguous quotations, likely pointer drift, label-supported unresolved quotes, weak-overlap review cases, and low-overlap possible fabrication cases. On the selected JSON-schema cell, deterministic span recovery raises item-level auditable support from 54.4% exact-contiguous quotes to 82.9% span-supported items, but 2,053 items still abstain and only 31 of 350 completed records fully pass the span-support gate. The defensible finding is narrower and more useful for system design: schema validity carried little information about whether an extracted field had an auditable source anchor. A pipeline gated only on structure would have shipped with almost no visibility into source grounding.
+
+A targeted decomposition stress test then selected the 20 lowest exact-provenance evidence items from each of three held-out Cohere cells and compared five parsing policies. Across 60 deliberately difficult items, exact full-note matching supported 0/60, normalized full-note matching supported 8/60, simple line-span retrieval supported 15/60, section-filtered retrieval supported 10/60, and query-aware multi-span retrieval supported 15/60. The key tradeoff is context cost: normalized full-note support consumed about 1,792 source words when it succeeded, while line-span and query-aware retrieval used about 9.8 and 11.9 words respectively. This supports a parsing/chunking experiment for dense notes, but it does not prove that length causes failure or that retrieval fixes low-overlap items.
 
 HandoffLens responds with a candidate-first architecture. Instead of asking the model to freely extract and summarize, the system:
 
@@ -109,6 +111,7 @@ The Docker image does not copy `.env`, raw clinical data, benchmark corpora, gen
 | Attribution repair diagnostic | Public benchmark-shaped result | Pre-specified `compact_extractive` retains most ROUGE-L while reducing unsupported-sentence case rate; high lexical support is by construction, not semantic factuality proof |
 | BioScope assertion evaluation | Adjacent-domain component result | Sentence-level cue classification on biomedical literature, not clinical notes or BioScope scope-boundary resolution |
 | Structured-output baseline | Completed | High schema validity, poor exact-source provenance |
+| Decomposition stress diagnostic | Completed on worst exact-provenance items | Targeted line/query-aware spans recover more support than full-note normalization at far lower context cost; most selected hard items still abstain |
 | Candidate-first v4 | Strongest current architecture | 19/20 deterministic-gate pass on fresh rerun; one abstention |
 | Extractive rematerialization | Added after audit | Removed unsupported numeric details from model-written summaries |
 | Stability testing | Completed on development subset | Passed gates; ambiguous candidate selection is not perfectly repeatable |
