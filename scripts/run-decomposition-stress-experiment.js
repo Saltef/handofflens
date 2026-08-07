@@ -13,7 +13,7 @@ const METHOD_DEFINITIONS = {
   normalized_full_note: "Aggressive punctuation/de-identification normalized quote search over the full source note; supported cases require full-note context.",
   line_span_id: "Best deterministic line/list span selected by quote and label token overlap.",
   section_filtered_span: "Domain-routed section/list candidate selection before span scoring.",
-  query_aware_multispan: "Query-aware retrieval of one or more spans for non-contiguous or composite evidence.",
+  query_aware_multispan: "Query-aware retrieval of one or more spans for non-contiguous or composite evidence, including a bounded greedy token-union fallback.",
 };
 
 const METHOD_ORDER = Object.keys(METHOD_DEFINITIONS);
@@ -190,6 +190,7 @@ function sectionFilteredSpan(task, context) {
 }
 
 function queryAwareMultiSpan(task, context) {
+  const lowOverlap = isLowOverlapTask(task);
   const parts = splitQuoteParts(task.source_quote);
   const spans = uniqueSpans(parts.flatMap((part) => {
     const ranked = rankSegments(context.segments, {
@@ -199,17 +200,86 @@ function queryAwareMultiSpan(task, context) {
     });
     return ranked.filter((span) => span.quote_coverage >= 0.72 || span.label_coverage >= 0.72 || span.exact_normalized_part).slice(0, 1);
   }));
-  const combined = combinedCoverage(spans, task);
+  let combined = combinedCoverage(spans, task);
+  let selected = spans;
+  let status = selected.length > 1 ? "query_multispan_supported" : "query_single_span_supported";
+
+  if (!querySupport(selected, combined)) {
+    const greedy = greedyMultiSpan(task, context);
+    if (greedy.supported) {
+      selected = greedy.spans;
+      combined = greedy.combined;
+      status = selected.length > 1 ? "query_greedy_multispan_supported" : "query_greedy_single_span_supported";
+    }
+  }
+
   const labelOnly = rankSegments(context.segments, task).filter((span) => span.label_coverage >= 0.72).slice(0, 2);
-  const selected = spans.length ? spans : labelOnly;
-  const supported = Boolean(selected.length && (combined.quote_coverage >= 0.72 || combined.label_coverage >= 0.72 || labelOnly.length > 0));
+  if (!lowOverlap && !querySupport(selected, combined) && labelOnly.length) {
+    selected = labelOnly;
+    combined = combinedCoverage(selected, task);
+    status = selected.length > 1 ? "query_label_multispan_supported" : "query_label_single_span_supported";
+  }
+
+  const supported = !lowOverlap && querySupport(selected, combined);
   return result({
     supported,
-    status: supported ? (selected.length > 1 ? "query_multispan_supported" : "query_single_span_supported") : "abstain_query_weak",
+    status: supported ? status : "abstain_query_weak",
     spans: selected,
     method: "query_aware_multispan",
     combined,
   });
+}
+
+function isLowOverlapTask(task) {
+  return task.prior_span_support_status === "abstain_low_overlap" || task.miss_category === "low_overlap_possible_fabrication";
+}
+
+function querySupport(spans, combined) {
+  return Boolean(spans.length && (combined.quote_coverage >= 0.72 || combined.label_coverage >= 0.72));
+}
+
+function greedyMultiSpan(task, context) {
+  const quoteTokens = [...new Set(contentTokens(expandKnownTerms(task.source_quote)))];
+  const labelTokens = [...new Set(contentTokens(expandKnownTerms(task.label)))];
+  const targetTokens = [...new Set([...quoteTokens, ...labelTokens])];
+  if (targetTokens.length < 2) {
+    return { supported: false, spans: [], combined: { quote_coverage: 0, label_coverage: 0 } };
+  }
+
+  const selected = [];
+  const covered = new Set();
+  const ranked = rankSegments(context.segments, task)
+    .filter((span) => span.score >= 0.16)
+    .slice(0, 40);
+
+  for (let i = 0; i < 4; i += 1) {
+    const next = ranked
+      .filter((span) => !selected.some((item) => item.id === span.id))
+      .map((span) => ({
+        ...span,
+        gain: tokenGain(span.token_set, targetTokens, covered),
+        quote_gain: tokenGain(span.token_set, quoteTokens, covered),
+      }))
+      .filter((span) => span.gain > 0)
+      .sort((left, right) => right.gain - left.gain
+        || right.quote_gain - left.quote_gain
+        || right.score - left.score
+        || left.id.localeCompare(right.id))[0];
+    if (!next) break;
+    selected.push(next);
+    for (const token of targetTokens) if (next.token_set.has(token)) covered.add(token);
+  }
+
+  const ordered = selected.sort((left, right) => left.ordinal - right.ordinal);
+  const combined = combinedCoverage(ordered, task);
+  const contextWords = wordCount(ordered.map((span) => span.text).join(" "));
+  const spanWindow = ordered.length ? ordered[ordered.length - 1].ordinal - ordered[0].ordinal + 1 : 0;
+  const strongQuote = combined.quote_coverage >= 0.86 && ordered.length > 1;
+  const quoteAndLabel = combined.quote_coverage >= 0.78 && combined.label_coverage >= 0.5;
+  const safeWindow = spanWindow <= 80 && contextWords <= 100;
+  const lowOverlap = isLowOverlapTask(task);
+  const supported = safeWindow && !lowOverlap && (strongQuote || quoteAndLabel);
+  return { supported, spans: ordered, combined };
 }
 
 function result({ supported, status, spans, method, combined, contextWords }) {
@@ -245,6 +315,7 @@ function buildContext(sourceText) {
       return {
         ...segment,
         section,
+        ordinal: segment.ordinal,
         normalized,
         token_set: new Set(contentTokens(expandKnownTerms(segment.text))),
         is_header: isHeader(segment.text),
@@ -303,8 +374,10 @@ function rankSegments(segments, task) {
     const score = Math.max(quoteCoverage, labelCoverage * 0.95, exactPart ? 1 : 0);
     return {
       id: segment.id,
+      ordinal: segment.ordinal,
       text: segment.text,
       section: segment.section,
+      token_set: segment.token_set,
       quote_coverage: quoteCoverage,
       label_coverage: labelCoverage,
       exact_normalized_part: exactPart,
@@ -419,6 +492,12 @@ function tokenSetCoverage(tokens, tokenSet) {
   let found = 0;
   for (const token of unique) if (tokenSet.has(token)) found += 1;
   return found / unique.length;
+}
+
+function tokenGain(tokenSet, tokens, covered) {
+  let gain = 0;
+  for (const token of tokens) if (!covered.has(token) && tokenSet.has(token)) gain += 1;
+  return gain;
 }
 
 function normalizeExact(value) {

@@ -21,52 +21,60 @@
     "decomposition_stress_diagnostic": {
       "date": "2026-08-07",
       "private_case_level_outputs_committed": false,
-      "task_selection": "20 failed exact-provenance evidence items from each of three held-out Cohere cells, selected from the lowest exact-provenance records.",
-      "total_tasks": 60,
+      "task_selection": "50 failed exact-provenance evidence items from each of three held-out Cohere cells, selected from the lowest exact-provenance records.",
+      "total_tasks": 150,
       "aggregate_supported_tasks": {
         "exact_full_note": 0,
-        "normalized_full_note": 8,
-        "line_span_id": 15,
-        "section_filtered_span": 10,
-        "query_aware_multispan": 15
+        "normalized_full_note": 24,
+        "line_span_id": 32,
+        "section_filtered_span": 26,
+        "query_aware_multispan": 101
       },
       "aggregate_support_rates": {
         "exact_full_note": 0,
-        "normalized_full_note": 0.13333333333333333,
-        "line_span_id": 0.25,
-        "section_filtered_span": 0.16666666666666666,
-        "query_aware_multispan": 0.25
+        "normalized_full_note": 0.16,
+        "line_span_id": 0.21333333333333335,
+        "section_filtered_span": 0.17333333333333334,
+        "query_aware_multispan": 0.6733333333333333
       },
       "mean_context_words_on_supported_items": {
-        "normalized_full_note": 1792.1,
-        "line_span_id": 9.8,
-        "section_filtered_span": 10.1,
-        "query_aware_multispan": 11.9
+        "normalized_full_note": 1503.6,
+        "line_span_id": 10.1,
+        "section_filtered_span": 10.3,
+        "query_aware_multispan": 22.2
+      },
+      "query_aware_supported_by_miss_category": {
+        "quote_terms_present_noncontiguous": 66,
+        "normalization_or_punctuation": 20,
+        "label_supported_quote_unresolved": 5,
+        "weak_overlap_needs_review": 5,
+        "high_overlap_pointer_drift": 5,
+        "low_overlap_possible_fabrication": 0
       },
       "cells": [
         {
           "cell": "json_schema_thinking_128",
-          "tasks": 20,
-          "line_span_id_supported": 3,
-          "query_aware_multispan_supported": 3,
-          "best_support_rate": 0.15
+          "tasks": 50,
+          "line_span_id_supported": 12,
+          "query_aware_multispan_supported": 37,
+          "best_support_rate": 0.74
         },
         {
           "cell": "json_schema_thinking_512",
-          "tasks": 20,
-          "line_span_id_supported": 5,
-          "query_aware_multispan_supported": 5,
-          "best_support_rate": 0.25
+          "tasks": 50,
+          "line_span_id_supported": 8,
+          "query_aware_multispan_supported": 28,
+          "best_support_rate": 0.56
         },
         {
           "cell": "strict_tool_thinking_512",
-          "tasks": 20,
-          "line_span_id_supported": 7,
-          "query_aware_multispan_supported": 7,
-          "best_support_rate": 0.35
+          "tasks": 50,
+          "line_span_id_supported": 12,
+          "query_aware_multispan_supported": 36,
+          "best_support_rate": 0.72
         }
       ],
-      "interpretation": "Targeted decomposition helps recover a subset of source anchors with far less context than full-note normalization, but most deliberately difficult items still abstain. This is parsing-policy failure analysis, not semantic factuality or proof that note length causally drives errors."
+      "interpretation": "Targeted decomposition helps recover many source anchors with far less context than full-note normalization, while preserving abstention for low-overlap possible-fabrication items. This is parsing-policy failure analysis, not semantic factuality or proof that note length causally drives errors."
     }
   },
   "architecture_development": {
