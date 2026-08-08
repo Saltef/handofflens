@@ -112,6 +112,14 @@ npm run decomposition:coherence -- --input results/model-eval-decomposition-stre
 
 The coherence audit checks supported query-aware span unions for low-overlap leakage, assertion-cue conflicts, label-only support, cross-section unions, wide span windows, and many-span selections. It is a review-priority diagnostic, not an entailment label.
 
+The model-side span-ID v5 ablation compares generated free-text quotes with constrained source-span IDs across frozen providers. It writes private case-level outputs and may update only aggregate public summary fields:
+
+```bash
+EVAL_CAPTURE_LOGPROBS=1 EVAL_STORE_RAW_LOGPROBS=1 npm run span:id:v5:ablation -- --cases <private-hard20-cases.json> --out <ignored-output-dir>/span-id-v5-cross-provider-hard20-private.json --public-summary eval/public_results_summary.json --models cohere-aplus:command-a-plus-05-2026,anthropic/claude-haiku-4.5 --arms quote_v2,quote_v2_minimal,span_id_v5,span_id_v5_minimal --repeats 3
+```
+
+Hosted chat APIs do not return raw logits. Cohere logprobs are requested when supported; the OpenRouter Haiku structured-output route rejected logprob requests in smoke testing, so logprobs are skipped there by default unless explicitly overridden. Raw provider traces and source records must remain ignored.
+
 ## Human-review workflow
 
 Review packets and method keys contain source excerpts and remain under ignored local output directories. Commit only blank schemas, protocols, and aggregate analyses.

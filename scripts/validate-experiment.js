@@ -51,6 +51,7 @@ const requiredFiles = [
   "review.css",
   "review.js",
   "scripts/evaluate-models.js",
+  "scripts/evaluate-span-id-v5-ablation.js",
   "scripts/validate-model-evidence.js",
   "scripts/check-syntax.js",
   "scripts/schema-utils.js",
@@ -125,6 +126,9 @@ const dockerignore = readText(".dockerignore");
 const ciWorkflow = readText(path.join(".github", "workflows", "check.yml"));
 const prTemplate = readText(path.join(".github", "pull_request_template.md"));
 const packageJson = readJson("package.json");
+const spanIdV5Schema = readJson(path.join("eval", "schema_evidence_span_id_v5.json"));
+const spanIdV5AblationSource = readText(path.join("scripts", "evaluate-span-id-v5-ablation.js"));
+const publicResultsSummary = readJson(path.join("eval", "public_results_summary.json"));
 
 check("Schema root is object", schema.type === "object");
 check("Schema forbids root extra keys", schema.additionalProperties === false);
@@ -185,6 +189,12 @@ check("Confirmatory sampler enforces duplicate-cluster isolation", confirmatoryS
 check("Duplicate-cluster script parses", (() => { try { new Function(duplicateClusterSource.replace(/^#!.*\n/, "")); return true; } catch { return false; } })());
 check("Evaluator interleaves paired configurations", evaluatorSource.includes("orderedModelsForCase(models, testCase.case_id)") && evaluatorSource.includes("execution_design"));
 check("Evaluator records per-attempt telemetry", ["attempt_audit", "provider_request_id", "returned_model", "finish_reason", "request_hash", "source_hash"].every((item) => evaluatorSource.includes(item)));
+check("Span-ID v5 schema caps evidence span IDs", spanIdV5Schema.properties?.evidence_span_ids?.maxItems === 3);
+check("Span-ID v5 schema keeps entailment unscored", spanIdV5Schema.properties?.entailment_scored?.const === false && spanIdV5Schema.properties?.entailment_score?.type === "null");
+check("Span-ID v5 ablation constrains IDs by enum at provider schema time", spanIdV5AblationSource.includes("enum: spanIds") && spanIdV5AblationSource.includes("span_id_v5"));
+check("Span-ID v5 ablation preserves hosted-logit boundary", spanIdV5AblationSource.includes("raw_logits_available_from_hosted_chat_api: false") && spanIdV5AblationSource.includes("field_level_logprobs_available"));
+check("Span-ID v5 ablation script is wired", packageJson.scripts?.["span:id:v5:ablation"]?.includes("evaluate-span-id-v5-ablation.js") && packageJson.scripts?.["span:id:v5:ablation:test"]?.includes("test-span-id-v5-ablation.js"));
+check("Public summary carries schema ablation boundary", /schema_ablation/.test(JSON.stringify(publicResultsSummary)) && /semantic factuality|semantic entailment|by construction/i.test(JSON.stringify(publicResultsSummary.schema_ablation || {})));
 check("Model evidence validator rejects credential and provider-error runs", ["Missing\\s+(COHERE|OPENROUTER)_API_KEY", "\\b401\\b", "\\b403\\b", "provider_error", "no_selected_results", "zero_scored"].every((item) => modelEvidenceValidatorSource.includes(item)));
 check("Provider-specific eval validation script is wired", packageJson.scripts?.["eval:cohere-plus:validate"]?.includes("validate-model-evidence.js --input results/cohere-plus-eval.json"));
 check("Benchmark adapter and scoring scripts are wired", ["benchmark:adapt:aci", "benchmark:score:aci-note", "benchmark:score:aci-factuality", "benchmark:generate:aci-note", "benchmark:aci-note:baselines", "benchmark:aci-note:cohere", "benchmark:aci-note:repair", "benchmark:score", "benchmark:test", "benchmark:public:test", "benchmark:bioscope", "benchmark:bioscope:conformal", "benchmark:bioscope:baselines", "benchmark:derive-reference-gold", "benchmark:predict:candidates", "benchmark:validate"].every((key) => packageJson.scripts?.[key]));

@@ -9,6 +9,7 @@
 | Model-side hard20 diagnostic | On selected dense/low-performing private cases, candidate-first v4 is more auditable than full-note request-mode variants under deterministic provenance gates | Model superiority, clinical correctness, semantic completeness, population performance, or treating exact source support from materialized candidates as independent factuality proof |
 | Case-gate arithmetic and evidence-dedup diagnostics | Item-count stratification, effective item-count estimates, conservative near-duplicate removal, and auditable-or-review-routed rates can diagnose over-extraction and review-routing burden | Claiming that a case is clinically correct because it is review-routed, treating low-overlap items as clean abstentions, or claiming over-extraction is solved without human factual labels |
 | Span-budget diagnostic | Lexical top-k and transparent reranker-style top-k curves can measure support/context tradeoffs over the same selected stress tasks | Claiming semantic factuality, learned retriever performance, model superiority, or proof that larger context budgets improve clinical correctness |
+| Span-ID v5 cross-provider schema ablation | Stable source-span IDs can be evaluated against generated free-text quotes under matched hard20 cases, frozen providers, and repeated runs; provider-specific cap violations and case-gate effects are measurable | Claiming span-ID resolvability proves semantic grounding, claiming universal model improvement, or treating hosted-schema cap violations as clean supported evidence |
 | LLM-judge review | Exploratory failure taxonomy and review prioritization hypotheses | Clinician ground truth or clinical accuracy |
 | Risk-enriched clinician development cohort | Failure modes, annotation refinement, judge/routing development | Population prevalence or confirmatory comparison |
 | Probability-sampled independent source-fidelity test cohort | Prespecified paired semantic-fidelity endpoints with intervals | Clinical safety, appropriateness, harmfulness, or generalization beyond the study population |
@@ -77,6 +78,23 @@ Timestamp: 2026-08-08. Unit: failed exact-provenance evidence item. This compare
 
 Recall-loss categories: assertion conflict 3, budget-normalized label risk 3, old policy exceeded the 3-span cap 2. Recall-loss features: multi-span composition 8, label-risk-sensitive 6, assertion-sensitive 3, normalization-sensitive 2, cross-section reasoning 1. Mean supported context fell from 16.164 words under the old query-aware policy to 10.795 words under the minimal selector. This supports the selector as an auditability design, not a semantic grounding solution.
 
+## Phase 4 Cross-Provider Span-ID v5 Ablation Result
+
+Timestamp: 2026-08-08. Unit: provider run and extracted evidence item. The 20 private hard cases were run across Cohere Command A+ and Anthropic Claude Haiku 4.5, with three repeats per model/arm cell. Raw case-level model outputs, source text, and raw provider telemetry remain private and uncommitted.
+
+| Model and arm | Successful runs | Items | Item support | Case gate | Span IDs resolve | Full v5 contract | Interpretation |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| Haiku quote-v2 | 60/60 | 1,825 | 1,709/1,825, 93.6% [92.4, 94.7] | 20/60, 33.3% [22.7, 45.9] | N/A | N/A | Strong generated-quote baseline on this slice |
+| Haiku quote-v2 + minimal selector | 60/60 | 1,825 | 1,719/1,825, 94.2% [93.0, 95.2] | 17/60, 28.3% [18.5, 40.8] | N/A | N/A | Slight item gain, worse complete-case gate |
+| Haiku span-ID-v5 | 60/60 | 2,168 | 1,453/2,168, 67.0% [65.0, 69.0] | 2/60, 3.3% [0.9, 11.4] | 2,168/2,168, 100.0% [99.8, 100.0] | 1,144/2,168, 52.8% [50.7, 54.9] | Over-selected spans after provider schema constraints were stripped |
+| Haiku span-ID-v5 + minimal selector | 60/60 | 2,168 | 1,934/2,168, 89.2% [87.8, 90.4] | 9/60, 15.0% [8.1, 26.1] | 2,168/2,168, 100.0% [99.8, 100.0] | 1,144/2,168, 52.8% [50.7, 54.9] | Selector recovers much of the item support, but not the contract |
+| Cohere quote-v2 | 60/60 | 1,192 | 769/1,192, 64.5% [61.8, 67.2] | 5/60, 8.3% [3.6, 18.1] | N/A | N/A | Generated quotes remain brittle under exact support |
+| Cohere quote-v2 + minimal selector | 60/60 | 1,192 | 1,131/1,192, 94.9% [93.5, 96.0] | 24/60, 40.0% [28.6, 52.6] | N/A | N/A | Strongest Cohere item and case-gate result, but selector support is still lexical |
+| Cohere span-ID-v5 | 59/60 | 1,276 | 1,127/1,276, 88.3% [86.4, 90.0] | 18/59, 30.5% [20.3, 43.2] | 1,276/1,276, 100.0% [99.7, 100.0] | 1,102/1,276, 86.4% [84.4, 88.1] | Span IDs improve pointer integrity and support versus quote-v2 |
+| Cohere span-ID-v5 + minimal selector | 59/60 | 1,276 | 1,185/1,276, 92.9% [91.3, 94.2] | 21/59, 35.6% [24.6, 48.3] | 1,276/1,276, 100.0% [99.7, 100.0] | 1,102/1,276, 86.4% [84.4, 88.1] | Better than raw span-ID support, but below quote-v2 minimal on this slice |
+
+Decision: span IDs are useful as a provenance-addressing interface because unresolved pointers disappear when provider-side enums are honored. They do not solve semantic support. The full v5 contract is the honest metric because hosted structured-output compatibility required removing some local schema constraints, including the max-3 evidence-span cap; Haiku's 703 too-many-span-ID violations are a design failure, not a harmless formatting issue. The next engineering step is a cap-violation retry or repair loop plus learned reranking or entailment checks, not another claim that pointer validity equals factuality.
+
 ## Phase 5 Length Versus Density Result
 
 Timestamp: 2026-08-08. Unit: completed source record and evidence item. Thresholds: short note <1500 words; high density >=16 evidence items per 1k words.
@@ -95,5 +113,5 @@ Decision: this private hard slice cannot disentangle length from density because
 - Entailment-backed source support: lexical overlap should be replaced or supplemented with a factuality/entailment scorer, such as MiniCheck, AlignScore, or a clinical NLI comparator, followed by manual review of disagreements.
 - Official ACI scorer reproduction: the repository scorer needs an official-scorer sanity check, including transcript-copy and at least one published-system or baseline reproduction, before comparing to published full-note ROUGE.
 - In-domain clinical assertion validation: the target-aware item-quote behavior must be measured on clinical-note text, not only BioScope biomedical literature. Suitable paths are DUA-controlled i2b2/n2c2 data or private adjudicated clinical gold.
-- Span-ID and reranker ablations: generated quote text should be compared with a span-ID-only schema, and the lexical span matcher should be compared against an embedding or reranker-backed matcher under the same case-gate and review-routing metrics.
+- Schema-enforcement and reranker follow-up: the span-ID-only ablation has run. The remaining design work is to test a retry/repair loop for max-3 cap violations and compare the lexical span matcher against an embedding or reranker-backed matcher under the same case-gate and review-routing metrics.
 - Human source-fidelity labels: automated gates and LLM judges can prioritize review, but stronger source-fidelity claims require independent human labels with intervals.

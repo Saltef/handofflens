@@ -279,28 +279,148 @@
         "primary_route_denominator": 271,
         "transparent_rerank_topk_primary": {
           "all_guards_active": {
-            "budget_1": { "supported": "164/271", "rate": 0.6052, "wilson_95": [0.5459, 0.6615], "active_label_risk_triggers": 0 },
-            "budget_2": { "supported": "140/271", "rate": 0.5166, "wilson_95": [0.4573, 0.5755], "active_label_risk_triggers": 109 },
-            "budget_4": { "supported": "0/271", "rate": 0, "wilson_95": [0, 0.014], "active_label_risk_triggers": 271 },
-            "budget_8": { "supported": "0/271", "rate": 0, "wilson_95": [0, 0.014], "active_label_risk_triggers": 271 }
+            "budget_1": {
+              "supported": "164/271",
+              "rate": 0.6052,
+              "wilson_95": [
+                0.5459,
+                0.6615
+              ],
+              "active_label_risk_triggers": 0
+            },
+            "budget_2": {
+              "supported": "140/271",
+              "rate": 0.5166,
+              "wilson_95": [
+                0.4573,
+                0.5755
+              ],
+              "active_label_risk_triggers": 109
+            },
+            "budget_4": {
+              "supported": "0/271",
+              "rate": 0,
+              "wilson_95": [
+                0,
+                0.014
+              ],
+              "active_label_risk_triggers": 271
+            },
+            "budget_8": {
+              "supported": "0/271",
+              "rate": 0,
+              "wilson_95": [
+                0,
+                0.014
+              ],
+              "active_label_risk_triggers": 271
+            }
           },
           "label_risk_disabled_assertion_active": {
-            "budget_1": { "supported": "164/271", "rate": 0.6052, "wilson_95": [0.5459, 0.6615] },
-            "budget_2": { "supported": "232/271", "rate": 0.8561, "wilson_95": [0.8093, 0.8929] },
-            "budget_4": { "supported": "238/271", "rate": 0.8782, "wilson_95": [0.8339, 0.912] },
-            "budget_8": { "supported": "227/271", "rate": 0.8376, "wilson_95": [0.7891, 0.8768] }
+            "budget_1": {
+              "supported": "164/271",
+              "rate": 0.6052,
+              "wilson_95": [
+                0.5459,
+                0.6615
+              ]
+            },
+            "budget_2": {
+              "supported": "232/271",
+              "rate": 0.8561,
+              "wilson_95": [
+                0.8093,
+                0.8929
+              ]
+            },
+            "budget_4": {
+              "supported": "238/271",
+              "rate": 0.8782,
+              "wilson_95": [
+                0.8339,
+                0.912
+              ]
+            },
+            "budget_8": {
+              "supported": "227/271",
+              "rate": 0.8376,
+              "wilson_95": [
+                0.7891,
+                0.8768
+              ]
+            }
           },
           "all_guards_disabled": {
-            "budget_1": { "supported": "165/271", "rate": 0.6089, "wilson_95": [0.5496, 0.665] },
-            "budget_2": { "supported": "237/271", "rate": 0.8745, "wilson_95": [0.8298, 0.9088] },
-            "budget_4": { "supported": "262/271", "rate": 0.9668, "wilson_95": [0.9381, 0.9824] },
-            "budget_8": { "supported": "266/271", "rate": 0.9815, "wilson_95": [0.9575, 0.9921] }
+            "budget_1": {
+              "supported": "165/271",
+              "rate": 0.6089,
+              "wilson_95": [
+                0.5496,
+                0.665
+              ]
+            },
+            "budget_2": {
+              "supported": "237/271",
+              "rate": 0.8745,
+              "wilson_95": [
+                0.8298,
+                0.9088
+              ]
+            },
+            "budget_4": {
+              "supported": "262/271",
+              "rate": 0.9668,
+              "wilson_95": [
+                0.9381,
+                0.9824
+              ]
+            },
+            "budget_8": {
+              "supported": "266/271",
+              "rate": 0.9815,
+              "wilson_95": [
+                0.9575,
+                0.9921
+              ]
+            }
           },
           "budget_normalized_label_risk_assertion_active": {
-            "budget_1": { "supported": "164/271", "rate": 0.6052, "wilson_95": [0.5459, 0.6615], "active_label_risk_triggers": 0 },
-            "budget_2": { "supported": "179/271", "rate": 0.6605, "wilson_95": [0.6022, 0.7143], "active_label_risk_triggers": 62 },
-            "budget_4": { "supported": "160/271", "rate": 0.5904, "wilson_95": [0.531, 0.6473], "active_label_risk_triggers": 92 },
-            "budget_8": { "supported": "198/271", "rate": 0.7306, "wilson_95": [0.6749, 0.78], "active_label_risk_triggers": 38 }
+            "budget_1": {
+              "supported": "164/271",
+              "rate": 0.6052,
+              "wilson_95": [
+                0.5459,
+                0.6615
+              ],
+              "active_label_risk_triggers": 0
+            },
+            "budget_2": {
+              "supported": "179/271",
+              "rate": 0.6605,
+              "wilson_95": [
+                0.6022,
+                0.7143
+              ],
+              "active_label_risk_triggers": 62
+            },
+            "budget_4": {
+              "supported": "160/271",
+              "rate": 0.5904,
+              "wilson_95": [
+                0.531,
+                0.6473
+              ],
+              "active_label_risk_triggers": 92
+            },
+            "budget_8": {
+              "supported": "198/271",
+              "rate": 0.7306,
+              "wilson_95": [
+                0.6749,
+                0.78
+              ],
+              "active_label_risk_triggers": 38
+            }
           }
         },
         "adaptive_query_aware_selector": {
@@ -308,14 +428,48 @@
           "rate": 0.7897,
           "median_selected_spans_all_tasks": 2,
           "median_selected_spans_supported_tasks": 2,
-          "selected_span_count_distribution_all_tasks": { "0": 13, "1": 75, "2": 118, "3": 46, "4": 19 }
+          "selected_span_count_distribution_all_tasks": {
+            "0": 13,
+            "1": 75,
+            "2": 118,
+            "3": 46,
+            "4": 19
+          }
         },
         "minimal_selector_recall_cost": {
           "unit": "failed exact-provenance evidence item",
-          "old_query_aware_support": { "supported": "214/271", "rate": 0.7897, "wilson_95": [0.7373, 0.834] },
-          "minimal_selector_support": { "supported": "249/271", "rate": 0.9188, "wilson_95": [0.8801, 0.9458] },
-          "old_supported_retained_by_minimal_selector": { "supported": "206/214", "rate": 0.9626, "wilson_95": [0.928, 0.9809] },
-          "recall_cost_among_old_supported": { "lost": "8/214", "rate": 0.0374, "wilson_95": [0.0191, 0.072] },
+          "old_query_aware_support": {
+            "supported": "214/271",
+            "rate": 0.7897,
+            "wilson_95": [
+              0.7373,
+              0.834
+            ]
+          },
+          "minimal_selector_support": {
+            "supported": "249/271",
+            "rate": 0.9188,
+            "wilson_95": [
+              0.8801,
+              0.9458
+            ]
+          },
+          "old_supported_retained_by_minimal_selector": {
+            "supported": "206/214",
+            "rate": 0.9626,
+            "wilson_95": [
+              0.928,
+              0.9809
+            ]
+          },
+          "recall_cost_among_old_supported": {
+            "lost": "8/214",
+            "rate": 0.0374,
+            "wilson_95": [
+              0.0191,
+              0.072
+            ]
+          },
           "recall_loss_categories": {
             "blocked_by_assertion_conflict": 3,
             "blocked_by_budget_normalized_label_risk": 3,
@@ -349,16 +503,58 @@
             "short_high_density": {
               "records": 13,
               "evidence_items": 539,
-              "exact_quote_item_rate": { "supported": "431/539", "rate": 0.7996, "wilson_95": [0.7638, 0.8312] },
-              "span_supported_item_rate": { "supported": "520/539", "rate": 0.9648, "wilson_95": [0.9456, 0.9773] },
-              "provenance_abstain_item_rate": { "supported": "19/539", "rate": 0.0353, "wilson_95": [0.0227, 0.0544] }
+              "exact_quote_item_rate": {
+                "supported": "431/539",
+                "rate": 0.7996,
+                "wilson_95": [
+                  0.7638,
+                  0.8312
+                ]
+              },
+              "span_supported_item_rate": {
+                "supported": "520/539",
+                "rate": 0.9648,
+                "wilson_95": [
+                  0.9456,
+                  0.9773
+                ]
+              },
+              "provenance_abstain_item_rate": {
+                "supported": "19/539",
+                "rate": 0.0353,
+                "wilson_95": [
+                  0.0227,
+                  0.0544
+                ]
+              }
             },
             "long_high_density": {
               "records": 9,
               "evidence_items": 629,
-              "exact_quote_item_rate": { "supported": "406/629", "rate": 0.6455, "wilson_95": [0.6073, 0.6819] },
-              "span_supported_item_rate": { "supported": "539/629", "rate": 0.8569, "wilson_95": [0.8274, 0.8821] },
-              "provenance_abstain_item_rate": { "supported": "90/629", "rate": 0.1431, "wilson_95": [0.1179, 0.1726] }
+              "exact_quote_item_rate": {
+                "supported": "406/629",
+                "rate": 0.6455,
+                "wilson_95": [
+                  0.6073,
+                  0.6819
+                ]
+              },
+              "span_supported_item_rate": {
+                "supported": "539/629",
+                "rate": 0.8569,
+                "wilson_95": [
+                  0.8274,
+                  0.8821
+                ]
+              },
+              "provenance_abstain_item_rate": {
+                "supported": "90/629",
+                "rate": 0.1431,
+                "wilson_95": [
+                  0.1179,
+                  0.1726
+                ]
+              }
             }
           },
           "conclusion": "off_diagonal_cells_too_thin",
@@ -370,12 +566,16 @@
     }
   },
   "schema_ablation": {
-    "status": "deterministic_span_id_substrate_ready; cross_provider_model_repeats_not_yet_run",
+    "status": "cross_provider_span_id_v5_ablation_completed_with_provider_errors",
     "span_id_schema": "eval/schema_evidence_span_id_v5.json",
     "span_index": {
       "script": "scripts/span-index.js",
       "default_granularity": "clause",
-      "supported_granularities": ["sentence", "line", "clause"],
+      "supported_granularities": [
+        "sentence",
+        "line",
+        "clause"
+      ],
       "deterministic_ids": "S1..Sn in document order",
       "offset_policy": "char_start/char_end must slice exactly to span.text"
     },
@@ -389,7 +589,1111 @@
       "policy": "greedy set cover over claim tokens with adaptive stopping and budget-normalized label-risk checks",
       "phase0_dependency": "built after guard calibration showed the fixed-budget cliff was a guard-threshold artifact"
     },
-    "remaining_ablation_work": "Run v2/v3 generated quote arms against v5 span-ID arms across both frozen providers with at least three repeats per cell; report non-completion, item-level support, case gates, and recall cost."
+    "completed_ablation_work": "Ran quote-v2 and span-ID-v5 arms across both frozen providers with three repeats per cell; case-level outputs and raw provider traces remain private.",
+    "remaining_schema_work": "Test a retry/repair loop for max-3 evidence-span cap violations, then compare lexical matching with learned reranking and entailment-backed faithfulness.",
+    "experiment_id": "span-id-v5-cross-provider-ablation",
+    "private_case_level_outputs_committed": false,
+    "cases": 20,
+    "models": [
+      "cohere-aplus:command-a-plus-05-2026",
+      "anthropic/claude-haiku-4.5"
+    ],
+    "arms": [
+      "quote_v2",
+      "quote_v2_minimal",
+      "span_id_v5",
+      "span_id_v5_minimal"
+    ],
+    "repeats": 3,
+    "routes": {
+      "primary": "json_schema",
+      "tool_routes": "not rerun in this span-ID-only ablation harness"
+    },
+    "telemetry_policy": {
+      "capture_logprobs": true,
+      "store_raw_logprobs": true,
+      "top_logprobs": 5,
+      "raw_logits_available_from_hosted_chat_api": false,
+      "provider_logprob_policy": {
+        "cohere": "requested",
+        "openrouter": "not_sent_by_default; structured-output Haiku route rejected logprobs in smoke testing"
+      },
+      "field_level_logprobs": "exploratory_only; marked unavailable unless provider returns token offsets that can be mapped to evidence_span_ids"
+    },
+    "claims_boundary": "Automated auditability evidence only; span-ID validity is by construction and does not prove semantic entailment, clinical correctness, safety, or completeness.",
+    "aggregate_results": {
+      "anthropic/claude-haiku-4.5||quote_v2": {
+        "model": "anthropic/claude-haiku-4.5",
+        "arm": "quote_v2",
+        "runs": 60,
+        "successful_runs": 60,
+        "completion_rate": {
+          "numerator": 60,
+          "denominator": 60,
+          "rate": 1,
+          "wilson_95": [
+            0.9398,
+            1
+          ]
+        },
+        "item_count": 1825,
+        "item_support_rate": {
+          "numerator": 1709,
+          "denominator": 1825,
+          "rate": 0.936438,
+          "wilson_95": [
+            0.9243,
+            0.9467
+          ]
+        },
+        "case_gate_rate": {
+          "numerator": 20,
+          "denominator": 60,
+          "rate": 0.333333,
+          "wilson_95": [
+            0.2273,
+            0.4594
+          ]
+        },
+        "exact_quote_support_rate": {
+          "numerator": 1709,
+          "denominator": 1825,
+          "rate": 0.936438,
+          "wilson_95": [
+            0.9243,
+            0.9467
+          ]
+        },
+        "span_validity_rate": null,
+        "v5_contract_validity_rate": null,
+        "evidence_span_count_validity_rate": null,
+        "selector_support_rate": null,
+        "mean_items_per_successful_run": 30.417,
+        "mean_selected_context_words": null,
+        "repeat_spread": {
+          "1": {
+            "successful_runs": 20,
+            "item_count": 612,
+            "item_support_rate": {
+              "numerator": 571,
+              "denominator": 612,
+              "rate": 0.933007,
+              "wilson_95": [
+                0.9104,
+                0.9502
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 7,
+              "denominator": 20,
+              "rate": 0.35,
+              "wilson_95": [
+                0.1812,
+                0.5671
+              ]
+            }
+          },
+          "2": {
+            "successful_runs": 20,
+            "item_count": 613,
+            "item_support_rate": {
+              "numerator": 567,
+              "denominator": 613,
+              "rate": 0.924959,
+              "wilson_95": [
+                0.9014,
+                0.9433
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 6,
+              "denominator": 20,
+              "rate": 0.3,
+              "wilson_95": [
+                0.1455,
+                0.519
+              ]
+            }
+          },
+          "3": {
+            "successful_runs": 20,
+            "item_count": 600,
+            "item_support_rate": {
+              "numerator": 571,
+              "denominator": 600,
+              "rate": 0.951667,
+              "wilson_95": [
+                0.9314,
+                0.9661
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 7,
+              "denominator": 20,
+              "rate": 0.35,
+              "wilson_95": [
+                0.1812,
+                0.5671
+              ]
+            }
+          }
+        },
+        "span_resolution_error_counts": {},
+        "span_count_error_counts": {},
+        "error_counts": {}
+      },
+      "anthropic/claude-haiku-4.5||quote_v2_minimal": {
+        "model": "anthropic/claude-haiku-4.5",
+        "arm": "quote_v2_minimal",
+        "runs": 60,
+        "successful_runs": 60,
+        "completion_rate": {
+          "numerator": 60,
+          "denominator": 60,
+          "rate": 1,
+          "wilson_95": [
+            0.9398,
+            1
+          ]
+        },
+        "item_count": 1825,
+        "item_support_rate": {
+          "numerator": 1719,
+          "denominator": 1825,
+          "rate": 0.941918,
+          "wilson_95": [
+            0.9302,
+            0.9517
+          ]
+        },
+        "case_gate_rate": {
+          "numerator": 17,
+          "denominator": 60,
+          "rate": 0.283333,
+          "wilson_95": [
+            0.1851,
+            0.4077
+          ]
+        },
+        "exact_quote_support_rate": {
+          "numerator": 1709,
+          "denominator": 1825,
+          "rate": 0.936438,
+          "wilson_95": [
+            0.9243,
+            0.9467
+          ]
+        },
+        "span_validity_rate": null,
+        "v5_contract_validity_rate": null,
+        "evidence_span_count_validity_rate": null,
+        "selector_support_rate": {
+          "numerator": 1719,
+          "denominator": 1825,
+          "rate": 0.941918,
+          "wilson_95": [
+            0.9302,
+            0.9517
+          ]
+        },
+        "mean_items_per_successful_run": 30.417,
+        "mean_selected_context_words": 11.139,
+        "repeat_spread": {
+          "1": {
+            "successful_runs": 20,
+            "item_count": 612,
+            "item_support_rate": {
+              "numerator": 581,
+              "denominator": 612,
+              "rate": 0.949346,
+              "wilson_95": [
+                0.929,
+                0.9641
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 5,
+              "denominator": 20,
+              "rate": 0.25,
+              "wilson_95": [
+                0.1119,
+                0.4687
+              ]
+            }
+          },
+          "2": {
+            "successful_runs": 20,
+            "item_count": 613,
+            "item_support_rate": {
+              "numerator": 575,
+              "denominator": 613,
+              "rate": 0.93801,
+              "wilson_95": [
+                0.9161,
+                0.9545
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 5,
+              "denominator": 20,
+              "rate": 0.25,
+              "wilson_95": [
+                0.1119,
+                0.4687
+              ]
+            }
+          },
+          "3": {
+            "successful_runs": 20,
+            "item_count": 600,
+            "item_support_rate": {
+              "numerator": 563,
+              "denominator": 600,
+              "rate": 0.938333,
+              "wilson_95": [
+                0.9162,
+                0.9549
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 7,
+              "denominator": 20,
+              "rate": 0.35,
+              "wilson_95": [
+                0.1812,
+                0.5671
+              ]
+            }
+          }
+        },
+        "span_resolution_error_counts": {},
+        "span_count_error_counts": {},
+        "error_counts": {}
+      },
+      "anthropic/claude-haiku-4.5||span_id_v5": {
+        "model": "anthropic/claude-haiku-4.5",
+        "arm": "span_id_v5",
+        "runs": 60,
+        "successful_runs": 60,
+        "completion_rate": {
+          "numerator": 60,
+          "denominator": 60,
+          "rate": 1,
+          "wilson_95": [
+            0.9398,
+            1
+          ]
+        },
+        "item_count": 2168,
+        "item_support_rate": {
+          "numerator": 1453,
+          "denominator": 2168,
+          "rate": 0.670203,
+          "wilson_95": [
+            0.6501,
+            0.6897
+          ]
+        },
+        "case_gate_rate": {
+          "numerator": 2,
+          "denominator": 60,
+          "rate": 0.033333,
+          "wilson_95": [
+            0.0092,
+            0.1136
+          ]
+        },
+        "exact_quote_support_rate": null,
+        "span_validity_rate": {
+          "numerator": 2168,
+          "denominator": 2168,
+          "rate": 1,
+          "wilson_95": [
+            0.9982,
+            1
+          ]
+        },
+        "v5_contract_validity_rate": {
+          "numerator": 1144,
+          "denominator": 2168,
+          "rate": 0.527675,
+          "wilson_95": [
+            0.5066,
+            0.5486
+          ]
+        },
+        "evidence_span_count_validity_rate": {
+          "numerator": 1465,
+          "denominator": 2168,
+          "rate": 0.675738,
+          "wilson_95": [
+            0.6557,
+            0.6951
+          ]
+        },
+        "selector_support_rate": null,
+        "mean_items_per_successful_run": 36.133,
+        "mean_selected_context_words": 22.74,
+        "repeat_spread": {
+          "1": {
+            "successful_runs": 20,
+            "item_count": 691,
+            "item_support_rate": {
+              "numerator": 469,
+              "denominator": 691,
+              "rate": 0.678726,
+              "wilson_95": [
+                0.643,
+                0.7125
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 0,
+              "denominator": 20,
+              "rate": 0,
+              "wilson_95": [
+                0,
+                0.1611
+              ]
+            }
+          },
+          "2": {
+            "successful_runs": 20,
+            "item_count": 762,
+            "item_support_rate": {
+              "numerator": 513,
+              "denominator": 762,
+              "rate": 0.673228,
+              "wilson_95": [
+                0.6391,
+                0.7056
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 1,
+              "denominator": 20,
+              "rate": 0.05,
+              "wilson_95": [
+                0.0089,
+                0.2361
+              ]
+            }
+          },
+          "3": {
+            "successful_runs": 20,
+            "item_count": 715,
+            "item_support_rate": {
+              "numerator": 471,
+              "denominator": 715,
+              "rate": 0.658741,
+              "wilson_95": [
+                0.6232,
+                0.6926
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 1,
+              "denominator": 20,
+              "rate": 0.05,
+              "wilson_95": [
+                0.0089,
+                0.2361
+              ]
+            }
+          }
+        },
+        "span_resolution_error_counts": {},
+        "span_count_error_counts": {
+          "too_many_span_ids": 703
+        },
+        "error_counts": {}
+      },
+      "anthropic/claude-haiku-4.5||span_id_v5_minimal": {
+        "model": "anthropic/claude-haiku-4.5",
+        "arm": "span_id_v5_minimal",
+        "runs": 60,
+        "successful_runs": 60,
+        "completion_rate": {
+          "numerator": 60,
+          "denominator": 60,
+          "rate": 1,
+          "wilson_95": [
+            0.9398,
+            1
+          ]
+        },
+        "item_count": 2168,
+        "item_support_rate": {
+          "numerator": 1934,
+          "denominator": 2168,
+          "rate": 0.892066,
+          "wilson_95": [
+            0.8783,
+            0.9044
+          ]
+        },
+        "case_gate_rate": {
+          "numerator": 9,
+          "denominator": 60,
+          "rate": 0.15,
+          "wilson_95": [
+            0.081,
+            0.2611
+          ]
+        },
+        "exact_quote_support_rate": null,
+        "span_validity_rate": {
+          "numerator": 2168,
+          "denominator": 2168,
+          "rate": 1,
+          "wilson_95": [
+            0.9982,
+            1
+          ]
+        },
+        "v5_contract_validity_rate": {
+          "numerator": 1144,
+          "denominator": 2168,
+          "rate": 0.527675,
+          "wilson_95": [
+            0.5066,
+            0.5486
+          ]
+        },
+        "evidence_span_count_validity_rate": {
+          "numerator": 1465,
+          "denominator": 2168,
+          "rate": 0.675738,
+          "wilson_95": [
+            0.6557,
+            0.6951
+          ]
+        },
+        "selector_support_rate": {
+          "numerator": 1934,
+          "denominator": 2168,
+          "rate": 0.892066,
+          "wilson_95": [
+            0.8783,
+            0.9044
+          ]
+        },
+        "mean_items_per_successful_run": 36.133,
+        "mean_selected_context_words": 13.609,
+        "repeat_spread": {
+          "1": {
+            "successful_runs": 20,
+            "item_count": 691,
+            "item_support_rate": {
+              "numerator": 618,
+              "denominator": 691,
+              "rate": 0.894356,
+              "wilson_95": [
+                0.8692,
+                0.9151
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 3,
+              "denominator": 20,
+              "rate": 0.15,
+              "wilson_95": [
+                0.0524,
+                0.3604
+              ]
+            }
+          },
+          "2": {
+            "successful_runs": 20,
+            "item_count": 762,
+            "item_support_rate": {
+              "numerator": 674,
+              "denominator": 762,
+              "rate": 0.884514,
+              "wilson_95": [
+                0.8599,
+                0.9053
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 2,
+              "denominator": 20,
+              "rate": 0.1,
+              "wilson_95": [
+                0.0279,
+                0.301
+              ]
+            }
+          },
+          "3": {
+            "successful_runs": 20,
+            "item_count": 715,
+            "item_support_rate": {
+              "numerator": 642,
+              "denominator": 715,
+              "rate": 0.897902,
+              "wilson_95": [
+                0.8735,
+                0.918
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 4,
+              "denominator": 20,
+              "rate": 0.2,
+              "wilson_95": [
+                0.0807,
+                0.416
+              ]
+            }
+          }
+        },
+        "span_resolution_error_counts": {},
+        "span_count_error_counts": {
+          "too_many_span_ids": 703
+        },
+        "error_counts": {}
+      },
+      "cohere-aplus:command-a-plus-05-2026||quote_v2": {
+        "model": "cohere-aplus:command-a-plus-05-2026",
+        "arm": "quote_v2",
+        "runs": 60,
+        "successful_runs": 60,
+        "completion_rate": {
+          "numerator": 60,
+          "denominator": 60,
+          "rate": 1,
+          "wilson_95": [
+            0.9398,
+            1
+          ]
+        },
+        "item_count": 1192,
+        "item_support_rate": {
+          "numerator": 769,
+          "denominator": 1192,
+          "rate": 0.645134,
+          "wilson_95": [
+            0.6175,
+            0.6718
+          ]
+        },
+        "case_gate_rate": {
+          "numerator": 5,
+          "denominator": 60,
+          "rate": 0.083333,
+          "wilson_95": [
+            0.0361,
+            0.1807
+          ]
+        },
+        "exact_quote_support_rate": {
+          "numerator": 769,
+          "denominator": 1192,
+          "rate": 0.645134,
+          "wilson_95": [
+            0.6175,
+            0.6718
+          ]
+        },
+        "span_validity_rate": null,
+        "v5_contract_validity_rate": null,
+        "evidence_span_count_validity_rate": null,
+        "selector_support_rate": null,
+        "mean_items_per_successful_run": 19.867,
+        "mean_selected_context_words": null,
+        "repeat_spread": {
+          "1": {
+            "successful_runs": 20,
+            "item_count": 439,
+            "item_support_rate": {
+              "numerator": 301,
+              "denominator": 439,
+              "rate": 0.685649,
+              "wilson_95": [
+                0.6408,
+                0.7273
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 1,
+              "denominator": 20,
+              "rate": 0.05,
+              "wilson_95": [
+                0.0089,
+                0.2361
+              ]
+            }
+          },
+          "2": {
+            "successful_runs": 20,
+            "item_count": 385,
+            "item_support_rate": {
+              "numerator": 253,
+              "denominator": 385,
+              "rate": 0.657143,
+              "wilson_95": [
+                0.6084,
+                0.7028
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 3,
+              "denominator": 20,
+              "rate": 0.15,
+              "wilson_95": [
+                0.0524,
+                0.3604
+              ]
+            }
+          },
+          "3": {
+            "successful_runs": 20,
+            "item_count": 368,
+            "item_support_rate": {
+              "numerator": 215,
+              "denominator": 368,
+              "rate": 0.584239,
+              "wilson_95": [
+                0.5333,
+                0.6335
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 1,
+              "denominator": 20,
+              "rate": 0.05,
+              "wilson_95": [
+                0.0089,
+                0.2361
+              ]
+            }
+          }
+        },
+        "span_resolution_error_counts": {},
+        "span_count_error_counts": {},
+        "error_counts": {}
+      },
+      "cohere-aplus:command-a-plus-05-2026||quote_v2_minimal": {
+        "model": "cohere-aplus:command-a-plus-05-2026",
+        "arm": "quote_v2_minimal",
+        "runs": 60,
+        "successful_runs": 60,
+        "completion_rate": {
+          "numerator": 60,
+          "denominator": 60,
+          "rate": 1,
+          "wilson_95": [
+            0.9398,
+            1
+          ]
+        },
+        "item_count": 1192,
+        "item_support_rate": {
+          "numerator": 1131,
+          "denominator": 1192,
+          "rate": 0.948826,
+          "wilson_95": [
+            0.9348,
+            0.96
+          ]
+        },
+        "case_gate_rate": {
+          "numerator": 24,
+          "denominator": 60,
+          "rate": 0.4,
+          "wilson_95": [
+            0.2857,
+            0.5263
+          ]
+        },
+        "exact_quote_support_rate": {
+          "numerator": 769,
+          "denominator": 1192,
+          "rate": 0.645134,
+          "wilson_95": [
+            0.6175,
+            0.6718
+          ]
+        },
+        "span_validity_rate": null,
+        "v5_contract_validity_rate": null,
+        "evidence_span_count_validity_rate": null,
+        "selector_support_rate": {
+          "numerator": 1131,
+          "denominator": 1192,
+          "rate": 0.948826,
+          "wilson_95": [
+            0.9348,
+            0.96
+          ]
+        },
+        "mean_items_per_successful_run": 19.867,
+        "mean_selected_context_words": 10.497,
+        "repeat_spread": {
+          "1": {
+            "successful_runs": 20,
+            "item_count": 439,
+            "item_support_rate": {
+              "numerator": 419,
+              "denominator": 439,
+              "rate": 0.954442,
+              "wilson_95": [
+                0.9307,
+                0.9703
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 7,
+              "denominator": 20,
+              "rate": 0.35,
+              "wilson_95": [
+                0.1812,
+                0.5671
+              ]
+            }
+          },
+          "2": {
+            "successful_runs": 20,
+            "item_count": 385,
+            "item_support_rate": {
+              "numerator": 366,
+              "denominator": 385,
+              "rate": 0.950649,
+              "wilson_95": [
+                0.9242,
+                0.9682
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 6,
+              "denominator": 20,
+              "rate": 0.3,
+              "wilson_95": [
+                0.1455,
+                0.519
+              ]
+            }
+          },
+          "3": {
+            "successful_runs": 20,
+            "item_count": 368,
+            "item_support_rate": {
+              "numerator": 346,
+              "denominator": 368,
+              "rate": 0.940217,
+              "wilson_95": [
+                0.9111,
+                0.9602
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 11,
+              "denominator": 20,
+              "rate": 0.55,
+              "wilson_95": [
+                0.3421,
+                0.7418
+              ]
+            }
+          }
+        },
+        "span_resolution_error_counts": {},
+        "span_count_error_counts": {},
+        "error_counts": {}
+      },
+      "cohere-aplus:command-a-plus-05-2026||span_id_v5": {
+        "model": "cohere-aplus:command-a-plus-05-2026",
+        "arm": "span_id_v5",
+        "runs": 60,
+        "successful_runs": 59,
+        "completion_rate": {
+          "numerator": 59,
+          "denominator": 60,
+          "rate": 0.983333,
+          "wilson_95": [
+            0.9114,
+            0.9971
+          ]
+        },
+        "item_count": 1276,
+        "item_support_rate": {
+          "numerator": 1127,
+          "denominator": 1276,
+          "rate": 0.883229,
+          "wilson_95": [
+            0.8644,
+            0.8997
+          ]
+        },
+        "case_gate_rate": {
+          "numerator": 18,
+          "denominator": 59,
+          "rate": 0.305085,
+          "wilson_95": [
+            0.2025,
+            0.4315
+          ]
+        },
+        "exact_quote_support_rate": null,
+        "span_validity_rate": {
+          "numerator": 1276,
+          "denominator": 1276,
+          "rate": 1,
+          "wilson_95": [
+            0.997,
+            1
+          ]
+        },
+        "v5_contract_validity_rate": {
+          "numerator": 1102,
+          "denominator": 1276,
+          "rate": 0.863636,
+          "wilson_95": [
+            0.8437,
+            0.8814
+          ]
+        },
+        "evidence_span_count_validity_rate": {
+          "numerator": 1144,
+          "denominator": 1276,
+          "rate": 0.896552,
+          "wilson_95": [
+            0.8786,
+            0.9121
+          ]
+        },
+        "selector_support_rate": null,
+        "mean_items_per_successful_run": 21.627,
+        "mean_selected_context_words": 18.221,
+        "repeat_spread": {
+          "1": {
+            "successful_runs": 20,
+            "item_count": 448,
+            "item_support_rate": {
+              "numerator": 410,
+              "denominator": 448,
+              "rate": 0.915179,
+              "wilson_95": [
+                0.8857,
+                0.9376
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 6,
+              "denominator": 20,
+              "rate": 0.3,
+              "wilson_95": [
+                0.1455,
+                0.519
+              ]
+            }
+          },
+          "2": {
+            "successful_runs": 19,
+            "item_count": 392,
+            "item_support_rate": {
+              "numerator": 348,
+              "denominator": 392,
+              "rate": 0.887755,
+              "wilson_95": [
+                0.8527,
+                0.9153
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 8,
+              "denominator": 19,
+              "rate": 0.421053,
+              "wilson_95": [
+                0.2314,
+                0.6372
+              ]
+            }
+          },
+          "3": {
+            "successful_runs": 20,
+            "item_count": 436,
+            "item_support_rate": {
+              "numerator": 369,
+              "denominator": 436,
+              "rate": 0.84633,
+              "wilson_95": [
+                0.8095,
+                0.8771
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 4,
+              "denominator": 20,
+              "rate": 0.2,
+              "wilson_95": [
+                0.0807,
+                0.416
+              ]
+            }
+          }
+        },
+        "span_resolution_error_counts": {},
+        "span_count_error_counts": {
+          "empty_supported_span_ids": 2,
+          "too_many_span_ids": 130
+        },
+        "error_counts": {
+          "schema_or_parse": 1
+        }
+      },
+      "cohere-aplus:command-a-plus-05-2026||span_id_v5_minimal": {
+        "model": "cohere-aplus:command-a-plus-05-2026",
+        "arm": "span_id_v5_minimal",
+        "runs": 60,
+        "successful_runs": 59,
+        "completion_rate": {
+          "numerator": 59,
+          "denominator": 60,
+          "rate": 0.983333,
+          "wilson_95": [
+            0.9114,
+            0.9971
+          ]
+        },
+        "item_count": 1276,
+        "item_support_rate": {
+          "numerator": 1185,
+          "denominator": 1276,
+          "rate": 0.928683,
+          "wilson_95": [
+            0.9132,
+            0.9416
+          ]
+        },
+        "case_gate_rate": {
+          "numerator": 21,
+          "denominator": 59,
+          "rate": 0.355932,
+          "wilson_95": [
+            0.246,
+            0.4834
+          ]
+        },
+        "exact_quote_support_rate": null,
+        "span_validity_rate": {
+          "numerator": 1276,
+          "denominator": 1276,
+          "rate": 1,
+          "wilson_95": [
+            0.997,
+            1
+          ]
+        },
+        "v5_contract_validity_rate": {
+          "numerator": 1102,
+          "denominator": 1276,
+          "rate": 0.863636,
+          "wilson_95": [
+            0.8437,
+            0.8814
+          ]
+        },
+        "evidence_span_count_validity_rate": {
+          "numerator": 1144,
+          "denominator": 1276,
+          "rate": 0.896552,
+          "wilson_95": [
+            0.8786,
+            0.9121
+          ]
+        },
+        "selector_support_rate": {
+          "numerator": 1185,
+          "denominator": 1276,
+          "rate": 0.928683,
+          "wilson_95": [
+            0.9132,
+            0.9416
+          ]
+        },
+        "mean_items_per_successful_run": 21.627,
+        "mean_selected_context_words": 11.194,
+        "repeat_spread": {
+          "1": {
+            "successful_runs": 20,
+            "item_count": 448,
+            "item_support_rate": {
+              "numerator": 416,
+              "denominator": 448,
+              "rate": 0.928571,
+              "wilson_95": [
+                0.9009,
+                0.949
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 11,
+              "denominator": 20,
+              "rate": 0.55,
+              "wilson_95": [
+                0.3421,
+                0.7418
+              ]
+            }
+          },
+          "2": {
+            "successful_runs": 19,
+            "item_count": 392,
+            "item_support_rate": {
+              "numerator": 363,
+              "denominator": 392,
+              "rate": 0.92602,
+              "wilson_95": [
+                0.8958,
+                0.948
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 5,
+              "denominator": 19,
+              "rate": 0.263158,
+              "wilson_95": [
+                0.1181,
+                0.4879
+              ]
+            }
+          },
+          "3": {
+            "successful_runs": 20,
+            "item_count": 436,
+            "item_support_rate": {
+              "numerator": 406,
+              "denominator": 436,
+              "rate": 0.931193,
+              "wilson_95": [
+                0.9035,
+                0.9514
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 5,
+              "denominator": 20,
+              "rate": 0.25,
+              "wilson_95": [
+                0.1119,
+                0.4687
+              ]
+            }
+          }
+        },
+        "span_resolution_error_counts": {},
+        "span_count_error_counts": {
+          "empty_supported_span_ids": 2,
+          "too_many_span_ids": 130
+        },
+        "error_counts": {
+          "schema_or_parse": 1
+        }
+      }
+    },
+    "interpretation": "The v5 span-ID arm tests whether provenance can be made a constrained selection over a pre-enumerated source index. Resolvable span-ID validity is expected by construction when provider-side enums are honored and should not be read as semantic factuality. Full v5 contract validity is stricter because hosted providers did not enforce the max-3 span cap or optional token offsets; those violations remain local validation failures."
   },
   "architecture_development": {
     "evidence_span_v2_final_rerun": {
@@ -419,7 +1723,7 @@
     "candidate_first_v4_stability": {
       "cases": 5,
       "deterministic_gate_passed": 5,
-      "median_selection_jaccard": 1.0,
+      "median_selection_jaccard": 1,
       "minimum_selection_jaccard": 0.5,
       "interpretation": "passed deterministic gates, but model-selected ambiguous candidates are not perfectly repeatable"
     },
