@@ -10,6 +10,11 @@ assert.equal(hasAssertionCueConflict("No pneumonia was seen.", "Pneumonia"), tru
 assert.equal(hasAssertionCueConflict("No pneumonia was seen.", "No pneumonia"), false);
 assert.equal(hasAssertionCueConflict("Cannot exclude abscess.", "Abscess"), true);
 assert.equal(hasAssertionCueConflict("Cannot exclude abscess.", "Possible abscess"), false);
+assert.equal(hasAssertionCueConflict("In MICU, did EGD which showed erosions, but no active bleed.", "EGD upper endoscopy", { domain: "procedure_or_test" }), false);
+assert.equal(hasAssertionCueConflict("Cardiac catheterization completed without complication.", "Cardiac catheterization completed", { domain: "procedure_or_test" }), false);
+assert.equal(hasAssertionCueConflict("A blood culture was no growth.", "Blood culture for sepsis evaluation", { domain: "procedure_or_test" }), false);
+assert.equal(hasAssertionCueConflict("Please do not stop your Amoxicillin.", "Antibiotic completion", { domain: "safety" }), false);
+assert.equal(hasAssertionCueConflict("Culture showed no MRSA growth.", "MRSA growth", { domain: "lab" }), true);
 
 const payload = {
   tasks: [
@@ -92,7 +97,7 @@ assert.equal(byPath["diagnosis_changes.new_or_changed[0]"].acceptance, "blocked_
 assert.equal(byPath["follow_up_actions[0]"].risk_level, "not_supported");
 assert.equal(byPath["follow_up_actions[0]"].acceptance, "abstain");
 
-console.log("PASS decomposition coherence audit (30 assertions)");
+console.log("PASS decomposition coherence audit (35 assertions)");
 
 function task({
   path,

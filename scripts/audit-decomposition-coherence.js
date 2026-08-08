@@ -2,6 +2,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const { hasAssertionCueConflict } = require("./assertion-cue-scope");
 
 const args = parseArgs(process.argv.slice(2));
 
@@ -87,7 +88,7 @@ function auditTask(task, options = {}) {
     && Number(method.combined_label_coverage || 0) >= 0.72
     && Number(method.combined_quote_coverage || 0) < 0.72
   );
-  const assertionCueConflict = hasAssertionCueConflict(selectedText, label);
+  const assertionCueConflict = hasAssertionCueConflict(selectedText, label, task);
   const flags = {
     low_overlap_supported: Boolean(method.supported && lowOverlap),
     label_only_support: Boolean(method.supported && labelOnly),
@@ -138,16 +139,6 @@ function acceptanceForRisk(supported, riskLevel) {
   if (riskLevel === "low") return "auto_accept";
   if (riskLevel === "medium") return "review_required";
   return "blocked_review";
-}
-
-function hasAssertionCueConflict(text, label) {
-  const source = normalize(text);
-  const item = normalize(label);
-  const hasNegation = /\b(no|not|without|denies|denied|negative|resolved|ruled out|rule out)\b/.test(source);
-  const labelAcknowledgesNegation = /\b(no|not|without|denies|denied|negative|resolved|ruled out|rule out)\b/.test(item);
-  const hasUncertainty = /\b(possible|possibly|probable|suspected|concern for|cannot exclude|may represent)\b/.test(source);
-  const labelAcknowledgesUncertainty = /\b(possible|possibly|probable|suspected|concern|cannot exclude|may represent)\b/.test(item);
-  return (hasNegation && !labelAcknowledgesNegation) || (hasUncertainty && !labelAcknowledgesUncertainty);
 }
 
 function renderMarkdown(report) {
@@ -207,10 +198,6 @@ function countBy(values) {
 function ordinalFromSpanId(spanId) {
   const match = String(spanId || "").match(/^L0*([0-9]+)$/);
   return match ? Number(match[1]) : NaN;
-}
-
-function normalize(value) {
-  return String(value || "").toLowerCase().replace(/\s+/g, " ").trim();
 }
 
 function required(value, message) {
