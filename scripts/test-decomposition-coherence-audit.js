@@ -72,6 +72,9 @@ assert.equal(report.summary.unsupported_tasks, 1);
 assert.equal(report.summary.low_risk_supported_tasks, 1);
 assert.equal(report.summary.medium_risk_supported_tasks, 1);
 assert.equal(report.summary.high_risk_supported_tasks, 2);
+assert.equal(report.summary.auto_accepted_supported_tasks, 1);
+assert.equal(report.summary.review_required_supported_tasks, 1);
+assert.equal(report.summary.blocked_supported_tasks, 2);
 assert.equal(report.summary.low_overlap_supported_tasks, 1);
 assert.equal(report.summary.assertion_cue_conflict_tasks, 1);
 assert.equal(report.summary.cross_section_supported_tasks, 1);
@@ -79,12 +82,17 @@ assert.equal(report.summary.wide_window_supported_tasks, 1);
 
 const byPath = Object.fromEntries(report.tasks.map((item) => [item.path, item]));
 assert.equal(byPath["labs[0]"].risk_level, "low");
+assert.equal(byPath["labs[0]"].acceptance, "auto_accept");
 assert.equal(byPath["diagnosis_changes.discharge[0]"].risk_level, "medium");
+assert.equal(byPath["diagnosis_changes.discharge[0]"].acceptance, "review_required");
 assert.equal(byPath["procedures_and_tests[0]"].risk_level, "high");
+assert.equal(byPath["procedures_and_tests[0]"].acceptance, "blocked_review");
 assert.equal(byPath["diagnosis_changes.new_or_changed[0]"].risk_level, "high");
+assert.equal(byPath["diagnosis_changes.new_or_changed[0]"].acceptance, "blocked_review");
 assert.equal(byPath["follow_up_actions[0]"].risk_level, "not_supported");
+assert.equal(byPath["follow_up_actions[0]"].acceptance, "abstain");
 
-console.log("PASS decomposition coherence audit (22 assertions)");
+console.log("PASS decomposition coherence audit (30 assertions)");
 
 function task({
   path,

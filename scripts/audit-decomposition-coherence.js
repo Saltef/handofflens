@@ -48,7 +48,9 @@ function auditDecompositionCoherence(payload, options = {}) {
       high_risk_supported_tasks: highRisk.length,
       medium_risk_supported_tasks: mediumRisk.length,
       low_risk_supported_tasks: lowRisk.length,
-      review_required_supported_tasks: highRisk.length + mediumRisk.length,
+      auto_accepted_supported_tasks: lowRisk.length,
+      review_required_supported_tasks: mediumRisk.length,
+      blocked_supported_tasks: highRisk.length,
       low_overlap_supported_tasks: lowOverlapSupported.length,
       label_only_supported_tasks: labelOnly.length,
       assertion_cue_conflict_tasks: assertionConflicts.length,
@@ -107,6 +109,7 @@ function auditTask(task, options = {}) {
     status: String(method.status || ""),
     risk_level: method.supported ? risk.level : "not_supported",
     risk_reasons: method.supported ? risk.reasons : [],
+    acceptance: acceptanceForRisk(method.supported, risk.level),
     selected_span_count: Number(method.selected_span_count || 0),
     selected_context_words: Number(method.selected_context_words || 0),
     span_window_lines: spanWindow,
@@ -128,6 +131,13 @@ function classifyRisk(flags) {
     return { level: "medium", reasons };
   }
   return { level: "low", reasons };
+}
+
+function acceptanceForRisk(supported, riskLevel) {
+  if (!supported) return "abstain";
+  if (riskLevel === "low") return "auto_accept";
+  if (riskLevel === "medium") return "review_required";
+  return "blocked_review";
 }
 
 function hasAssertionCueConflict(text, label) {
@@ -155,7 +165,9 @@ function renderMarkdown(report) {
     `| Low-risk supported tasks | ${report.summary.low_risk_supported_tasks} |`,
     `| Medium-risk supported tasks | ${report.summary.medium_risk_supported_tasks} |`,
     `| High-risk supported tasks | ${report.summary.high_risk_supported_tasks} |`,
+    `| Auto-accepted supported tasks | ${report.summary.auto_accepted_supported_tasks} |`,
     `| Review-required supported tasks | ${report.summary.review_required_supported_tasks} |`,
+    `| Blocked supported tasks | ${report.summary.blocked_supported_tasks} |`,
     `| Low-overlap supported tasks | ${report.summary.low_overlap_supported_tasks} |`,
     `| Assertion-cue conflict tasks | ${report.summary.assertion_cue_conflict_tasks} |`,
     `| Label-only supported tasks | ${report.summary.label_only_supported_tasks} |`,

@@ -60,7 +60,10 @@
         "high_risk_supported_tasks": 0,
         "medium_risk_supported_tasks": 29,
         "low_risk_supported_tasks": 54,
+        "auto_accepted_supported_tasks": 54,
         "review_required_supported_tasks": 29,
+        "blocked_supported_tasks": 0,
+        "abstained_tasks": 67,
         "low_overlap_supported_tasks": 0,
         "assertion_cue_conflict_supported_tasks": 0,
         "multi_span_supported_tasks": 61,
@@ -91,7 +94,7 @@
           "best_support_rate": 0.52
         }
       ],
-      "interpretation": "Targeted decomposition helps recover many source anchors with far less context than full-note normalization, while preserving abstention for low-overlap possible-fabrication and assertion-conflict items. The coherence audit found no high-risk supported items, but medium-risk stitching flags remain review-priority signals. This is parsing-policy failure analysis, not semantic factuality or proof that note length causally drives errors."
+      "interpretation": "Targeted decomposition helps recover many source anchors with far less context than full-note normalization, while preserving abstention for low-overlap possible-fabrication and assertion-conflict items. The coherence audit separates auto-accepted support from review-required support: 54/150 items auto-accept, 29/150 require review, and 67/150 abstain. This is parsing-policy failure analysis, not semantic factuality or proof that note length causally drives errors."
     }
   },
   "architecture_development": {
