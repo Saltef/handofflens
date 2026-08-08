@@ -1,5 +1,5 @@
 {
-  "generated_on": "2026-08-07",
+  "generated_on": "2026-08-08",
   "status": "development_evidence_only",
   "clinical_validation_complete": false,
   "human_factual_review_complete": false,
@@ -19,82 +19,100 @@
     "selected_json_schema_512_span_case_gate_rate_among_completed": 0.08857142857142856,
     "how_to_read_this": "The low exact-provenance pass rate is the baseline finding, not a defect in the repository. It quantifies how often schema-valid output lacked an attached quote that resolved verbatim. Deterministic span-ID recovery improves item-level auditability, but remaining abstentions and low case-level full-pass rates show this is not a solved grounding or semantic-entailment result.",
     "decomposition_stress_diagnostic": {
-      "date": "2026-08-07",
+      "date": "2026-08-08",
       "private_case_level_outputs_committed": false,
-      "task_selection": "50 failed exact-provenance evidence items from each of three held-out Cohere cells, selected from the lowest exact-provenance records.",
-      "total_tasks": 150,
+      "task_selection": "100 failed exact-provenance evidence items from each of three held-out Cohere cells, selected from the lowest exact-provenance records.",
+      "total_tasks": 300,
       "aggregate_supported_tasks": {
         "exact_full_note": 0,
-        "normalized_full_note": 24,
-        "line_span_id": 32,
-        "section_filtered_span": 26,
-        "query_aware_multispan": 83
+        "normalized_full_note": 35,
+        "line_span_id": 55,
+        "section_filtered_span": 41,
+        "query_aware_multispan": 158
       },
       "aggregate_support_rates": {
         "exact_full_note": 0,
-        "normalized_full_note": 0.16,
-        "line_span_id": 0.21333333333333335,
-        "section_filtered_span": 0.17333333333333334,
-        "query_aware_multispan": 0.5533333333333333
+        "normalized_full_note": 0.116667,
+        "line_span_id": 0.183333,
+        "section_filtered_span": 0.136667,
+        "query_aware_multispan": 0.526667
       },
       "mean_context_words_on_supported_items": {
-        "normalized_full_note": 1503.6,
-        "line_span_id": 10.1,
+        "normalized_full_note": 1676.1,
+        "line_span_id": 9.2,
         "section_filtered_span": 10.3,
-        "query_aware_multispan": 20.0
+        "query_aware_multispan": 21.7
       },
-      "query_aware_supported_by_miss_category": {
-        "quote_terms_present_noncontiguous": 51,
-        "normalization_or_punctuation": 18,
-        "label_supported_quote_unresolved": 5,
-        "weak_overlap_needs_review": 5,
-        "high_overlap_pointer_drift": 4,
-        "low_overlap_possible_fabrication": 0
+      "task_miss_category_counts": {
+        "quote_terms_present_noncontiguous": 191,
+        "normalization_or_punctuation": 35,
+        "low_overlap_possible_fabrication": 45,
+        "weak_overlap_needs_review": 12,
+        "high_overlap_pointer_drift": 11,
+        "label_supported_quote_unresolved": 6
       },
       "query_aware_abstentions": {
-        "weak_or_insufficient_overlap": 49,
-        "assertion_conflict": 18
+        "weak_or_insufficient_overlap": 114,
+        "assertion_conflict": 28
+      },
+      "query_aware_status_counts": {
+        "abstain_query_assertion_conflict": 28,
+        "abstain_query_weak": 114,
+        "query_greedy_multispan_supported": 122,
+        "query_label_multispan_supported": 1,
+        "query_label_single_span_supported": 8,
+        "query_multispan_supported": 2,
+        "query_single_span_supported": 25
       },
       "coherence_audit": {
-        "supported_tasks": 83,
+        "supported_tasks": 158,
         "high_risk_supported_tasks": 0,
-        "medium_risk_supported_tasks": 29,
-        "low_risk_supported_tasks": 54,
-        "auto_accepted_supported_tasks": 54,
-        "review_required_supported_tasks": 29,
+        "medium_risk_supported_tasks": 66,
+        "low_risk_supported_tasks": 92,
+        "auto_accepted_supported_tasks": 92,
+        "review_required_supported_tasks": 66,
         "blocked_supported_tasks": 0,
-        "abstained_tasks": 67,
+        "abstained_tasks": 142,
         "low_overlap_supported_tasks": 0,
         "assertion_cue_conflict_supported_tasks": 0,
-        "multi_span_supported_tasks": 61,
-        "cross_section_supported_tasks": 6,
-        "wide_window_supported_tasks": 10,
-        "many_span_supported_tasks": 15
+        "multi_span_supported_tasks": 125,
+        "cross_section_supported_tasks": 17,
+        "wide_window_supported_tasks": 25,
+        "many_span_supported_tasks": 40
       },
       "cells": [
         {
+          "cell": "strict_tool_thinking_512",
+          "tasks": 100,
+          "line_span_id_supported": 29,
+          "query_aware_multispan_supported": 59,
+          "auto_accepted_supported": 35,
+          "review_required_supported": 24,
+          "abstained": 41,
+          "best_support_rate": 0.59
+        },
+        {
           "cell": "json_schema_thinking_128",
-          "tasks": 50,
-          "line_span_id_supported": 12,
-          "query_aware_multispan_supported": 36,
-          "best_support_rate": 0.72
+          "tasks": 100,
+          "line_span_id_supported": 15,
+          "query_aware_multispan_supported": 60,
+          "auto_accepted_supported": 36,
+          "review_required_supported": 24,
+          "abstained": 40,
+          "best_support_rate": 0.6
         },
         {
           "cell": "json_schema_thinking_512",
-          "tasks": 50,
-          "line_span_id_supported": 8,
-          "query_aware_multispan_supported": 21,
-          "best_support_rate": 0.42
-        },
-        {
-          "cell": "strict_tool_thinking_512",
-          "tasks": 50,
-          "line_span_id_supported": 12,
-          "query_aware_multispan_supported": 26,
-          "best_support_rate": 0.52
+          "tasks": 100,
+          "line_span_id_supported": 11,
+          "query_aware_multispan_supported": 39,
+          "auto_accepted_supported": 21,
+          "review_required_supported": 18,
+          "abstained": 61,
+          "best_support_rate": 0.39
         }
       ],
-      "interpretation": "Targeted decomposition helps recover many source anchors with far less context than full-note normalization, while preserving abstention for low-overlap possible-fabrication and assertion-conflict items. The coherence audit separates auto-accepted support from review-required support: 54/150 items auto-accept, 29/150 require review, and 67/150 abstain. This is parsing-policy failure analysis, not semantic factuality or proof that note length causally drives errors."
+      "interpretation": "Expanded targeted decomposition still favors query-aware multi-span retrieval over full-note normalization and one-span baselines, while showing that the broader hard slice is not solved: 92/300 items auto-accept, 66/300 require review, and 142/300 abstain. This is parsing-policy failure analysis, not semantic factuality or proof that note length causally drives errors."
     }
   },
   "architecture_development": {
