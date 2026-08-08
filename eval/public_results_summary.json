@@ -310,6 +310,60 @@
           "median_selected_spans_supported_tasks": 2,
           "selected_span_count_distribution_all_tasks": { "0": 13, "1": 75, "2": 118, "3": 46, "4": 19 }
         },
+        "minimal_selector_recall_cost": {
+          "unit": "failed exact-provenance evidence item",
+          "old_query_aware_support": { "supported": "214/271", "rate": 0.7897, "wilson_95": [0.7373, 0.834] },
+          "minimal_selector_support": { "supported": "249/271", "rate": 0.9188, "wilson_95": [0.8801, 0.9458] },
+          "old_supported_retained_by_minimal_selector": { "supported": "206/214", "rate": 0.9626, "wilson_95": [0.928, 0.9809] },
+          "recall_cost_among_old_supported": { "lost": "8/214", "rate": 0.0374, "wilson_95": [0.0191, 0.072] },
+          "recall_loss_categories": {
+            "blocked_by_assertion_conflict": 3,
+            "blocked_by_budget_normalized_label_risk": 3,
+            "old_policy_exceeded_span_cap": 2
+          },
+          "recall_loss_features": {
+            "multi_span_composition": 8,
+            "label_risk_sensitive": 6,
+            "assertion_sensitive": 3,
+            "normalization_sensitive": 2,
+            "cross_section_reasoning": 1
+          },
+          "mean_context_words_supported": {
+            "old_query_aware": 16.164,
+            "minimal_selector": 10.795
+          },
+          "interpretation": "The minimal selector improved lexical/span auditability on this existing hard-slice diagnostic while reducing supported-context size, but this is deterministic post-hoc evidence selection over existing model-generated items. It is not a fresh model-output comparison or semantic factuality proof."
+        },
+        "length_density_confounding": {
+          "unit": "completed source record and evidence item",
+          "thresholds": {
+            "short_word_count_lt": 1500,
+            "high_density_items_per_1k_words_gte": 16
+          },
+          "completed_records": 22,
+          "off_diagonal_records": {
+            "short_high_density": 13,
+            "long_low_density": 0
+          },
+          "cells": {
+            "short_high_density": {
+              "records": 13,
+              "evidence_items": 539,
+              "exact_quote_item_rate": { "supported": "431/539", "rate": 0.7996, "wilson_95": [0.7638, 0.8312] },
+              "span_supported_item_rate": { "supported": "520/539", "rate": 0.9648, "wilson_95": [0.9456, 0.9773] },
+              "provenance_abstain_item_rate": { "supported": "19/539", "rate": 0.0353, "wilson_95": [0.0227, 0.0544] }
+            },
+            "long_high_density": {
+              "records": 9,
+              "evidence_items": 629,
+              "exact_quote_item_rate": { "supported": "406/629", "rate": 0.6455, "wilson_95": [0.6073, 0.6819] },
+              "span_supported_item_rate": { "supported": "539/629", "rate": 0.8569, "wilson_95": [0.8274, 0.8821] },
+              "provenance_abstain_item_rate": { "supported": "90/629", "rate": 0.1431, "wilson_95": [0.1179, 0.1726] }
+            }
+          },
+          "conclusion": "off_diagonal_cells_too_thin",
+          "interpretation": "The hard slice supports an association between harder provenance and longer/dense records, but cannot separate length from density because there are no long low-density records under the pre-specified thresholds."
+        },
         "decision": "The fixed-budget cliff is primarily a strict label-risk guard artifact: support rises when guards are disabled and remains high when only label-risk is disabled. Minimal sufficient evidence selection should use adaptive stopping plus calibrated risk guards, not the old fixed-budget strict label-risk curve.",
         "claim_boundary": "Selected hard-slice item-level auditability diagnostic only; not semantic entailment, clinical correctness, or population performance."
       }

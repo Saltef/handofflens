@@ -64,6 +64,32 @@ Primary route: `cohere-json-schema:command-a-plus-05-2026`, transparent reranker
 
 Decision: the fixed-budget cliff should not be cited as evidence that broader context inherently destroys provenance support. It is primarily a strict label-risk guard artifact. The next design should use minimal sufficient evidence selection with adaptive stopping, calibrated assertion/label-risk guards, and an explicit recall-cost report. The adaptive query-aware policy on the same primary route supported 214/271 items, 79.0%, with median selected span count 2; that number is item-level auditability under lexical/span support, not semantic entailment or clinical correctness.
 
+## Phase 3 Minimal Selector Recall Cost
+
+Timestamp: 2026-08-08. Unit: failed exact-provenance evidence item. This compares deterministic post-hoc evidence selection policies over existing private hard-slice model outputs; it is not a fresh model-output comparison.
+
+| Metric | Result | Interpretation |
+| --- | ---: | --- |
+| Old adaptive query-aware support | 214/271, 79.0% [73.7, 83.4] | Prior item-level lexical/span support baseline |
+| Minimal selector support | 249/271, 91.9% [88.0, 94.6] | Smaller deterministic span sets can recover more auditability on this slice |
+| Old-supported retained by minimal selector | 206/214, 96.3% [92.8, 98.1] | Most prior supported items remain supported |
+| Recall cost among old-supported items | 8/214, 3.7% [1.9, 7.2] | Lost items are the explicit tradeoff |
+
+Recall-loss categories: assertion conflict 3, budget-normalized label risk 3, old policy exceeded the 3-span cap 2. Recall-loss features: multi-span composition 8, label-risk-sensitive 6, assertion-sensitive 3, normalization-sensitive 2, cross-section reasoning 1. Mean supported context fell from 16.164 words under the old query-aware policy to 10.795 words under the minimal selector. This supports the selector as an auditability design, not a semantic grounding solution.
+
+## Phase 5 Length Versus Density Result
+
+Timestamp: 2026-08-08. Unit: completed source record and evidence item. Thresholds: short note <1500 words; high density >=16 evidence items per 1k words.
+
+| Cell | Records | Evidence items | Exact item rate | Span-supported item rate | Abstain item rate |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Short high-density | 13 | 539 | 431/539, 80.0% [76.4, 83.1] | 520/539, 96.5% [94.6, 97.7] | 19/539, 3.5% [2.3, 5.4] |
+| Long high-density | 9 | 629 | 406/629, 64.5% [60.7, 68.2] | 539/629, 85.7% [82.7, 88.2] | 90/629, 14.3% [11.8, 17.3] |
+| Short low-density | 0 | 0 | N/A | N/A | N/A |
+| Long low-density | 0 | 0 | N/A | N/A | N/A |
+
+Decision: this private hard slice cannot disentangle length from density because the off-diagonal cells are empty. The allowed claim is association with harder provenance on longer/dense records. The prohibited claim is that density, rather than length, is causally responsible.
+
 ## Evidence Needed For Stronger Claims
 
 - Entailment-backed source support: lexical overlap should be replaced or supplemented with a factuality/entailment scorer, such as MiniCheck, AlignScore, or a clinical NLI comparator, followed by manual review of disagreements.
