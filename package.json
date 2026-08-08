@@ -4,7 +4,7 @@
   "private": true,
   "description": "Clinical model evaluation harness for discharge-summary change extraction.",
   "scripts": {
-    "test": "npm run quality:gate:test && npm run evidence:pointer:test && npm run evidence:pipeline:v3:test && npm run candidate:v4:test && npm run clinical:signals:test && npm run lexical:overstatement:test && npm run typed:provenance:test && npm run provenance:misses:test && npm run decomposition:stress:test && npm run adjudication:test && npm run model:evidence:test && npm run scoring:test && npm run profile:test && npm run benchmark:test && npm run benchmark:public:test && npm run benchmark:validate",
+    "test": "npm run quality:gate:test && npm run evidence:pointer:test && npm run evidence:pipeline:v3:test && npm run candidate:v4:test && npm run clinical:signals:test && npm run lexical:overstatement:test && npm run typed:provenance:test && npm run provenance:misses:test && npm run decomposition:stress:test && npm run decomposition:coherence:test && npm run adjudication:test && npm run model:evidence:test && npm run scoring:test && npm run profile:test && npm run benchmark:test && npm run benchmark:public:test && npm run benchmark:validate",
     "check:share": "node scripts/check-share-readiness.js",
     "figures:build": "python3 scripts/make-results-figure.py",
     "check:all": "npm run check && npm test && npm run check:share",
@@ -71,6 +71,8 @@
     "provenance:misses:test": "node scripts/test-provenance-miss-taxonomy.js",
     "decomposition:stress": "node scripts/run-decomposition-stress-experiment.js",
     "decomposition:stress:test": "node scripts/test-decomposition-stress-experiment.js",
+    "decomposition:coherence": "node scripts/audit-decomposition-coherence.js",
+    "decomposition:coherence:test": "node scripts/test-decomposition-coherence-audit.js",
     "review:v2-v4:prepare": "node scripts/prepare-v2-v4-factual-review.js",
     "review:v4:rematerialize": "node scripts/rematerialize-v4-extractive.js",
     "conformal:route": "node scripts/run-conformal-routing-experiment.js --cases eval/dataset_sample_representative_500.json --results results/cohere-aplus-routed-representative100.json --out-prefix results/cohere-aplus-routed-representative100",

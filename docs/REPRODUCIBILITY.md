@@ -104,6 +104,14 @@ npm run decomposition:stress -- --input results/model-eval.json --cases eval/pil
 
 This compares exact full-note matching, normalized full-note matching, line-span retrieval, section-filtered retrieval, and query-aware multi-span retrieval on failed exact-provenance items. For private held-out runs, commit only aggregate counts and keep the case-level output ignored.
 
+Recovered query-aware spans can be audited for coherence and stitching risk:
+
+```bash
+npm run decomposition:coherence -- --input results/model-eval-decomposition-stress.json --out results/model-eval-decomposition-coherence.json
+```
+
+The coherence audit checks supported query-aware span unions for low-overlap leakage, assertion-cue conflicts, label-only support, cross-section unions, wide span windows, and many-span selections. It is a review-priority diagnostic, not an entailment label.
+
 ## Human-review workflow
 
 Review packets and method keys contain source excerpts and remain under ignored local output directories. Commit only blank schemas, protocols, and aggregate analyses.

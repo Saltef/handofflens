@@ -18,6 +18,7 @@ const sourceText = [
   "Potassium 4.9 mmol/L.",
   "DISCHARGE DIAGNOSES:",
   "Heart failure exacerbation.",
+  "No pneumonia was seen.",
 ].join("\n");
 
 const payload = {
@@ -40,7 +41,12 @@ const payload = {
           uncertain: [],
         },
         diagnosis_changes: {
-          discharge: [],
+          discharge: [
+            {
+              label: "Pneumonia",
+              source_quote: "Pneumonia present.",
+            },
+          ],
           new_or_changed: [],
         },
         procedures_and_tests: [
@@ -74,7 +80,7 @@ const report = runDecompositionStressExperiment(payload, {
 });
 
 assert.equal(Object.keys(METHOD_DEFINITIONS).length, 5);
-assert.equal(report.summary.tasks, 4);
+assert.equal(report.summary.tasks, 5);
 assert.equal(report.summary.source_records, 1);
 
 const tasksByPath = Object.fromEntries(report.tasks.map((task) => [task.path, task]));
@@ -97,6 +103,10 @@ assert.equal(labs.methods.query_aware_multispan.supported, true);
 assert.equal(labs.methods.query_aware_multispan.selected_span_count, 2);
 assert.equal(labs.methods.query_aware_multispan.status, "query_greedy_multispan_supported");
 
+const assertionConflict = tasksByPath["diagnosis_changes.discharge[0]"];
+assert.equal(assertionConflict.methods.query_aware_multispan.supported, false);
+assert.equal(assertionConflict.methods.query_aware_multispan.status, "abstain_query_assertion_conflict");
+
 const unsupported = tasksByPath["procedures_and_tests[0]"];
 assert.equal(unsupported.methods.exact_full_note.supported, false);
 assert.equal(unsupported.methods.normalized_full_note.supported, false);
@@ -108,4 +118,4 @@ assert.equal(report.summary.methods.find((item) => item.method === "exact_full_n
 assert.equal(report.summary.methods.find((item) => item.method === "normalized_full_note").supported_tasks, 1);
 assert.equal(report.summary.methods.find((item) => item.method === "query_aware_multispan").supported_tasks, 3);
 
-console.log("PASS decomposition stress experiment (23 assertions)");
+console.log("PASS decomposition stress experiment (25 assertions)");

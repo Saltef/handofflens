@@ -220,10 +220,12 @@ function queryAwareMultiSpan(task, context) {
     status = selected.length > 1 ? "query_label_multispan_supported" : "query_label_single_span_supported";
   }
 
-  const supported = !lowOverlap && querySupport(selected, combined);
+  const assertionConflict = hasAssertionCueConflict(selected.map((span) => span.text).join(" "), task.label);
+  const supported = !lowOverlap && !assertionConflict && querySupport(selected, combined);
+  const unsupportedStatus = assertionConflict ? "abstain_query_assertion_conflict" : "abstain_query_weak";
   return result({
     supported,
-    status: supported ? status : "abstain_query_weak",
+    status: supported ? status : unsupportedStatus,
     spans: selected,
     method: "query_aware_multispan",
     combined,
@@ -232,6 +234,20 @@ function queryAwareMultiSpan(task, context) {
 
 function isLowOverlapTask(task) {
   return task.prior_span_support_status === "abstain_low_overlap" || task.miss_category === "low_overlap_possible_fabrication";
+}
+
+function hasAssertionCueConflict(text, label) {
+  const source = normalizeAssertionText(text);
+  const item = normalizeAssertionText(label);
+  const hasNegation = /\b(no|not|without|denies|denied|negative|resolved|ruled out|rule out)\b/.test(source);
+  const labelAcknowledgesNegation = /\b(no|not|without|denies|denied|negative|resolved|ruled out|rule out)\b/.test(item);
+  const hasUncertainty = /\b(possible|possibly|probable|suspected|concern for|cannot exclude|may represent)\b/.test(source);
+  const labelAcknowledgesUncertainty = /\b(possible|possibly|probable|suspected|concern|cannot exclude|may represent)\b/.test(item);
+  return (hasNegation && !labelAcknowledgesNegation) || (hasUncertainty && !labelAcknowledgesUncertainty);
+}
+
+function normalizeAssertionText(value) {
+  return String(value || "").toLowerCase().replace(/\s+/g, " ").trim();
 }
 
 function querySupport(spans, combined) {

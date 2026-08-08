@@ -28,53 +28,70 @@
         "normalized_full_note": 24,
         "line_span_id": 32,
         "section_filtered_span": 26,
-        "query_aware_multispan": 101
+        "query_aware_multispan": 83
       },
       "aggregate_support_rates": {
         "exact_full_note": 0,
         "normalized_full_note": 0.16,
         "line_span_id": 0.21333333333333335,
         "section_filtered_span": 0.17333333333333334,
-        "query_aware_multispan": 0.6733333333333333
+        "query_aware_multispan": 0.5533333333333333
       },
       "mean_context_words_on_supported_items": {
         "normalized_full_note": 1503.6,
         "line_span_id": 10.1,
         "section_filtered_span": 10.3,
-        "query_aware_multispan": 22.2
+        "query_aware_multispan": 20.0
       },
       "query_aware_supported_by_miss_category": {
-        "quote_terms_present_noncontiguous": 66,
-        "normalization_or_punctuation": 20,
+        "quote_terms_present_noncontiguous": 51,
+        "normalization_or_punctuation": 18,
         "label_supported_quote_unresolved": 5,
         "weak_overlap_needs_review": 5,
-        "high_overlap_pointer_drift": 5,
+        "high_overlap_pointer_drift": 4,
         "low_overlap_possible_fabrication": 0
+      },
+      "query_aware_abstentions": {
+        "weak_or_insufficient_overlap": 49,
+        "assertion_conflict": 18
+      },
+      "coherence_audit": {
+        "supported_tasks": 83,
+        "high_risk_supported_tasks": 0,
+        "medium_risk_supported_tasks": 29,
+        "low_risk_supported_tasks": 54,
+        "review_required_supported_tasks": 29,
+        "low_overlap_supported_tasks": 0,
+        "assertion_cue_conflict_supported_tasks": 0,
+        "multi_span_supported_tasks": 61,
+        "cross_section_supported_tasks": 6,
+        "wide_window_supported_tasks": 10,
+        "many_span_supported_tasks": 15
       },
       "cells": [
         {
           "cell": "json_schema_thinking_128",
           "tasks": 50,
           "line_span_id_supported": 12,
-          "query_aware_multispan_supported": 37,
-          "best_support_rate": 0.74
+          "query_aware_multispan_supported": 36,
+          "best_support_rate": 0.72
         },
         {
           "cell": "json_schema_thinking_512",
           "tasks": 50,
           "line_span_id_supported": 8,
-          "query_aware_multispan_supported": 28,
-          "best_support_rate": 0.56
+          "query_aware_multispan_supported": 21,
+          "best_support_rate": 0.42
         },
         {
           "cell": "strict_tool_thinking_512",
           "tasks": 50,
           "line_span_id_supported": 12,
-          "query_aware_multispan_supported": 36,
-          "best_support_rate": 0.72
+          "query_aware_multispan_supported": 26,
+          "best_support_rate": 0.52
         }
       ],
-      "interpretation": "Targeted decomposition helps recover many source anchors with far less context than full-note normalization, while preserving abstention for low-overlap possible-fabrication items. This is parsing-policy failure analysis, not semantic factuality or proof that note length causally drives errors."
+      "interpretation": "Targeted decomposition helps recover many source anchors with far less context than full-note normalization, while preserving abstention for low-overlap possible-fabrication and assertion-conflict items. The coherence audit found no high-risk supported items, but medium-risk stitching flags remain review-priority signals. This is parsing-policy failure analysis, not semantic factuality or proof that note length causally drives errors."
     }
   },
   "architecture_development": {
