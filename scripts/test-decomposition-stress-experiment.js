@@ -6,6 +6,8 @@ const {
   isHighRiskLabelOnlyUnion,
   isStrictLowOverlapRescue,
   METHOD_DEFINITIONS,
+  SPAN_BUDGETS,
+  SPAN_BUDGET_MATCHERS,
 } = require("./run-decomposition-stress-experiment");
 
 const sourceText = [
@@ -89,8 +91,12 @@ const report = runDecompositionStressExperiment(payload, {
 });
 
 assert.equal(Object.keys(METHOD_DEFINITIONS).length, 5);
+assert.deepEqual(SPAN_BUDGETS, [1, 2, 4, 8]);
+assert.equal(Object.keys(SPAN_BUDGET_MATCHERS).length, 2);
 assert.equal(report.summary.tasks, 6);
 assert.equal(report.summary.source_records, 1);
+assert.equal(report.summary.span_budget_curves.lexical_topk["1"].tasks, 6);
+assert.equal(report.summary.span_budget_curves.transparent_rerank_topk["8"].tasks, 6);
 
 const tasksByPath = Object.fromEntries(report.tasks.map((task) => [task.path, task]));
 
@@ -99,6 +105,8 @@ assert.equal(aspirin.methods.exact_full_note.supported, false);
 assert.equal(aspirin.methods.query_aware_multispan.supported, true);
 assert.equal(aspirin.methods.query_aware_multispan.selected_span_count, 2);
 assert.equal(aspirin.methods.query_aware_multispan.status, "query_greedy_multispan_supported");
+assert.ok(aspirin.span_budget_curve.lexical_topk["2"].selected_span_count <= 2);
+assert.ok(aspirin.span_budget_curve.transparent_rerank_topk["4"].selected_context_words > 0);
 
 const lasix = tasksByPath["medication_changes.changed[0]"];
 assert.equal(lasix.methods.exact_full_note.supported, false);
@@ -122,6 +130,7 @@ assert.equal(labs.methods.query_aware_multispan.status, "query_greedy_multispan_
 const assertionConflict = tasksByPath["diagnosis_changes.discharge[0]"];
 assert.equal(assertionConflict.methods.query_aware_multispan.supported, false);
 assert.equal(assertionConflict.methods.query_aware_multispan.status, "abstain_query_assertion_conflict");
+assert.equal(assertionConflict.span_budget_curve.transparent_rerank_topk["1"].supported, false);
 
 const unsupported = tasksByPath["procedures_and_tests[0]"];
 assert.equal(unsupported.methods.exact_full_note.supported, false);
@@ -163,4 +172,4 @@ assert.equal(isHighRiskLabelOnlyUnion(
   "query_label_single_span_supported",
 ), false);
 
-console.log("PASS decomposition stress experiment (36 assertions)");
+console.log("PASS decomposition stress experiment (44 assertions)");

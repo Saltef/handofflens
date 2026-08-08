@@ -18,6 +18,11 @@ const METHOD_DEFINITIONS = {
 };
 
 const METHOD_ORDER = Object.keys(METHOD_DEFINITIONS);
+const SPAN_BUDGETS = [1, 2, 4, 8];
+const SPAN_BUDGET_MATCHERS = {
+  lexical_topk: "Rank source spans by quote/label lexical overlap only.",
+  transparent_rerank_topk: "Rerank the same spans with section relevance and assertion-conflict penalties; this is a transparent reranker-style comparator, not an embedding model.",
+};
 
 if (require.main === module) {
   const inputPath = required(args.input, "--input is required");
@@ -50,6 +55,7 @@ function runDecompositionStressExperiment(payload, options = {}) {
   const tasks = selectStressTasks(taxonomy, recordsById, options.taskLimit || 20);
   const taskResults = tasks.map((task) => runTask(task, recordsById.get(task.case_id)));
   const methodReports = METHOD_ORDER.map((method) => summarizeMethod(method, taskResults));
+  const spanBudgetReports = summarizeSpanBudgetCurves(taskResults);
 
   return {
     generated_at: new Date().toISOString(),
@@ -60,12 +66,18 @@ function runDecompositionStressExperiment(payload, options = {}) {
       policy: "Select failed exact-provenance evidence items from the lowest exact-provenance records, prioritizing abstain/low-overlap/weak-overlap cases before easier pointer artifacts.",
     },
     method_definitions: METHOD_DEFINITIONS,
+    span_budget_definitions: {
+      budgets: SPAN_BUDGETS,
+      matchers: SPAN_BUDGET_MATCHERS,
+      interpretation: "Matched diagnostic over the same selected stress tasks. It asks how support and review risk change as the retriever is allowed to expose more source spans.",
+    },
     summary: {
       tasks: taskResults.length,
       source_records: new Set(taskResults.map((task) => task.case_id)).size,
       exact_baseline_supported_tasks: methodReports.find((item) => item.method === "exact_full_note")?.supported_tasks || 0,
       best_method: bestMethod(methodReports),
       methods: methodReports,
+      span_budget_curves: spanBudgetReports,
       dominant_task_miss_categories: countBy(taskResults.map((task) => task.miss_category)),
       task_domains: countBy(taskResults.map((task) => task.domain)),
     },
@@ -139,6 +151,7 @@ function runTask(task, record) {
   return {
     ...task,
     methods: methodResults,
+    span_budget_curve: buildSpanBudgetCurve(task, context),
   };
 }
 
@@ -243,6 +256,59 @@ function queryAwareMultiSpan(task, context) {
     method: "query_aware_multispan",
     combined,
   });
+}
+
+function buildSpanBudgetCurve(task, context) {
+  const lexicalRanked = rankSegments(context.segments, task);
+  const reranked = transparentRerankSegments(context.segments, task);
+  return {
+    lexical_topk: Object.fromEntries(SPAN_BUDGETS.map((budget) => [String(budget), evaluateSpanBudget(task, lexicalRanked, budget)])),
+    transparent_rerank_topk: Object.fromEntries(SPAN_BUDGETS.map((budget) => [String(budget), evaluateSpanBudget(task, reranked, budget)])),
+  };
+}
+
+function transparentRerankSegments(segments, task) {
+  return rankSegments(segments, task).map((span) => {
+    const sectionBonus = isDomainRelevant(span.section, task.domain) ? 0.12 : 0;
+    const exactBonus = span.exact_normalized_part ? 0.08 : 0;
+    const assertionPenalty = hasAssertionCueConflict(span.text, task.label, task) ? 0.35 : 0;
+    const score = span.score + sectionBonus + exactBonus - assertionPenalty;
+    return {
+      ...span,
+      rerank_score: score,
+      rerank_features: {
+        lexical_score: round(span.score),
+        section_relevant: Boolean(sectionBonus),
+        exact_normalized_part: Boolean(span.exact_normalized_part),
+        assertion_conflict_penalty: Boolean(assertionPenalty),
+      },
+    };
+  }).sort((left, right) => right.rerank_score - left.rerank_score
+    || right.score - left.score
+    || left.id.localeCompare(right.id));
+}
+
+function evaluateSpanBudget(task, ranked, budget) {
+  const selected = uniqueSpans(ranked.slice(0, budget)).sort((left, right) => left.ordinal - right.ordinal);
+  const combined = combinedCoverage(selected, task);
+  const assertionConflict = hasAssertionCueConflict(selected.map((span) => span.text).join(" "), task.label, task);
+  const labelRisk = isHighRiskLabelOnlyUnion(selected, combined, "query_label_span_budget");
+  const contextWords = wordCount(selected.map((span) => span.text).join(" "));
+  const spanWindow = selected.length ? selected[selected.length - 1].ordinal - selected[0].ordinal + 1 : 0;
+  const supported = selected.length > 0
+    && !assertionConflict
+    && !labelRisk
+    && (combined.quote_coverage >= 0.72 || combined.label_coverage >= 0.72);
+  return {
+    supported,
+    status: supported ? "supported_under_budget" : assertionConflict ? "abstain_assertion_conflict" : labelRisk ? "abstain_label_risk" : "abstain_weak_budget",
+    selected_span_count: selected.length,
+    selected_context_words: contextWords,
+    span_window_lines: spanWindow,
+    combined_quote_coverage: round(combined.quote_coverage),
+    combined_label_coverage: round(combined.label_coverage),
+    selected_span_ids: selected.map((span) => span.id),
+  };
 }
 
 function isLowOverlapTask(task) {
@@ -508,6 +574,31 @@ function summarizeMethod(method, taskResults) {
   };
 }
 
+function summarizeSpanBudgetCurves(taskResults) {
+  const out = {};
+  for (const matcher of Object.keys(SPAN_BUDGET_MATCHERS)) {
+    out[matcher] = {};
+    for (const budget of SPAN_BUDGETS) {
+      const results = taskResults
+        .map((task) => task.span_budget_curve?.[matcher]?.[String(budget)])
+        .filter(Boolean);
+      const supported = results.filter((item) => item.supported);
+      out[matcher][String(budget)] = {
+        tasks: results.length,
+        supported_tasks: supported.length,
+        support_rate: ratio(supported.length, results.length),
+        mean_selected_context_words: round(mean(results.map((item) => item.selected_context_words))),
+        mean_selected_context_words_supported: round(mean(supported.map((item) => item.selected_context_words))),
+        mean_span_window_lines: round(mean(results.map((item) => item.span_window_lines))),
+        assertion_conflict_tasks: results.filter((item) => item.status === "abstain_assertion_conflict").length,
+        label_risk_tasks: results.filter((item) => item.status === "abstain_label_risk").length,
+        status_counts: countBy(results.map((item) => item.status)),
+      };
+    }
+  }
+  return out;
+}
+
 function bestMethod(methodReports) {
   return [...methodReports].sort((left, right) => right.support_rate - left.support_rate
     || left.mean_selected_context_words_supported - right.mean_selected_context_words_supported
@@ -533,6 +624,15 @@ function renderMarkdown(report) {
   lines.push("", "## Methods", "");
   for (const [method, definition] of Object.entries(report.method_definitions)) {
     lines.push(`- \`${method}\`: ${definition}`);
+  }
+  lines.push("", "## Span Budget Curves", "");
+  lines.push(report.span_budget_definitions.interpretation, "");
+  for (const [matcher, definition] of Object.entries(report.span_budget_definitions.matchers)) {
+    lines.push(`### ${matcher}`, "", definition, "", "| Span budget | Supported tasks | Support rate | Mean context words | Mean context words, supported | Assertion conflicts | Label-risk abstains |", "| ---: | ---: | ---: | ---: | ---: | ---: | ---: |");
+    for (const [budget, values] of Object.entries(report.summary.span_budget_curves[matcher] || {})) {
+      lines.push(`| ${budget} | ${values.supported_tasks} | ${formatPercent(values.support_rate)} | ${format(values.mean_selected_context_words)} | ${format(values.mean_selected_context_words_supported)} | ${values.assertion_conflict_tasks} | ${values.label_risk_tasks} |`);
+    }
+    lines.push("");
   }
   lines.push("", "## Task Mix", "", "| Category | Count |", "| --- | ---: |");
   for (const [category, count] of Object.entries(report.summary.dominant_task_miss_categories)) {
@@ -640,7 +740,11 @@ function parseArgs(argv) {
 module.exports = {
   runDecompositionStressExperiment,
   evaluateMethod,
+  buildSpanBudgetCurve,
+  transparentRerankSegments,
   isHighRiskLabelOnlyUnion,
   isStrictLowOverlapRescue,
   METHOD_DEFINITIONS,
+  SPAN_BUDGETS,
+  SPAN_BUDGET_MATCHERS,
 };
