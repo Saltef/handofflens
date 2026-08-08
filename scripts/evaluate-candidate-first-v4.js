@@ -18,6 +18,8 @@ const selectionRepeats = Number(args["selection-repeats"] || 1);
 const sourceTransform = args["source-transform"] || "none";
 const model = args.model || "command-a-plus-05-2026";
 const cases = JSON.parse(fs.readFileSync(casesPath, "utf8"));
+const captureLogprobs = /^(1|true|yes)$/i.test(String(process.env.EVAL_CAPTURE_LOGPROBS || ""));
+const storeRawLogprobs = /^(1|true|yes)$/i.test(String(process.env.EVAL_STORE_RAW_LOGPROBS || ""));
 if (!Number.isInteger(start) || !Number.isInteger(limit) || start < 0 || start + limit > cases.length) throw new Error("Invalid range");
 if (![1, 2, 3].includes(selectionRepeats)) throw new Error("selection-repeats must be 1, 2, or 3");
 if (!dryRun && !process.env.COHERE_API_KEY) throw new Error("Missing COHERE_API_KEY");
@@ -26,7 +28,7 @@ fs.mkdirSync(outDir, { recursive: true });
 main().catch((error) => { console.error(error.stack || error.message); process.exitCode = 1; });
 
 async function main() {
-  const manifest = { experiment_id: "candidate-first-v4-development", created_at: new Date().toISOString(), cases_path: casesPath, cases_sha256: sha256(fs.readFileSync(casesPath)), range: { start, limit }, model, source_index: "canonical-source-map-v1", candidate_generator: "candidate-first-index-v1", selection_repeats: selectionRepeats, source_transform: sourceTransform, generation: { temperature: 0, seed: Number(process.env.COHERE_SEED || 20260622) }, reasoning: { hidden: true, token_budget: 512, chain_of_thought_stored: false }, retries: { provider: 0, recovery: 1 }, claims_boundary: "Automated development evidence only; no clinical correctness or safety claim." };
+  const manifest = { experiment_id: "candidate-first-v4-development", created_at: new Date().toISOString(), cases_path: casesPath, cases_sha256: sha256(fs.readFileSync(casesPath)), range: { start, limit }, model, source_index: "canonical-source-map-v1", candidate_generator: "candidate-first-index-v1", selection_repeats: selectionRepeats, source_transform: sourceTransform, generation: { temperature: 0, seed: Number(process.env.COHERE_SEED || 20260622) }, telemetry_policy: { capture_logprobs: captureLogprobs, store_raw_logprobs: storeRawLogprobs, raw_logits_available_from_hosted_chat_api: false }, reasoning: { hidden: true, token_budget: 512, chain_of_thought_stored: false }, retries: { provider: 0, recovery: 1 }, claims_boundary: "Automated development evidence only; no clinical correctness or safety claim." };
   writeJson(path.join(outDir, "manifest.json"), manifest);
   const records = [];
   for (const testCase of cases.slice(start, start + limit)) {
@@ -88,14 +90,28 @@ function summaryMessages(testCase, extraction) { return [{ role: "system", conte
 
 async function callJson(stage, messages, schema) {
   const request = { model, max_tokens: 8000, temperature: 0, seed: Number(process.env.COHERE_SEED || 20260622), thinking: { token_budget: 512 }, response_format: { type: "json_object", schema: toProviderCompatibleSchema(schema) }, messages };
+  if (captureLogprobs) request.logprobs = true;
   const controller = new AbortController(), timer = setTimeout(() => controller.abort(), Number(process.env.COHERE_TIMEOUT_MS || 120000)), began = Date.now();
   try {
     const response = await fetch("https://api.cohere.com/v2/chat", { method: "POST", signal: controller.signal, headers: { Authorization: `Bearer ${process.env.COHERE_API_KEY}`, "Content-Type": "application/json" }, body: JSON.stringify(request) });
-    const body = await response.json(), telemetry = { stage, provider_request_id: body.id || response.headers.get("x-request-id") || null, usage: body.usage || null, finish_reason: body.finish_reason || body.message?.finish_reason || null, request_hash: sha256(JSON.stringify(request)), latency_ms: Date.now() - began };
+    const body = await response.json(), telemetry = { stage, provider_request_id: body.id || response.headers.get("x-request-id") || null, usage: body.usage || null, finish_reason: body.finish_reason || body.message?.finish_reason || null, request_hash: sha256(JSON.stringify(request)), request_parameters: { model: request.model, max_tokens: request.max_tokens, temperature: request.temperature, seed: request.seed, response_format: { type: request.response_format.type, schema_present: Boolean(request.response_format.schema) }, thinking: request.thinking, logprobs: Boolean(request.logprobs) }, logprobs: normalizeLogprobs(body.logprobs), latency_ms: Date.now() - began };
     if (!response.ok) { const error = new Error(`Cohere API error ${response.status}: ${JSON.stringify(body)}`); error.telemetry = telemetry; throw error; }
     const text = Array.isArray(body.message?.content) ? body.message.content.map((x) => x?.text || "").join("") : String(body.message?.content || "");
     return { value: JSON.parse(text.trim()), telemetry };
   } finally { clearTimeout(timer); }
+}
+
+function normalizeLogprobs(raw) {
+  if (!captureLogprobs) return { requested: false, sent_to_provider: false, returned: false, raw_stored: false };
+  if (!raw) return { requested: true, sent_to_provider: true, returned: false, raw_stored: false, note: "Provider response did not include log probabilities." };
+  return {
+    requested: true,
+    sent_to_provider: true,
+    returned: true,
+    raw_stored: storeRawLogprobs,
+    token_count: Array.isArray(raw) ? raw.length : Array.isArray(raw.content) ? raw.content.length : null,
+    raw: storeRawLogprobs ? raw : undefined,
+  };
 }
 
 function selectionSchema(candidates) { const ids = candidates.map((x) => x.candidate_id); return { type: "object", additionalProperties: false, required: ["selected", "uncertain_candidate_ids", "abstention_reason"], properties: { selected: { type: "array", items: { type: "object", additionalProperties: false, required: ["candidate_id", "category", "label", "rationale"], properties: { candidate_id: { type: "string", enum: ids }, category: { type: "string", enum: categories() }, label: { type: "string" }, rationale: { type: "string" } } } }, uncertain_candidate_ids: { type: "array", items: { type: "string", enum: ids } }, abstention_reason: { type: "string" } } }; }

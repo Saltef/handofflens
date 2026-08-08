@@ -31,6 +31,8 @@ A targeted decomposition stress test then selected the 200 lowest exact-provenan
 
 The same policy was then run across the full available failed-exact-provenance pool from those three cells. Across 13,038 items, query-aware retrieval supported 11,001 items, with 7,829 auto-accepted, 3,172 review-required, 2,037 abstained, and 0 high-risk supported after a stricter label-only risk guard converted 332 diffuse label-only unions into abstentions. This broader pool includes easier exact-match failures than the 600-item hard slice, so it is useful as a scaling check, not a replacement for the harder stress result.
 
+A model-side hard-case diagnostic then reran Command A+ on 20 private dense/low-performing cases across four full-note request modes plus candidate-first v4. JSON-schema full-note extraction completed 16/20 cases but only 2/16 completed cases passed the exact/span provenance gate; plain JSON completed 0/20, strict tools 4/20, and flat tools 6/20. Candidate-first v4 completed and passed deterministic gates on 20/20 cases with 716 exact source-backed evidence items. This is the strongest design signal for parsing/chunking, but the 1.000 exact support is by construction because candidate-first materializes accepted source candidates; it is not proof of semantic completeness or clinical correctness.
+
 HandoffLens responds with a candidate-first architecture. Instead of asking the model to freely extract and summarize, the system:
 
 1. deterministically identifies source candidates;

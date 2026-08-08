@@ -20,6 +20,9 @@ const extractionPromptPath = IS_EXPLORATORY && process.env.EXTRACTION_PROMPT_PAT
   ? process.env.EXTRACTION_PROMPT_PATH
   : path.join("prompts", "clinical-extraction.md");
 const extractionPrompt = fs.readFileSync(extractionPromptPath, "utf8");
+const CAPTURE_LOGPROBS = envFlag("EVAL_CAPTURE_LOGPROBS");
+const STORE_RAW_LOGPROBS = envFlag("EVAL_STORE_RAW_LOGPROBS");
+const TOP_LOGPROBS = boundedInteger(process.env.EVAL_TOP_LOGPROBS, 5, 0, 20);
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
@@ -104,6 +107,12 @@ async function main() {
     models,
     extraction_prompt_path: extractionPromptPath,
     extraction_prompt_sha256: sha256(extractionPrompt),
+    telemetry_policy: {
+      capture_logprobs: CAPTURE_LOGPROBS,
+      store_raw_logprobs: STORE_RAW_LOGPROBS,
+      top_logprobs: CAPTURE_LOGPROBS ? TOP_LOGPROBS : null,
+      raw_logits_available_from_hosted_chat_api: false,
+    },
     execution_design: "case-interleaved paired execution with deterministic counterbalanced model order",
     summary: summarize(results),
     results
@@ -164,6 +173,105 @@ function normalizeUsage(usage) {
   };
 }
 
+function envFlag(name) {
+  return /^(1|true|yes)$/i.test(String(process.env[name] || ""));
+}
+
+function boundedInteger(value, fallback, min, max) {
+  if (value === undefined || value === "") return fallback;
+  const number = Number(value);
+  if (!Number.isInteger(number) || number < min || number > max) throw new Error(`Invalid bounded integer ${value}; expected integer ${min}-${max}`);
+  return number;
+}
+
+function requestParameters(requestBody) {
+  const params = {};
+  for (const key of [
+    "model",
+    "max_tokens",
+    "max_completion_tokens",
+    "temperature",
+    "seed",
+    "frequency_penalty",
+    "presence_penalty",
+    "k",
+    "p",
+    "top_k",
+    "top_p",
+    "logprobs",
+    "top_logprobs",
+    "strict_tools",
+    "tool_choice",
+    "response_format",
+    "thinking"
+  ]) {
+    if (requestBody[key] !== undefined) params[key] = summarizeRequestValue(requestBody[key]);
+  }
+  return params;
+}
+
+function summarizeRequestValue(value) {
+  if (!value || typeof value !== "object") return value;
+  if (Array.isArray(value)) return { type: "array", length: value.length };
+  if (value.type) {
+    const summary = { type: value.type };
+    if (value.schema) summary.schema_present = true;
+    if (value.token_budget !== undefined) summary.token_budget = value.token_budget;
+    return summary;
+  }
+  if (value.token_budget !== undefined) return { token_budget: value.token_budget };
+  return { type: "object", keys: Object.keys(value).sort() };
+}
+
+function applyLogprobRequestOptions(requestBody, provider) {
+  if (!CAPTURE_LOGPROBS) {
+    setLogprobPolicy(requestBody, { requested: false, sent: false, top_logprobs_requested: null });
+    return;
+  }
+  if (requestBody.tools || requestBody.documents) {
+    setLogprobPolicy(requestBody, {
+      requested: true,
+      sent: false,
+      top_logprobs_requested: null,
+      skipped_reason: "Provider does not support logprobs with tool/document requests.",
+    });
+    return;
+  }
+  requestBody.logprobs = true;
+  if (provider === "openrouter" && TOP_LOGPROBS > 0) requestBody.top_logprobs = TOP_LOGPROBS;
+  setLogprobPolicy(requestBody, { requested: true, sent: true, top_logprobs_requested: provider === "openrouter" ? TOP_LOGPROBS : null });
+}
+
+function setLogprobPolicy(requestBody, policy) {
+  Object.defineProperty(requestBody, "__logprob_policy", { value: policy, enumerable: false, configurable: true });
+}
+
+function normalizeLogprobTelemetry(rawLogprobs, requestBody) {
+  const policy = requestBody?.__logprob_policy || { requested: CAPTURE_LOGPROBS, sent: CAPTURE_LOGPROBS, top_logprobs_requested: TOP_LOGPROBS };
+  if (!rawLogprobs) {
+    return {
+      requested: policy.requested,
+      sent_to_provider: Boolean(policy.sent),
+      returned: false,
+      raw_stored: false,
+      skipped_reason: policy.skipped_reason || null,
+      note: policy.skipped_reason || (policy.requested ? "Provider response did not include log probabilities." : "Log probability capture was not requested."),
+    };
+  }
+  const tokenCount = Array.isArray(rawLogprobs)
+    ? rawLogprobs.length
+    : Array.isArray(rawLogprobs.content) ? rawLogprobs.content.length : null;
+  return {
+    requested: policy.requested,
+    sent_to_provider: Boolean(policy.sent),
+    returned: true,
+    raw_stored: STORE_RAW_LOGPROBS,
+    top_logprobs_requested: policy.top_logprobs_requested,
+    token_count: tokenCount,
+    raw: STORE_RAW_LOGPROBS ? rawLogprobs : undefined,
+  };
+}
+
 function sha256(value) {
   return crypto.createHash("sha256").update(value).digest("hex");
 }
@@ -207,6 +315,7 @@ async function callOpenRouter(model, testCase) {
   const timeoutMs = Number(process.env.OPENROUTER_TIMEOUT_MS || 120000);
   const retries = runtimeNumber("OPENROUTER_RETRIES", 0);
   const requestBody = buildOpenRouterRequest(model, testCase);
+  applyLogprobRequestOptions(requestBody, "openrouter");
 
   let lastError;
   for (let attempt = 0; attempt <= retries; attempt += 1) {
@@ -219,6 +328,7 @@ async function callOpenRouter(model, testCase) {
           headers: {
             Authorization: `Bearer ${apiKey}`,
             "Content-Type": "application/json",
+            "X-OpenRouter-Metadata": "enabled",
             "HTTP-Referer": process.env.OPENROUTER_SITE_URL || "https://github.com",
             "X-Title": process.env.OPENROUTER_APP_NAME || "Hospital Course Change Summarizer Eval"
           },
@@ -239,7 +349,10 @@ async function callOpenRouter(model, testCase) {
         returned_model: body.model || model,
         finish_reason: body.choices?.[0]?.finish_reason || null,
         usage: normalizeUsage(body.usage),
-        provider_attempt: attempt + 1
+        provider_attempt: attempt + 1,
+        openrouter_metadata: body.openrouter_metadata || null,
+        request_parameters: requestParameters(requestBody),
+        logprobs: normalizeLogprobTelemetry(body.choices?.[0]?.logprobs || message?.logprobs || null, requestBody)
       };
       telemetry.request_hash = sha256(JSON.stringify(requestBody));
       if (toolArgs) return { extraction: typeof toolArgs === "string" ? parseJsonFromText(toolArgs) : toolArgs, telemetry };
@@ -369,6 +482,7 @@ async function callCohere(model, testCase, options = {}) {
   const mode = options.schemaMode || process.env.COHERE_SCHEMA_MODE || "tool-loose";
   const requestBody = buildCohereRequest(model, testCase, mode);
   applyCohereTuning(requestBody, options);
+  applyLogprobRequestOptions(requestBody, "cohere");
 
   let lastError;
   for (let attempt = 0; attempt <= retries; attempt += 1) {
@@ -401,7 +515,9 @@ async function callCohere(model, testCase, options = {}) {
           finish_reason: body.finish_reason || body.message?.finish_reason || null,
           usage: normalizeUsage(body.usage),
           provider_attempt: attempt + 1,
-          request_hash: sha256(JSON.stringify(requestBody))
+          request_hash: sha256(JSON.stringify(requestBody)),
+          request_parameters: requestParameters(requestBody),
+          logprobs: normalizeLogprobTelemetry(body.logprobs || null, requestBody)
         }
       };
     } catch (error) {
@@ -487,10 +603,22 @@ function parseCohereResponse(body, mode) {
   if (!args) {
     const text = cohereMessageText(body);
     if (text) return parseJsonFromText(text);
-    throw new Error(`Cohere response missing tool call arguments: ${JSON.stringify(body)}`);
+    throw new Error(`Cohere response missing tool call arguments: ${JSON.stringify(summarizeProviderBody(body))}`);
   }
   const parsed = typeof args === "string" ? parseJsonFromText(args) : args;
   return mode === "tool-flat" ? expandFlatExtraction(parsed) : parsed;
+}
+
+function summarizeProviderBody(body) {
+  return {
+    id: body?.id || null,
+    model: body?.model || null,
+    finish_reason: body?.finish_reason || body?.message?.finish_reason || null,
+    usage: normalizeUsage(body?.usage),
+    message_content_types: Array.isArray(body?.message?.content)
+      ? body.message.content.map((part) => part?.type || typeof part)
+      : typeof body?.message?.content,
+  };
 }
 
 function parseJsonFromText(text) {

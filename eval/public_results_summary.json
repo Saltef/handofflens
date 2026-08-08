@@ -167,6 +167,110 @@
         "interpretation": "The full-pool run shows that the stricter label-only risk guard removes high-risk supported items at scale while preserving most query-aware support. It should not be read as an easier headline replacement for the hard-slice stress result."
       },
       "interpretation": "Expanded targeted decomposition still favors query-aware multi-span retrieval over full-note normalization and one-span baselines. In the 600-item hard slice from the lowest-performing held-out records, query-aware support reaches 395/600, with 238 auto-accepted supports, 157 review-required supports, 205 abstentions, and 0 high-risk supported items. Strict low-overlap review rescue adds only 3 supported items in this expanded run, all review-required. The full failed-exact pool then scales the same policy to 13,038 items: query-aware support reaches 11,001/13,038, with 7,829 auto-accepted supports, 3,172 review-required supports, 2,037 abstentions, and 0 high-risk supported items after converting 332 diffuse label-only unions to abstentions. The remaining failures show that the result is parsing-policy failure analysis, not semantic factuality, population prevalence, or proof that note length causally drives errors."
+    },
+    "model_side_hard20_diagnostic": {
+      "date": "2026-08-08",
+      "private_case_level_outputs_committed": false,
+      "raw_logprobs_committed": false,
+      "case_selection": "20 private hard cases with at least 5 failed exact-provenance stress items each, ranked by query-aware abstain rate and burden.",
+      "data_parameter_summary": {
+        "source_words": {
+          "min": 545,
+          "median": 1973,
+          "max": 6476
+        },
+        "claim_density_per_1k_words": {
+          "min": 1.606,
+          "median": 9.967,
+          "max": 36.62
+        }
+      },
+      "methods": {
+        "cohere_json_schema_command_a_plus": {
+          "cases_completed": "16/20",
+          "exact_case_gate_rate_among_completed": 0.125,
+          "span_case_gate_rate_among_completed": 0.125,
+          "exact_item_rate": 0.654777,
+          "span_item_rate": 0.866242,
+          "failures": 4,
+          "logprob_attempts_returned": 27
+        },
+        "cohere_json_object_command_a_plus": {
+          "cases_completed": "0/20",
+          "failures": 20,
+          "failure_categories": {
+            "schema_type_error": 17,
+            "malformed_json": 3
+          },
+          "logprob_attempts_returned": 36
+        },
+        "cohere_strict_tool_command_a_plus": {
+          "cases_completed": "4/20",
+          "exact_case_gate_rate_among_completed": 0,
+          "span_case_gate_rate_among_completed": 0.75,
+          "exact_item_rate": 0.858025,
+          "span_item_rate": 0.993827,
+          "failures": 16,
+          "logprob_attempts_skipped_provider_limitation": 35
+        },
+        "cohere_flat_tool_command_a_plus": {
+          "cases_completed": "6/20",
+          "exact_case_gate_rate_among_completed": 0,
+          "span_case_gate_rate_among_completed": 0.5,
+          "exact_item_rate": 0.832579,
+          "span_item_rate": 0.986425,
+          "failures": 14,
+          "logprob_attempts_skipped_provider_limitation": 10
+        },
+        "candidate_first_v4_command_a_plus": {
+          "cases_completed": "20/20",
+          "deterministic_gate_passed": "20/20",
+          "exact_case_gate_rate_among_completed": 1,
+          "span_case_gate_rate_among_completed": 1,
+          "evidence_items": 716,
+          "exact_item_rate": 1,
+          "span_item_rate": 1,
+          "total_calls": 37,
+          "logprob_attempts_returned": 37
+        }
+      },
+      "data_parameter_buckets": {
+        "short_or_moderate_under_1500_words": {
+          "cases": 7,
+          "json_schema_completed": 5,
+          "strict_tool_completed": 4,
+          "flat_tool_completed": 4,
+          "candidate_first_completed": 7
+        },
+        "long_1500_to_2999_words": {
+          "cases": 10,
+          "json_schema_completed": 8,
+          "strict_tool_completed": 0,
+          "flat_tool_completed": 2,
+          "candidate_first_completed": 10
+        },
+        "very_long_3000_plus_words": {
+          "cases": 3,
+          "json_schema_completed": 3,
+          "strict_tool_completed": 0,
+          "flat_tool_completed": 0,
+          "candidate_first_completed": 3
+        },
+        "high_density_16_plus_failed_items_per_1k_words": {
+          "cases": 5,
+          "json_schema_completed": 4,
+          "strict_tool_completed": 3,
+          "flat_tool_completed": 1,
+          "candidate_first_completed": 5
+        }
+      },
+      "descriptive_correlations": {
+        "json_schema_completion_vs_source_words": 0.181873,
+        "json_schema_completion_vs_claim_density": -0.347206,
+        "strict_tool_completion_vs_source_words": -0.445617,
+        "flat_tool_completion_vs_source_words": -0.432323
+      },
+      "interpretation": "On this hard diagnostic slice, full-note/request-mode changes did not solve dense-case evidence fidelity. Candidate-first v4 performed best on deterministic auditability because it materializes exact source candidates before model classification. That exact support is by construction and should not be read as semantic completeness, clinical correctness, or population performance."
     }
   },
   "architecture_development": {
