@@ -35,8 +35,8 @@ const summary = summarizeDecompositionReports({
     }),
   ],
   coherenceReports: [
-    coherenceReport({ tasks: 5, supported: 3, unsupported: 2, auto: 2, review: 1, blocked: 0 }),
-    coherenceReport({ tasks: 7, supported: 4, unsupported: 3, auto: 1, review: 3, blocked: 0 }),
+    coherenceReport({ tasks: 5, supported: 3, unsupported: 2, auto: 2, review: 1, blocked: 0, lowOverlapReviewRescue: 1 }),
+    coherenceReport({ tasks: 7, supported: 4, unsupported: 3, auto: 1, review: 3, blocked: 0, lowOverlapReviewRescue: 2 }),
   ],
 });
 
@@ -50,6 +50,7 @@ assert.equal(summary.aggregate.auto_accepted_supported_tasks, 3);
 assert.equal(summary.aggregate.review_required_supported_tasks, 4);
 assert.equal(summary.aggregate.blocked_supported_tasks, 0);
 assert.equal(summary.aggregate.abstained_tasks, 5);
+assert.equal(summary.aggregate.low_overlap_review_rescue_supported_tasks, 3);
 assert.equal(summary.aggregate.query_aware_status_counts.query_greedy_multispan_supported, 4);
 assert.equal(summary.aggregate.query_aware_status_counts.abstain_query_weak, 4);
 assert.equal(summary.aggregate.miss_category_counts.quote_terms_present_noncontiguous, 9);
@@ -69,7 +70,7 @@ assert.match(markdown, /58\.3%/);
 
 assert.throws(() => summarizeDecompositionReports({ stressReports: [stressReport({ tasks: 1 })], coherenceReports: [] }), /counts must match/);
 
-console.log("PASS decomposition aggregate summary (26 assertions)");
+console.log("PASS decomposition aggregate summary (27 assertions)");
 
 function stressReport({
   tasks,
@@ -116,6 +117,7 @@ function coherenceReport({
   auto,
   review,
   blocked,
+  lowOverlapReviewRescue = 0,
 }) {
   return {
     summary: {
@@ -128,6 +130,9 @@ function coherenceReport({
       high_risk_supported_tasks: blocked,
       medium_risk_supported_tasks: review,
       low_risk_supported_tasks: auto,
+      medium_risk_reasons: {
+        low_overlap_review_rescue: lowOverlapReviewRescue,
+      },
     },
   };
 }

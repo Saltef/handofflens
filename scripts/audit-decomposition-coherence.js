@@ -88,9 +88,11 @@ function auditTask(task, options = {}) {
     && Number(method.combined_label_coverage || 0) >= 0.72
     && Number(method.combined_quote_coverage || 0) < 0.72
   );
+  const lowOverlapReviewRescue = method.status === "query_low_overlap_review_supported";
   const assertionCueConflict = hasAssertionCueConflict(selectedText, label, task);
   const flags = {
-    low_overlap_supported: Boolean(method.supported && lowOverlap),
+    low_overlap_supported: Boolean(method.supported && lowOverlap && !lowOverlapReviewRescue),
+    low_overlap_review_rescue: Boolean(method.supported && lowOverlapReviewRescue),
     label_only_support: Boolean(method.supported && labelOnly),
     assertion_cue_conflict: Boolean(method.supported && assertionCueConflict),
     cross_section_union: Boolean(method.supported && sections.length > 1),
@@ -128,7 +130,7 @@ function classifyRisk(flags) {
   if (flags.label_only_support && (flags.cross_section_union || flags.wide_span_window || flags.many_spans)) {
     return { level: "high", reasons };
   }
-  if (flags.cross_section_union || flags.wide_span_window || flags.high_context_words || flags.many_spans || flags.label_only_support) {
+  if (flags.low_overlap_review_rescue || flags.cross_section_union || flags.wide_span_window || flags.high_context_words || flags.many_spans || flags.label_only_support) {
     return { level: "medium", reasons };
   }
   return { level: "low", reasons };

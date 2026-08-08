@@ -62,6 +62,7 @@ function summarizeDecompositionReports({ stressReports, coherenceReports, labels
       high_risk_supported_tasks: number(coherence.summary?.high_risk_supported_tasks),
       medium_risk_supported_tasks: number(coherence.summary?.medium_risk_supported_tasks),
       low_risk_supported_tasks: number(coherence.summary?.low_risk_supported_tasks),
+      low_overlap_review_rescue_supported_tasks: number(coherence.summary?.medium_risk_reasons?.low_overlap_review_rescue),
     };
   });
 
@@ -81,6 +82,7 @@ function summarizeDecompositionReports({ stressReports, coherenceReports, labels
     high_risk_supported_tasks: sum(cells.map((cell) => cell.high_risk_supported_tasks)),
     medium_risk_supported_tasks: sum(cells.map((cell) => cell.medium_risk_supported_tasks)),
     low_risk_supported_tasks: sum(cells.map((cell) => cell.low_risk_supported_tasks)),
+    low_overlap_review_rescue_supported_tasks: sum(cells.map((cell) => cell.low_overlap_review_rescue_supported_tasks)),
     query_aware_status_counts: mergeCounts(cells.map((cell) => cell.query_aware_status_counts)),
     miss_category_counts: mergeCounts(cells.map((cell) => cell.miss_category_counts)),
   };

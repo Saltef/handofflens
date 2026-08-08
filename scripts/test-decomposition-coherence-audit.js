@@ -56,6 +56,16 @@ const payload = {
       labelText: "Pneumonia",
     }),
     task({
+      path: "follow_up_actions[1]",
+      miss: "low_overlap_possible_fabrication",
+      prior: "abstain_low_overlap",
+      status: "query_low_overlap_review_supported",
+      spans: [span("L0010", "follow_up_safety", "Follow-up with Dr. Cardio in two weeks.", 1, 1)],
+      quote: 1,
+      label: 1,
+      labelText: "Cardiology follow-up in two weeks",
+    }),
+    task({
       path: "follow_up_actions[0]",
       supported: false,
       status: "abstain_query_weak",
@@ -71,14 +81,14 @@ const report = auditDecompositionCoherence(payload, {
   lineWindowWarning: 40,
 });
 
-assert.equal(report.summary.tasks, 5);
-assert.equal(report.summary.supported_tasks, 4);
+assert.equal(report.summary.tasks, 6);
+assert.equal(report.summary.supported_tasks, 5);
 assert.equal(report.summary.unsupported_tasks, 1);
 assert.equal(report.summary.low_risk_supported_tasks, 1);
-assert.equal(report.summary.medium_risk_supported_tasks, 1);
+assert.equal(report.summary.medium_risk_supported_tasks, 2);
 assert.equal(report.summary.high_risk_supported_tasks, 2);
 assert.equal(report.summary.auto_accepted_supported_tasks, 1);
-assert.equal(report.summary.review_required_supported_tasks, 1);
+assert.equal(report.summary.review_required_supported_tasks, 2);
 assert.equal(report.summary.blocked_supported_tasks, 2);
 assert.equal(report.summary.low_overlap_supported_tasks, 1);
 assert.equal(report.summary.assertion_cue_conflict_tasks, 1);
@@ -94,10 +104,13 @@ assert.equal(byPath["procedures_and_tests[0]"].risk_level, "high");
 assert.equal(byPath["procedures_and_tests[0]"].acceptance, "blocked_review");
 assert.equal(byPath["diagnosis_changes.new_or_changed[0]"].risk_level, "high");
 assert.equal(byPath["diagnosis_changes.new_or_changed[0]"].acceptance, "blocked_review");
+assert.equal(byPath["follow_up_actions[1]"].risk_level, "medium");
+assert.equal(byPath["follow_up_actions[1]"].acceptance, "review_required");
+assert.equal(byPath["follow_up_actions[1]"].flags.low_overlap_review_rescue, true);
 assert.equal(byPath["follow_up_actions[0]"].risk_level, "not_supported");
 assert.equal(byPath["follow_up_actions[0]"].acceptance, "abstain");
 
-console.log("PASS decomposition coherence audit (35 assertions)");
+console.log("PASS decomposition coherence audit (38 assertions)");
 
 function task({
   path,

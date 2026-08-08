@@ -230,11 +230,12 @@ function queryAwareMultiSpan(task, context) {
   }
 
   const assertionConflict = hasAssertionCueConflict(selected.map((span) => span.text).join(" "), task.label, task);
-  const supported = !lowOverlap && !assertionConflict && querySupport(selected, combined);
+  const lowOverlapRescue = isStrictLowOverlapRescue(task, selected, combined);
+  const supported = !assertionConflict && ((!lowOverlap && querySupport(selected, combined)) || lowOverlapRescue);
   const unsupportedStatus = assertionConflict ? "abstain_query_assertion_conflict" : "abstain_query_weak";
   return result({
     supported,
-    status: supported ? status : unsupportedStatus,
+    status: supported ? (lowOverlapRescue ? "query_low_overlap_review_supported" : status) : unsupportedStatus,
     spans: selected,
     method: "query_aware_multispan",
     combined,
@@ -243,6 +244,15 @@ function queryAwareMultiSpan(task, context) {
 
 function isLowOverlapTask(task) {
   return task.prior_span_support_status === "abstain_low_overlap" || task.miss_category === "low_overlap_possible_fabrication";
+}
+
+function isStrictLowOverlapRescue(task, selected, combined) {
+  if (!isLowOverlapTask(task)) return false;
+  if (!selected.length || selected.length > 2) return false;
+  const contextWords = wordCount(selected.map((span) => span.text).join(" "));
+  return contextWords <= 40
+    && Number(combined?.quote_coverage || 0) >= 0.86
+    && Number(combined?.label_coverage || 0) >= 0.6;
 }
 
 function querySupport(spans, combined) {
@@ -617,5 +627,6 @@ function parseArgs(argv) {
 module.exports = {
   runDecompositionStressExperiment,
   evaluateMethod,
+  isStrictLowOverlapRescue,
   METHOD_DEFINITIONS,
 };

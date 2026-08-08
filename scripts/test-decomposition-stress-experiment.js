@@ -3,6 +3,7 @@
 const assert = require("node:assert/strict");
 const {
   runDecompositionStressExperiment,
+  isStrictLowOverlapRescue,
   METHOD_DEFINITIONS,
 } = require("./run-decomposition-stress-experiment");
 
@@ -132,4 +133,20 @@ assert.equal(report.summary.methods.find((item) => item.method === "exact_full_n
 assert.equal(report.summary.methods.find((item) => item.method === "normalized_full_note").supported_tasks, 1);
 assert.equal(report.summary.methods.find((item) => item.method === "query_aware_multispan").supported_tasks, 4);
 
-console.log("PASS decomposition stress experiment (31 assertions)");
+assert.equal(isStrictLowOverlapRescue(
+  { prior_span_support_status: "abstain_low_overlap", miss_category: "low_overlap_possible_fabrication" },
+  [{ text: "Follow-up with Dr. Cardio in two weeks." }],
+  { quote_coverage: 1, label_coverage: 0.75 },
+), true);
+assert.equal(isStrictLowOverlapRescue(
+  { prior_span_support_status: "abstain_low_overlap", miss_category: "low_overlap_possible_fabrication" },
+  [{ text: "Follow-up with Dr. Cardio in two weeks." }],
+  { quote_coverage: 1, label_coverage: 0.2 },
+), false);
+assert.equal(isStrictLowOverlapRescue(
+  { prior_span_support_status: "abstain_weak_overlap", miss_category: "quote_terms_present_noncontiguous" },
+  [{ text: "Follow-up with Dr. Cardio in two weeks." }],
+  { quote_coverage: 1, label_coverage: 0.75 },
+), false);
+
+console.log("PASS decomposition stress experiment (34 assertions)");
