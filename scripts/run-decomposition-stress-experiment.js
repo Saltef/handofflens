@@ -13,7 +13,7 @@ const METHOD_DEFINITIONS = {
   normalized_full_note: "Aggressive punctuation/de-identification normalized quote search over the full source note; supported cases require full-note context.",
   line_span_id: "Best deterministic line/list span selected by quote and label token overlap.",
   section_filtered_span: "Domain-routed section/list candidate selection before span scoring.",
-  query_aware_multispan: "Query-aware retrieval of one or more spans for non-contiguous or composite evidence, including a bounded greedy token-union fallback.",
+  query_aware_multispan: "Query-aware retrieval of one or more spans for non-contiguous or composite evidence, including clause-aware quote splitting and a bounded greedy token-union fallback.",
 };
 
 const METHOD_ORDER = Object.keys(METHOD_DEFINITIONS);
@@ -205,11 +205,19 @@ function queryAwareMultiSpan(task, context) {
   let status = selected.length > 1 ? "query_multispan_supported" : "query_single_span_supported";
 
   if (!querySupport(selected, combined)) {
-    const greedy = greedyMultiSpan(task, context);
+    let greedy = greedyMultiSpan(task, context);
+    let greedyStatus = "query_greedy";
+    if (!greedy.supported) {
+      const relaxedGreedy = greedyMultiSpan(task, context, relaxedGreedyMinimumScore(task));
+      if (relaxedGreedy.supported) {
+        greedy = relaxedGreedy;
+        greedyStatus = "query_relaxed_greedy";
+      }
+    }
     if (greedy.supported) {
       selected = greedy.spans;
       combined = greedy.combined;
-      status = selected.length > 1 ? "query_greedy_multispan_supported" : "query_greedy_single_span_supported";
+      status = selected.length > 1 ? `${greedyStatus}_multispan_supported` : `${greedyStatus}_single_span_supported`;
     }
   }
 
@@ -254,7 +262,7 @@ function querySupport(spans, combined) {
   return Boolean(spans.length && (combined.quote_coverage >= 0.72 || combined.label_coverage >= 0.72));
 }
 
-function greedyMultiSpan(task, context) {
+function greedyMultiSpan(task, context, minimumScore = 0.16) {
   const quoteTokens = [...new Set(contentTokens(expandKnownTerms(task.source_quote)))];
   const labelTokens = [...new Set(contentTokens(expandKnownTerms(task.label)))];
   const targetTokens = [...new Set([...quoteTokens, ...labelTokens])];
@@ -265,7 +273,7 @@ function greedyMultiSpan(task, context) {
   const selected = [];
   const covered = new Set();
   const ranked = rankSegments(context.segments, task)
-    .filter((span) => span.score >= 0.16)
+    .filter((span) => span.score >= minimumScore)
     .slice(0, 40);
 
   for (let i = 0; i < 4; i += 1) {
@@ -296,6 +304,11 @@ function greedyMultiSpan(task, context) {
   const lowOverlap = isLowOverlapTask(task);
   const supported = safeWindow && !lowOverlap && (strongQuote || quoteAndLabel);
   return { supported, spans: ordered, combined };
+}
+
+function relaxedGreedyMinimumScore(task) {
+  const quoteTokens = [...new Set(contentTokens(expandKnownTerms(task.source_quote)))];
+  return quoteTokens.length >= 16 ? 0.08 : 0.16;
 }
 
 function result({ supported, status, spans, method, combined, contextWords }) {
@@ -428,10 +441,35 @@ function combinedCoverage(spans, task) {
 }
 
 function splitQuoteParts(sourceQuote) {
-  return String(sourceQuote || "")
-    .split(/\.\.\.|\u2026|\r?\n/)
+  const source = String(sourceQuote || "");
+  const quoted = [...source.matchAll(/"([^"]{3,})"/g)].map((match) => match[1]);
+  const structuralParts = source.split(/\.\.\.|\u2026|\r?\n|\s+\/\s+|(?=\b(?:admission|discharge|follow-?up instructions?|medications? on admission|medications? on discharge|mri head|ct head|labs?|laboratory|imaging|procedure|procedures)\s*:)/i);
+  return uniqueStrings([...quoted, ...structuralParts])
+    .map(stripQuoteSourcePrefix)
     .map((part) => part.trim())
     .filter((part) => contentTokens(part).length > 0);
+}
+
+function stripQuoteSourcePrefix(value) {
+  return String(value || "")
+    .trim()
+    .replace(/^["']+|["']+$/g, "")
+    .replace(/^(?:admission|discharge|follow-?up instructions?|medications? on admission|medications? on discharge|mri head|ct head|labs?|laboratory|imaging|procedure|procedures)\s*:\s*/i, "")
+    .trim()
+    .replace(/^["']+|["']+$/g, "")
+    .trim();
+}
+
+function uniqueStrings(values) {
+  const seen = new Set();
+  const out = [];
+  for (const value of values) {
+    const normalized = normalizeAggressive(value);
+    if (!normalized || seen.has(normalized)) continue;
+    seen.add(normalized);
+    out.push(value);
+  }
+  return out;
 }
 
 function uniqueSpans(spans) {

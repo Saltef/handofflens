@@ -22,26 +22,27 @@
       "date": "2026-08-08",
       "private_case_level_outputs_committed": false,
       "task_selection": "100 failed exact-provenance evidence items from each of three held-out Cohere cells, selected from the lowest exact-provenance records.",
+      "query_aware_revision": "Clause-aware quote splitting recovers generated pseudo-quotes that join admission/discharge snippets, slash-separated clauses, or source-heading-prefixed fragments. The original strict greedy token-union pass still runs first; relaxed greedy is used only after strict greedy fails.",
       "total_tasks": 300,
       "aggregate_supported_tasks": {
         "exact_full_note": 0,
         "normalized_full_note": 35,
         "line_span_id": 55,
         "section_filtered_span": 41,
-        "query_aware_multispan": 158
+        "query_aware_multispan": 167
       },
       "aggregate_support_rates": {
         "exact_full_note": 0,
         "normalized_full_note": 0.116667,
         "line_span_id": 0.183333,
         "section_filtered_span": 0.136667,
-        "query_aware_multispan": 0.526667
+        "query_aware_multispan": 0.556667
       },
       "mean_context_words_on_supported_items": {
         "normalized_full_note": 1676.1,
         "line_span_id": 9.2,
         "section_filtered_span": 10.3,
-        "query_aware_multispan": 21.7
+        "query_aware_multispan": 21.1
       },
       "task_miss_category_counts": {
         "quote_terms_present_noncontiguous": 191,
@@ -52,30 +53,31 @@
         "label_supported_quote_unresolved": 6
       },
       "query_aware_abstentions": {
-        "weak_or_insufficient_overlap": 114,
+        "weak_or_insufficient_overlap": 105,
         "assertion_conflict": 28
       },
       "query_aware_status_counts": {
         "abstain_query_assertion_conflict": 28,
-        "abstain_query_weak": 114,
-        "query_greedy_multispan_supported": 122,
+        "abstain_query_weak": 105,
+        "query_greedy_multispan_supported": 120,
         "query_label_multispan_supported": 1,
         "query_label_single_span_supported": 8,
-        "query_multispan_supported": 2,
+        "query_multispan_supported": 12,
+        "query_relaxed_greedy_multispan_supported": 1,
         "query_single_span_supported": 25
       },
       "coherence_audit": {
-        "supported_tasks": 158,
+        "supported_tasks": 167,
         "high_risk_supported_tasks": 0,
         "medium_risk_supported_tasks": 66,
-        "low_risk_supported_tasks": 92,
-        "auto_accepted_supported_tasks": 92,
+        "low_risk_supported_tasks": 101,
+        "auto_accepted_supported_tasks": 101,
         "review_required_supported_tasks": 66,
         "blocked_supported_tasks": 0,
-        "abstained_tasks": 142,
+        "abstained_tasks": 133,
         "low_overlap_supported_tasks": 0,
         "assertion_cue_conflict_supported_tasks": 0,
-        "multi_span_supported_tasks": 125,
+        "multi_span_supported_tasks": 134,
         "cross_section_supported_tasks": 17,
         "wide_window_supported_tasks": 25,
         "many_span_supported_tasks": 40
@@ -85,34 +87,34 @@
           "cell": "strict_tool_thinking_512",
           "tasks": 100,
           "line_span_id_supported": 29,
-          "query_aware_multispan_supported": 59,
-          "auto_accepted_supported": 35,
-          "review_required_supported": 24,
-          "abstained": 41,
-          "best_support_rate": 0.59
+          "query_aware_multispan_supported": 60,
+          "auto_accepted_supported": 37,
+          "review_required_supported": 23,
+          "abstained": 40,
+          "best_support_rate": 0.6
         },
         {
           "cell": "json_schema_thinking_128",
           "tasks": 100,
           "line_span_id_supported": 15,
-          "query_aware_multispan_supported": 60,
-          "auto_accepted_supported": 36,
+          "query_aware_multispan_supported": 66,
+          "auto_accepted_supported": 42,
           "review_required_supported": 24,
-          "abstained": 40,
-          "best_support_rate": 0.6
+          "abstained": 34,
+          "best_support_rate": 0.66
         },
         {
           "cell": "json_schema_thinking_512",
           "tasks": 100,
           "line_span_id_supported": 11,
-          "query_aware_multispan_supported": 39,
-          "auto_accepted_supported": 21,
-          "review_required_supported": 18,
-          "abstained": 61,
-          "best_support_rate": 0.39
+          "query_aware_multispan_supported": 41,
+          "auto_accepted_supported": 22,
+          "review_required_supported": 19,
+          "abstained": 59,
+          "best_support_rate": 0.41
         }
       ],
-      "interpretation": "Expanded targeted decomposition still favors query-aware multi-span retrieval over full-note normalization and one-span baselines, while showing that the broader hard slice is not solved: 92/300 items auto-accept, 66/300 require review, and 142/300 abstain. This is parsing-policy failure analysis, not semantic factuality or proof that note length causally drives errors."
+      "interpretation": "Expanded targeted decomposition still favors query-aware multi-span retrieval over full-note normalization and one-span baselines. Clause-aware quote splitting adds nine supported items with no support regressions in the 300-task stress set, raising auto-accepted support from 92/300 to 101/300 while review-required support remains 66/300. The broader hard slice is still not solved: 133/300 items abstain. This is parsing-policy failure analysis, not semantic factuality or proof that note length causally drives errors."
     }
   },
   "architecture_development": {

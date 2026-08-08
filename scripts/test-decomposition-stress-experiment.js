@@ -9,8 +9,10 @@ const {
 const sourceText = [
   "ADMISSION MEDICATIONS:",
   "Aspirin 81 mg daily.",
+  "Lasix 40 mg daily.",
   "DISCHARGE MEDICATIONS:",
   "Aspirin 81 mg daily.",
+  "Furosemide 20 mg daily.",
   "FOLLOW-UP:",
   "Follow-up cardiology in one week.",
   "LABS:",
@@ -31,7 +33,12 @@ const payload = {
         medication_changes: {
           started: [],
           stopped: [],
-          changed: [],
+          changed: [
+            {
+              label: "Lasix changed to furosemide 20 mg daily",
+              source_quote: 'Admission: "Lasix 40 mg daily." Discharge: "Furosemide 20 mg daily."',
+            },
+          ],
           continued: [
             {
               label: "Aspirin 81 mg daily continued",
@@ -80,7 +87,7 @@ const report = runDecompositionStressExperiment(payload, {
 });
 
 assert.equal(Object.keys(METHOD_DEFINITIONS).length, 5);
-assert.equal(report.summary.tasks, 5);
+assert.equal(report.summary.tasks, 6);
 assert.equal(report.summary.source_records, 1);
 
 const tasksByPath = Object.fromEntries(report.tasks.map((task) => [task.path, task]));
@@ -90,6 +97,13 @@ assert.equal(aspirin.methods.exact_full_note.supported, false);
 assert.equal(aspirin.methods.query_aware_multispan.supported, true);
 assert.equal(aspirin.methods.query_aware_multispan.selected_span_count, 2);
 assert.equal(aspirin.methods.query_aware_multispan.status, "query_greedy_multispan_supported");
+
+const lasix = tasksByPath["medication_changes.changed[0]"];
+assert.equal(lasix.methods.exact_full_note.supported, false);
+assert.equal(lasix.methods.normalized_full_note.supported, false);
+assert.equal(lasix.methods.query_aware_multispan.supported, true);
+assert.equal(lasix.methods.query_aware_multispan.selected_span_count, 2);
+assert.equal(lasix.methods.query_aware_multispan.status, "query_multispan_supported");
 
 const followUp = tasksByPath["follow_up_actions[0]"];
 assert.equal(followUp.methods.exact_full_note.supported, false);
@@ -116,6 +130,6 @@ assert.equal(unsupported.methods.query_aware_multispan.supported, false);
 
 assert.equal(report.summary.methods.find((item) => item.method === "exact_full_note").supported_tasks, 0);
 assert.equal(report.summary.methods.find((item) => item.method === "normalized_full_note").supported_tasks, 1);
-assert.equal(report.summary.methods.find((item) => item.method === "query_aware_multispan").supported_tasks, 3);
+assert.equal(report.summary.methods.find((item) => item.method === "query_aware_multispan").supported_tasks, 4);
 
-console.log("PASS decomposition stress experiment (25 assertions)");
+console.log("PASS decomposition stress experiment (31 assertions)");
