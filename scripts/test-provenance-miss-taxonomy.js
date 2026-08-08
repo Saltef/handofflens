@@ -101,6 +101,8 @@ const report = analyzeProvenanceMissTaxonomy({
 assert.equal(report.summary.records, 1);
 assert.equal(report.summary.completed_records, 1);
 assert.equal(report.summary.evidence_items, 5);
+assert.equal(report.summary.mean_evidence_items_per_completed_case, 5);
+assert.equal(report.summary.median_evidence_items_per_completed_case, 5);
 assert.equal(report.summary.exact_quote_items, 1);
 assert.equal(report.summary.exact_quote_miss_items, 4);
 assert.equal(report.summary.exact_case_gate_passes, 0);
@@ -111,6 +113,10 @@ assert.equal(report.summary.exact_miss_category_counts.low_overlap_possible_fabr
 assert.equal(report.summary.strictness_or_pointer_artifact_items, 3);
 assert.equal(report.summary.possible_fabrication_items, 1);
 assert.equal(report.summary.span_supported_items, 4);
+assert.equal(report.summary.auditable_or_review_routed_items, 4);
+assert.equal(report.summary.auditable_or_review_routed_case_passes, 0);
+assert.equal(report.summary.clean_review_routed_items, 0);
+assert.equal(report.summary.low_overlap_review_items, 1);
 assert.equal(report.summary.exact_miss_span_supported_items, 3);
 assert.equal(report.summary.provenance_abstain_items, 1);
 assert.equal(report.summary.single_span_supported_items, 3);
@@ -121,6 +127,11 @@ assert.equal(report.summary.span_support_status_counts.normalized_single_span, 1
 assert.equal(report.summary.span_support_status_counts.multi_span_recovered, 1);
 assert.equal(report.summary.span_support_status_counts.label_span_recovered, 1);
 assert.equal(report.summary.span_support_status_counts.abstain_low_overlap, 1);
+assert.equal(report.case_gate_by_item_count["5-9"].records, 1);
+assert.equal(report.case_gate_by_item_count["5-9"].exact_case_gate_passes, 0);
+assert.equal(report.case_gate_by_item_count["5-9"].span_case_gate_passes, 0);
+assert.equal(report.case_gate_by_item_count["5-9"].auditable_or_review_routed_case_passes, 0);
+assert.equal(report.case_gate_by_item_count["5-9"].auditable_or_review_routed_item_rate, 0.8);
 
 const items = Object.fromEntries(report.cases[0].items.map((item) => [item.path, item]));
 assert.equal(items["medication_changes.started[0]"].span_support.status, "strict_exact_contiguous");
@@ -133,4 +144,4 @@ assert.equal(items["procedures_and_tests[0]"].span_support.status, "abstain_low_
 assert.equal(items["follow_up_actions[0]"].span_support.status, "normalized_single_span");
 assert.equal(items["follow_up_actions[0]"].span_support.entailment_input.status, "ready_for_entailment_scorer");
 
-console.log("PASS provenance miss taxonomy analysis (43 assertions)");
+console.log("PASS provenance miss taxonomy analysis (55 assertions)");

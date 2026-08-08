@@ -34,6 +34,7 @@ The project has several public engineering findings:
 - In a 400-case structured-output baseline, most outputs passed JSON schema validation, while only a small minority passed a strict exact-source provenance check. Follow-up miss taxonomy and deterministic span-ID recovery indicate that many exact-match failures are quote-format, non-contiguous citation, or pointer-drift artifacts rather than proven fabrication. Item-level support improves under span recovery, but many items still abstain and semantic entailment is not established. The supported claim is narrower: schema validity is not evidence fidelity, and structure-only gates give little visibility into source anchoring.
 - A 600-item decomposition stress diagnostic selected the lowest exact-provenance evidence items from three held-out Cohere cells and compared five parsing policies. Assertion-guarded clause-aware query retrieval recovered 395/600 auditable supports, compared with 39/600 for normalized full-note matching and 0/600 for exact full-note matching, while using far less context on supported items. A coherence audit splits those 395 supports into 238 auto-accepted items and 157 review-required items, with 0 high-risk supported items and 205 abstentions. Target-aware assertion-cue scope checks reduce broad cue over-blocking; the later strict low-overlap rescue adds only 3 recoveries, all review-required. A full-pool validation over 13,038 failed exact-provenance items preserved 11,001 query-aware supports while converting 332 diffuse label-only unions into abstentions, leaving 0 high-risk supported items. These are failure-analysis diagnostics, not population estimates or proof that chunking solves semantic fidelity.
 - A 20-case model-side hard-slice diagnostic reran Command A+ on dense/low-performing private cases across four full-note request modes plus candidate-first v4. Full-note JSON schema completed 16/20 cases but only 2/16 completed cases passed deterministic provenance gates; plain JSON completed 0/20, strict tools 4/20, and flat tools 6/20. Candidate-first v4 completed and passed deterministic provenance gates on 20/20 cases, with 716 exact source-backed evidence items. The exact support is by construction because candidate-first materializes source candidates, so this is evidence for auditability and failure-mode control, not proof of semantic completeness or clinical correctness.
+- The provenance miss taxonomy now reports case-gate arithmetic explicitly: evidence-item counts, effective item count implied by item/case gate rates, item-count-stratified gate outcomes, conservative near-duplicate evidence removal, and an auditable-or-review-routed metric that keeps low-overlap possible-fabrication items unresolved.
 - Evidence-pointer v2 provided a conservative source-grounded comparator, but it was less robust than candidate-first v4 in the final development rerun.
 - Candidate-first v4 passed deterministic provenance gates on 19 of 20 development cases in the June 23 rerun, with one abstention. Extractive rematerialization reduced unsupported-summary numeric leakage in the source-fidelity proxy audit.
 - The current atom/view bridge adds source-grounded `handoff_atoms`, deterministic compatibility-field canonicalization, raw-model versus system-score reporting, and typed safety-flag evaluation.
@@ -55,11 +56,13 @@ These are engineering results. They are not clinical accuracy estimates.
 - Lexical source-support metrics do not prove semantic factuality, entailment, temporal correctness, or clinical completeness.
 - ACI-Bench and BioScope public diagnostics are benchmark-shaped evidence with explicit task caveats, not clinical validation. The ACI ROUGE values should not be compared to published full-note scores without matching scorer, preprocessing, and split protocol.
 - The decomposition stress diagnostic is selected from difficult failed-provenance items and should not be read as a population-level performance estimate or causal proof about note length.
+- The auditable-or-review-routed metric is for triage accounting, not clinical correctness; it separates weak-overlap review routing from ordinary failure without relaxing strict provenance gates.
 
 ## Next validation priorities
 
 - Replace or augment lexical source support with entailment-backed faithfulness checks, such as MiniCheck, AlignScore, or a clinical NLI comparator when an appropriate local/runtime path is available.
 - Measure the target-aware item-quote assertion checks on in-domain clinical text, either through DUA-controlled i2b2/n2c2 access or a private adjudicated clinical gold set.
+- Compare a span-ID-only extraction schema and an embedding/reranker-backed span matcher against the current generated-quote and lexical-matcher path under matched token and item-count budgets.
 - Human-review a small slice of entailment/scorer disagreements so automated factuality scores do not become hidden ground truth.
 
 ## Allowed claims
@@ -73,6 +76,7 @@ The current evidence supports claims about:
 - stability under small perturbations;
 - cost and latency telemetry;
 - review-readiness and routing design;
+- item-count and case-gate tradeoff diagnostics;
 - public benchmark adapter/scorer reproducibility;
 - measured trade-offs between model fluency, extractive source support, and attribution repair.
 

@@ -33,6 +33,8 @@ The same policy was then run across the full available failed-exact-provenance p
 
 A model-side hard-case diagnostic then reran Command A+ on 20 private dense/low-performing cases across four full-note request modes plus candidate-first v4. JSON-schema full-note extraction completed 16/20 cases but only 2/16 completed cases passed the exact/span provenance gate; plain JSON completed 0/20, strict tools 4/20, and flat tools 6/20. Candidate-first v4 completed and passed deterministic gates on 20/20 cases with 716 exact source-backed evidence items. This is the strongest design signal for parsing/chunking, but the 1.000 exact support is by construction because candidate-first materializes accepted source candidates; it is not proof of semantic completeness or clinical correctness.
 
+The latest implementation response targets the case-gate arithmetic behind those results. Candidate-first materialization now records conservative near-duplicate evidence removal, and the provenance taxonomy reports mean/median item count, the effective item count implied by item-level versus case-level pass rates, case-gate outcomes by item-count bucket, and a separate auditable-or-review-routed diagnostic. That diagnostic does not weaken the strict gate: low-overlap possible-fabrication items still fail rather than being counted as clean abstentions.
+
 HandoffLens responds with a candidate-first architecture. Instead of asking the model to freely extract and summarize, the system:
 
 1. deterministically identifies source candidates;
@@ -117,6 +119,7 @@ The Docker image does not copy `.env`, raw clinical data, benchmark corpora, gen
 | Structured-output baseline | Completed | High schema validity, poor exact-source provenance |
 | Decomposition stress diagnostic | Completed on hard slice and full failed-exact pool | Targeted line/query-aware spans recover more support than full-note normalization at far lower context cost; hard-slice failures still abstain, and full-pool scaling requires label-risk abstention |
 | Candidate-first v4 | Strongest current architecture | 19/20 deterministic-gate pass on fresh rerun; one abstention |
+| Case-gate arithmetic diagnostic | Implemented | Reports item-count buckets, effective items-per-case from item/case gates, conservative deduplication, and auditable-or-review-routed cases without relaxing strict provenance gates |
 | Extractive rematerialization | Added after audit | Removed unsupported numeric details from model-written summaries |
 | Stability testing | Completed on development subset | Passed gates; ambiguous candidate selection is not perfectly repeatable |
 | Source-fidelity review packets | Prepared | Human factual review is pending |
@@ -141,6 +144,7 @@ Two measurements would most improve the project without expanding its scope into
 
 1. Entailment-backed source support. The current ACI repair metric is lexical: it asks whether output text is recoverable from source tokens. A stronger faithfulness result would run an entailment or factual-consistency scorer, such as MiniCheck, AlignScore, or a clinical NLI model when available, over generated and repaired note claims, then manually review a small disagreement slice.
 2. In-domain clinical assertion validation. BioScope gives adjacent-domain assertion evidence on biomedical literature. The HandoffLens-specific target-aware item-quote checks still need an in-domain clinical benchmark or private adjudicated clinical gold, such as i2b2/n2c2 when data-use access permits.
+3. Span-ID and reranker ablations. The next design comparison should replace generated free-text quotes with span IDs only, and compare the current lexical span matcher against an embedding or reranker-backed matcher under the same item-count and review-routing metrics.
 
 ## Repository map
 

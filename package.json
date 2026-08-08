@@ -4,7 +4,7 @@
   "private": true,
   "description": "Clinical model evaluation harness for discharge-summary change extraction.",
   "scripts": {
-    "test": "npm run quality:gate:test && npm run evidence:pointer:test && npm run evidence:pipeline:v3:test && npm run candidate:v4:test && npm run clinical:signals:test && npm run lexical:overstatement:test && npm run typed:provenance:test && npm run provenance:misses:test && npm run decomposition:stress:test && npm run decomposition:coherence:test && npm run decomposition:summary:test && npm run adjudication:test && npm run model:evidence:test && npm run scoring:test && npm run profile:test && npm run benchmark:test && npm run benchmark:public:test && npm run benchmark:validate",
+    "test": "npm run quality:gate:test && npm run evidence:pointer:test && npm run evidence:pipeline:v3:test && npm run candidate:v4:test && npm run evidence:dedup:test && npm run clinical:signals:test && npm run lexical:overstatement:test && npm run typed:provenance:test && npm run provenance:misses:test && npm run decomposition:stress:test && npm run decomposition:coherence:test && npm run decomposition:summary:test && npm run adjudication:test && npm run model:evidence:test && npm run scoring:test && npm run profile:test && npm run benchmark:test && npm run benchmark:public:test && npm run benchmark:validate",
     "check:share": "node scripts/check-share-readiness.js",
     "figures:build": "python3 scripts/make-results-figure.py",
     "check:all": "npm run check && npm test && npm run check:share",
@@ -58,6 +58,7 @@
     "evidence:pipeline:v3:pilot": "node scripts/evaluate-evidence-pipeline-v3.js --limit 10",
     "evidence:pipeline:v3:stability": "node scripts/run-evidence-stability-v3.js --limit 5",
     "candidate:v4:test": "node scripts/test-candidate-first-v4.js",
+    "evidence:dedup:test": "node scripts/test-evidence-dedup.js",
     "clinical:signals:test": "node scripts/test-clinical-validation-signals.js",
     "candidate:v4:dry": "node scripts/evaluate-candidate-first-v4.js --limit 20 --dry-run",
     "candidate:v4:pilot": "node scripts/evaluate-candidate-first-v4.js --limit 20",

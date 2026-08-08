@@ -45,6 +45,10 @@ const SPAN_SUPPORTED_STATUSES = new Set([
   "label_span_recovered",
 ]);
 
+const CLEAN_REVIEW_ROUTED_STATUSES = new Set([
+  "abstain_weak_overlap",
+]);
+
 const args = parseArgs(process.argv.slice(2));
 
 if (require.main === module) {
@@ -69,15 +73,20 @@ function analyzeProvenanceMissTaxonomy(payload, options = {}) {
   const cases = records.map((record) => analyzeRecord(record, options));
   const items = cases.flatMap((item) => item.items);
   const completed = cases.filter((item) => item.success);
+  const completedItems = completed.flatMap((item) => item.items);
   const exactItems = items.filter((item) => item.miss_category === "exact_contiguous");
   const exactMisses = items.filter((item) => item.strict_quote_found === false);
   const caseExactPasses = completed.filter((item) => item.evidence_items > 0 && item.exact_quote_miss_items === 0 && item.missing_quote_items === 0 && item.items_with_source_text === item.evidence_items);
   const strictnessOrPointer = exactMisses.filter((item) => STRICTNESS_OR_POINTER_CATEGORIES.has(item.miss_category));
   const possibleFabrication = exactMisses.filter((item) => item.miss_category === "low_overlap_possible_fabrication");
   const spanSupported = items.filter((item) => SPAN_SUPPORTED_STATUSES.has(item.span_support.status));
+  const completedSpanSupported = completedItems.filter((item) => SPAN_SUPPORTED_STATUSES.has(item.span_support.status));
   const exactMissSpanSupported = exactMisses.filter((item) => SPAN_SUPPORTED_STATUSES.has(item.span_support.status));
   const spanAbstained = items.filter((item) => item.span_support.action === "abstain_needs_review");
+  const auditableOrReviewRouted = items.filter(isAuditableOrReviewRoutedItem);
   const spanCasePasses = completed.filter((item) => item.evidence_items > 0 && item.items_with_source_text === item.evidence_items && item.provenance_abstain_items === 0);
+  const auditableOrReviewRoutedCasePasses = completed.filter((item) => item.evidence_items > 0 && item.auditable_or_review_routed_items === item.evidence_items);
+  const completedItemCounts = completed.filter((item) => item.evidence_items > 0).map((item) => item.evidence_items);
 
   return {
     generated_at: new Date().toISOString(),
@@ -86,6 +95,8 @@ function analyzeProvenanceMissTaxonomy(payload, options = {}) {
       records: records.length,
       completed_records: completed.length,
       evidence_items: items.length,
+      mean_evidence_items_per_completed_case: mean(completedItemCounts),
+      median_evidence_items_per_completed_case: median(completedItemCounts),
       exact_quote_items: exactItems.length,
       exact_quote_item_rate: ratio(exactItems.length, items.length),
       exact_quote_miss_items: exactMisses.length,
@@ -100,12 +111,20 @@ function analyzeProvenanceMissTaxonomy(payload, options = {}) {
       possible_fabrication_rate_among_exact_misses: ratio(possibleFabrication.length, exactMisses.length),
       span_supported_items: spanSupported.length,
       span_supported_item_rate: ratio(spanSupported.length, items.length),
+      span_supported_item_rate_among_completed: ratio(completedSpanSupported.length, completedItems.length),
       span_case_gate_passes: spanCasePasses.length,
       span_case_gate_rate_among_completed: ratio(spanCasePasses.length, completed.length),
+      effective_items_per_case_from_span_gate: effectiveItemCountFromGate(ratio(completedSpanSupported.length, completedItems.length), ratio(spanCasePasses.length, completed.length)),
+      auditable_or_review_routed_items: auditableOrReviewRouted.length,
+      auditable_or_review_routed_item_rate: ratio(auditableOrReviewRouted.length, items.length),
+      auditable_or_review_routed_case_passes: auditableOrReviewRoutedCasePasses.length,
+      auditable_or_review_routed_case_rate_among_completed: ratio(auditableOrReviewRoutedCasePasses.length, completed.length),
       exact_miss_span_supported_items: exactMissSpanSupported.length,
       exact_miss_span_supported_rate: ratio(exactMissSpanSupported.length, exactMisses.length),
       provenance_abstain_items: spanAbstained.length,
       provenance_abstain_rate_among_exact_misses: ratio(exactMisses.filter((item) => item.span_support.action === "abstain_needs_review").length, exactMisses.length),
+      clean_review_routed_items: items.filter(isCleanReviewRoutedItem).length,
+      low_overlap_review_items: items.filter((item) => item.span_support.status === "abstain_low_overlap").length,
       single_span_supported_items: spanSupported.filter((item) => item.span_support.evidence_mode === "single_span").length,
       multi_span_supported_items: spanSupported.filter((item) => item.span_support.evidence_mode === "multi_span").length,
       entailment_ready_items: spanSupported.filter((item) => item.span_support.entailment_input?.status === "ready_for_entailment_scorer").length,
@@ -113,11 +132,12 @@ function analyzeProvenanceMissTaxonomy(payload, options = {}) {
     },
     category_definitions: CATEGORY_DEFINITIONS,
     span_support_definitions: SPAN_SUPPORT_DEFINITIONS,
+    case_gate_by_item_count: summarizeCaseGateByItemCount(cases),
     data_parameter_buckets: summarizeDataParameterBuckets(cases),
     lowest_performing_cases: lowestPerformingCases(cases, options.worstLimit || 10),
     cases,
     samples: exactMisses.slice(0, options.sampleLimit || 25).map(sampleItem),
-    interpretation: "Automated diagnostic for exact-source-provenance misses. It preserves the strict exact-span gate, then tests whether deterministic span IDs can recover auditable single-span or multi-span support. Abstain buckets and low-overlap labels are triage signals, not clinical factuality, hallucination, or entailment ground truth.",
+    interpretation: "Automated diagnostic for exact-source-provenance misses. It preserves the strict exact-span gate, then tests whether deterministic span IDs can recover auditable single-span or multi-span support. The auditable/review-routed metric separates span-supported items from weak-overlap items that can be cleanly withheld for review; low-overlap possible-fabrication items are still counted as unresolved. These are triage signals, not clinical factuality, hallucination, or entailment ground truth.",
   };
 }
 
@@ -166,6 +186,12 @@ function analyzeRecord(record) {
       span_support: spanSupport,
     };
   });
+  const exactQuoteItems = items.filter((item) => item.miss_category === "exact_contiguous").length;
+  const exactQuoteMissItems = items.filter((item) => item.strict_quote_found === false).length;
+  const missingQuoteItems = items.filter((item) => item.miss_category === "missing_quote").length;
+  const spanSupportedItems = items.filter((item) => SPAN_SUPPORTED_STATUSES.has(item.span_support.status)).length;
+  const provenanceAbstainItems = items.filter((item) => item.span_support.action === "abstain_needs_review").length;
+  const auditableOrReviewRoutedItems = items.filter(isAuditableOrReviewRoutedItem).length;
   return {
     case_id: String(record.case_id || ""),
     success: Boolean(record.success),
@@ -173,13 +199,20 @@ function analyzeRecord(record) {
     source_line_count: candidateIndex.segments.length,
     evidence_items: items.length,
     items_with_source_text: items.filter((item) => item.has_source_text).length,
-    exact_quote_items: items.filter((item) => item.miss_category === "exact_contiguous").length,
-    exact_quote_miss_items: items.filter((item) => item.strict_quote_found === false).length,
-    missing_quote_items: items.filter((item) => item.miss_category === "missing_quote").length,
-    span_supported_items: items.filter((item) => SPAN_SUPPORTED_STATUSES.has(item.span_support.status)).length,
-    provenance_abstain_items: items.filter((item) => item.span_support.action === "abstain_needs_review").length,
-    exact_quote_item_rate: ratio(items.filter((item) => item.miss_category === "exact_contiguous").length, items.length),
-    span_supported_item_rate: ratio(items.filter((item) => SPAN_SUPPORTED_STATUSES.has(item.span_support.status)).length, items.length),
+    exact_quote_items: exactQuoteItems,
+    exact_quote_miss_items: exactQuoteMissItems,
+    missing_quote_items: missingQuoteItems,
+    span_supported_items: spanSupportedItems,
+    provenance_abstain_items: provenanceAbstainItems,
+    clean_review_routed_items: items.filter(isCleanReviewRoutedItem).length,
+    low_overlap_review_items: items.filter((item) => item.span_support.status === "abstain_low_overlap").length,
+    auditable_or_review_routed_items: auditableOrReviewRoutedItems,
+    exact_case_gate_pass: items.length > 0 && exactQuoteMissItems === 0 && missingQuoteItems === 0 && items.every((item) => item.has_source_text),
+    span_case_gate_pass: items.length > 0 && provenanceAbstainItems === 0 && items.every((item) => item.has_source_text),
+    auditable_or_review_routed_case_pass: items.length > 0 && auditableOrReviewRoutedItems === items.length,
+    exact_quote_item_rate: ratio(exactQuoteItems, items.length),
+    span_supported_item_rate: ratio(spanSupportedItems, items.length),
+    auditable_or_review_routed_item_rate: ratio(auditableOrReviewRoutedItems, items.length),
     miss_category_counts: countBy(items.map((item) => item.miss_category)),
     span_support_status_counts: countBy(items.map((item) => item.span_support.status)),
     items,
@@ -603,6 +636,58 @@ function wordCount(value) {
   return normalizeAggressive(value).split(/\s+/).filter(Boolean).length;
 }
 
+function isCleanReviewRoutedItem(item) {
+  return item.has_source_text
+    && item.has_quote
+    && CLEAN_REVIEW_ROUTED_STATUSES.has(item.span_support.status);
+}
+
+function isAuditableOrReviewRoutedItem(item) {
+  return item.has_source_text
+    && item.has_quote
+    && (SPAN_SUPPORTED_STATUSES.has(item.span_support.status) || isCleanReviewRoutedItem(item));
+}
+
+function summarizeCaseGateByItemCount(cases) {
+  const buckets = {};
+  for (const testCase of cases.filter((item) => item.success && item.evidence_items > 0)) {
+    const bucket = evidenceItemGateBucket(testCase);
+    if (!buckets[bucket]) {
+      buckets[bucket] = {
+        records: 0,
+        evidence_items: 0,
+        exact_case_gate_passes: 0,
+        span_case_gate_passes: 0,
+        auditable_or_review_routed_case_passes: 0,
+        exact_quote_items: 0,
+        span_supported_items: 0,
+        auditable_or_review_routed_items: 0,
+        provenance_abstain_items: 0,
+      };
+    }
+    buckets[bucket].records += 1;
+    buckets[bucket].evidence_items += testCase.evidence_items;
+    buckets[bucket].exact_case_gate_passes += testCase.exact_case_gate_pass ? 1 : 0;
+    buckets[bucket].span_case_gate_passes += testCase.span_case_gate_pass ? 1 : 0;
+    buckets[bucket].auditable_or_review_routed_case_passes += testCase.auditable_or_review_routed_case_pass ? 1 : 0;
+    buckets[bucket].exact_quote_items += testCase.exact_quote_items;
+    buckets[bucket].span_supported_items += testCase.span_supported_items;
+    buckets[bucket].auditable_or_review_routed_items += testCase.auditable_or_review_routed_items;
+    buckets[bucket].provenance_abstain_items += testCase.provenance_abstain_items;
+  }
+  return Object.fromEntries(Object.entries(buckets).map(([bucket, values]) => [bucket, {
+    ...values,
+    mean_evidence_items: ratio(values.evidence_items, values.records),
+    exact_case_gate_rate: ratio(values.exact_case_gate_passes, values.records),
+    span_case_gate_rate: ratio(values.span_case_gate_passes, values.records),
+    auditable_or_review_routed_case_rate: ratio(values.auditable_or_review_routed_case_passes, values.records),
+    exact_quote_item_rate: ratio(values.exact_quote_items, values.evidence_items),
+    span_supported_item_rate: ratio(values.span_supported_items, values.evidence_items),
+    auditable_or_review_routed_item_rate: ratio(values.auditable_or_review_routed_items, values.evidence_items),
+    provenance_abstain_item_rate: ratio(values.provenance_abstain_items, values.evidence_items),
+  }]));
+}
+
 function summarizeDataParameterBuckets(cases) {
   return {
     source_word_count: summarizeBuckets(cases, sourceWordBucket),
@@ -622,6 +707,7 @@ function summarizeBuckets(cases, bucketFn) {
         exact_quote_items: 0,
         exact_quote_miss_items: 0,
         span_supported_items: 0,
+        auditable_or_review_routed_items: 0,
         provenance_abstain_items: 0,
       };
     }
@@ -630,12 +716,14 @@ function summarizeBuckets(cases, bucketFn) {
     buckets[bucket].exact_quote_items += testCase.exact_quote_items;
     buckets[bucket].exact_quote_miss_items += testCase.exact_quote_miss_items;
     buckets[bucket].span_supported_items += testCase.span_supported_items;
+    buckets[bucket].auditable_or_review_routed_items += testCase.auditable_or_review_routed_items;
     buckets[bucket].provenance_abstain_items += testCase.provenance_abstain_items;
   }
   return Object.fromEntries(Object.entries(buckets).map(([bucket, values]) => [bucket, {
     ...values,
     exact_quote_item_rate: ratio(values.exact_quote_items, values.evidence_items),
     span_supported_item_rate: ratio(values.span_supported_items, values.evidence_items),
+    auditable_or_review_routed_item_rate: ratio(values.auditable_or_review_routed_items, values.evidence_items),
     provenance_abstain_item_rate: ratio(values.provenance_abstain_items, values.evidence_items),
   }]));
 }
@@ -662,6 +750,15 @@ function evidenceItemBucket(testCase) {
   if (value < 30) return "15-29";
   if (value < 50) return "30-49";
   return "50+";
+}
+
+function evidenceItemGateBucket(testCase) {
+  const value = testCase.evidence_items;
+  if (value < 5) return "<5";
+  if (value < 10) return "5-9";
+  if (value < 15) return "10-14";
+  if (value < 25) return "15-24";
+  return "25+";
 }
 
 function lowestPerformingCases(cases, limit) {
@@ -699,6 +796,21 @@ function countBy(values) {
 
 function ratio(numerator, denominator) {
   return denominator ? numerator / denominator : null;
+}
+
+function mean(values) {
+  return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
+}
+
+function median(values) {
+  if (!values.length) return null;
+  const sorted = [...values].sort((left, right) => left - right);
+  return sorted[Math.floor(sorted.length / 2)];
+}
+
+function effectiveItemCountFromGate(itemRate, caseRate) {
+  if (!(itemRate > 0 && itemRate < 1 && caseRate > 0 && caseRate < 1)) return null;
+  return round(Math.log(caseRate) / Math.log(itemRate));
 }
 
 function round(value) {
@@ -739,6 +851,8 @@ function renderMarkdown(report) {
     `| Records | ${report.summary.records} |`,
     `| Completed records | ${report.summary.completed_records} |`,
     `| Evidence items | ${report.summary.evidence_items} |`,
+    `| Mean evidence items per completed case | ${format(report.summary.mean_evidence_items_per_completed_case)} |`,
+    `| Median evidence items per completed case | ${format(report.summary.median_evidence_items_per_completed_case)} |`,
     `| Exact contiguous quote items | ${report.summary.exact_quote_items} |`,
     `| Exact quote item rate | ${formatPercent(report.summary.exact_quote_item_rate)} |`,
     `| Exact case gate passes | ${report.summary.exact_case_gate_passes} |`,
@@ -748,12 +862,20 @@ function renderMarkdown(report) {
     `| Possible-fabrication share among exact misses | ${formatPercent(report.summary.possible_fabrication_rate_among_exact_misses)} |`,
     `| Span-supported items after deterministic recovery | ${report.summary.span_supported_items} |`,
     `| Span-supported item rate | ${formatPercent(report.summary.span_supported_item_rate)} |`,
+    `| Span-supported item rate among completed records | ${formatPercent(report.summary.span_supported_item_rate_among_completed)} |`,
     `| Span case gate passes | ${report.summary.span_case_gate_passes} |`,
     `| Span case gate rate among completed | ${formatPercent(report.summary.span_case_gate_rate_among_completed)} |`,
+    `| Effective item count implied by span item/case gates | ${format(report.summary.effective_items_per_case_from_span_gate)} |`,
+    `| Auditable or review-routed items | ${report.summary.auditable_or_review_routed_items} |`,
+    `| Auditable or review-routed item rate | ${formatPercent(report.summary.auditable_or_review_routed_item_rate)} |`,
+    `| Auditable or review-routed case passes | ${report.summary.auditable_or_review_routed_case_passes} |`,
+    `| Auditable or review-routed case rate among completed | ${formatPercent(report.summary.auditable_or_review_routed_case_rate_among_completed)} |`,
     `| Exact misses recovered to span IDs | ${report.summary.exact_miss_span_supported_items} |`,
     `| Exact-miss span recovery rate | ${formatPercent(report.summary.exact_miss_span_supported_rate)} |`,
     `| Provenance abstain items | ${report.summary.provenance_abstain_items} |`,
     `| Provenance abstain rate among exact misses | ${formatPercent(report.summary.provenance_abstain_rate_among_exact_misses)} |`,
+    `| Clean review-routed weak-overlap items | ${report.summary.clean_review_routed_items} |`,
+    `| Low-overlap review items | ${report.summary.low_overlap_review_items} |`,
     `| Single-span supported items | ${report.summary.single_span_supported_items} |`,
     `| Multi-span supported items | ${report.summary.multi_span_supported_items} |`,
     `| Entailment-ready items | ${report.summary.entailment_ready_items} |`,
@@ -776,11 +898,17 @@ function renderMarkdown(report) {
       lines.push(`| ${testCase.case_id} | ${testCase.source_word_count} | ${testCase.source_line_count} | ${testCase.evidence_items} | ${formatPercent(testCase.exact_quote_item_rate)} | ${formatPercent(testCase.span_supported_item_rate)} | ${testCase.provenance_abstain_items} | \`${testCase.dominant_miss_category}\` | \`${testCase.dominant_span_support_status}\` |`);
     }
   }
+  if (Object.keys(report.case_gate_by_item_count || {}).length) {
+    lines.push("", "## Case Gate by Item Count", "", "| Items per case | Records | Mean items | Exact case rate | Span case rate | Auditable/review-routed case rate | Exact item rate | Span item rate | Review-routed item rate | Abstain item rate |", "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |");
+    for (const [bucket, values] of Object.entries(report.case_gate_by_item_count)) {
+      lines.push(`| \`${bucket}\` | ${values.records} | ${format(values.mean_evidence_items)} | ${formatPercent(values.exact_case_gate_rate)} | ${formatPercent(values.span_case_gate_rate)} | ${formatPercent(values.auditable_or_review_routed_case_rate)} | ${formatPercent(values.exact_quote_item_rate)} | ${formatPercent(values.span_supported_item_rate)} | ${formatPercent(values.auditable_or_review_routed_item_rate)} | ${formatPercent(values.provenance_abstain_item_rate)} |`);
+    }
+  }
   lines.push("", "## Data Parameter Buckets");
   for (const [bucketName, buckets] of Object.entries(report.data_parameter_buckets)) {
-    lines.push("", `### ${bucketName}`, "", "| Bucket | Records | Items | Exact rate | Span-supported rate | Abstain rate |", "| --- | ---: | ---: | ---: | ---: | ---: |");
+    lines.push("", `### ${bucketName}`, "", "| Bucket | Records | Items | Exact rate | Span-supported rate | Auditable/review-routed rate | Abstain rate |", "| --- | ---: | ---: | ---: | ---: | ---: | ---: |");
     for (const [bucket, values] of Object.entries(buckets)) {
-      lines.push(`| \`${bucket}\` | ${values.records} | ${values.evidence_items} | ${formatPercent(values.exact_quote_item_rate)} | ${formatPercent(values.span_supported_item_rate)} | ${formatPercent(values.provenance_abstain_item_rate)} |`);
+      lines.push(`| \`${bucket}\` | ${values.records} | ${values.evidence_items} | ${formatPercent(values.exact_quote_item_rate)} | ${formatPercent(values.span_supported_item_rate)} | ${formatPercent(values.auditable_or_review_routed_item_rate)} | ${formatPercent(values.provenance_abstain_item_rate)} |`);
     }
   }
   if (report.samples.length) {
