@@ -23,6 +23,32 @@ const SPAN_BUDGET_MATCHERS = {
   lexical_topk: "Rank source spans by quote/label lexical overlap only.",
   transparent_rerank_topk: "Rerank the same spans with section relevance and assertion-conflict penalties; this is a transparent reranker-style comparator, not an embedding model.",
 };
+const GUARD_CONDITIONS = {
+  all_guards_active: {
+    assertion: true,
+    labelRisk: true,
+    labelRiskMode: "strict",
+    description: "Current behavior: assertion conflict and strict label-risk guards active.",
+  },
+  label_risk_disabled: {
+    assertion: true,
+    labelRisk: false,
+    labelRiskMode: "off",
+    description: "Assertion conflict guard active; label-risk guard disabled.",
+  },
+  all_guards_disabled: {
+    assertion: false,
+    labelRisk: false,
+    labelRiskMode: "off",
+    description: "Coverage-only diagnostic with assertion and label-risk guards disabled.",
+  },
+  budget_normalized_label_risk: {
+    assertion: true,
+    labelRisk: true,
+    labelRiskMode: "budget_normalized",
+    description: "Assertion guard active; label-risk thresholds normalized by selected span count.",
+  },
+};
 
 if (require.main === module) {
   const inputPath = required(args.input, "--input is required");
@@ -56,6 +82,7 @@ function runDecompositionStressExperiment(payload, options = {}) {
   const taskResults = tasks.map((task) => runTask(task, recordsById.get(task.case_id)));
   const methodReports = METHOD_ORDER.map((method) => summarizeMethod(method, taskResults));
   const spanBudgetReports = summarizeSpanBudgetCurves(taskResults);
+  const guardCalibrationReports = summarizeGuardCalibrationCurves(taskResults);
 
   return {
     generated_at: new Date().toISOString(),
@@ -71,6 +98,10 @@ function runDecompositionStressExperiment(payload, options = {}) {
       matchers: SPAN_BUDGET_MATCHERS,
       interpretation: "Matched diagnostic over the same selected stress tasks. It asks how support and review risk change as the retriever is allowed to expose more source spans.",
     },
+    guard_calibration_definitions: {
+      conditions: Object.fromEntries(Object.entries(GUARD_CONDITIONS).map(([key, value]) => [key, value.description])),
+      interpretation: "Phase-0 guard calibration over the same span-budget curves. Raw trigger counts are reported even when a guard is disabled, so a coverage decline can be separated from a guard-threshold artifact.",
+    },
     summary: {
       tasks: taskResults.length,
       source_records: new Set(taskResults.map((task) => task.case_id)).size,
@@ -78,6 +109,8 @@ function runDecompositionStressExperiment(payload, options = {}) {
       best_method: bestMethod(methodReports),
       methods: methodReports,
       span_budget_curves: spanBudgetReports,
+      guard_calibration_curves: guardCalibrationReports,
+      adaptive_query_aware_span_counts: summarizeAdaptiveSpanCounts(taskResults),
       dominant_task_miss_categories: countBy(taskResults.map((task) => task.miss_category)),
       task_domains: countBy(taskResults.map((task) => task.domain)),
     },
@@ -152,6 +185,7 @@ function runTask(task, record) {
     ...task,
     methods: methodResults,
     span_budget_curve: buildSpanBudgetCurve(task, context),
+    guard_calibration_curve: buildGuardCalibrationCurve(task, context),
   };
 }
 
@@ -267,6 +301,23 @@ function buildSpanBudgetCurve(task, context) {
   };
 }
 
+function buildGuardCalibrationCurve(task, context) {
+  const rankedByMatcher = {
+    lexical_topk: rankSegments(context.segments, task),
+    transparent_rerank_topk: transparentRerankSegments(context.segments, task),
+  };
+  return Object.fromEntries(Object.entries(rankedByMatcher).map(([matcher, ranked]) => [
+    matcher,
+    Object.fromEntries(Object.entries(GUARD_CONDITIONS).map(([condition, guardOptions]) => [
+      condition,
+      Object.fromEntries(SPAN_BUDGETS.map((budget) => [
+        String(budget),
+        evaluateSpanBudget(task, ranked, budget, guardOptions),
+      ])),
+    ])),
+  ]));
+}
+
 function transparentRerankSegments(segments, task) {
   return rankSegments(segments, task).map((span) => {
     const sectionBonus = isDomainRelevant(span.section, task.domain) ? 0.12 : 0;
@@ -288,11 +339,18 @@ function transparentRerankSegments(segments, task) {
     || left.id.localeCompare(right.id));
 }
 
-function evaluateSpanBudget(task, ranked, budget) {
+function evaluateSpanBudget(task, ranked, budget, guardOptions = GUARD_CONDITIONS.all_guards_active) {
+  const guards = { ...GUARD_CONDITIONS.all_guards_active, ...guardOptions };
   const selected = uniqueSpans(ranked.slice(0, budget)).sort((left, right) => left.ordinal - right.ordinal);
   const combined = combinedCoverage(selected, task);
-  const assertionConflict = hasAssertionCueConflict(selected.map((span) => span.text).join(" "), task.label, task);
-  const labelRisk = isHighRiskLabelOnlyUnion(selected, combined, "query_label_span_budget");
+  const selectedText = selected.map((span) => span.text).join(" ");
+  const rawAssertionConflict = hasAssertionCueConflict(selectedText, task.label, task);
+  const rawLabelRisk = isHighRiskLabelOnlyUnion(selected, combined, "query_label_span_budget");
+  const normalizedLabelRisk = isBudgetNormalizedLabelRiskUnion(selected, combined, "query_label_span_budget");
+  const assertionConflict = Boolean(guards.assertion && rawAssertionConflict);
+  const labelRisk = Boolean(guards.labelRisk && (
+    guards.labelRiskMode === "budget_normalized" ? normalizedLabelRisk : rawLabelRisk
+  ));
   const contextWords = wordCount(selected.map((span) => span.text).join(" "));
   const spanWindow = selected.length ? selected[selected.length - 1].ordinal - selected[0].ordinal + 1 : 0;
   const supported = selected.length > 0
@@ -308,6 +366,11 @@ function evaluateSpanBudget(task, ranked, budget) {
     combined_quote_coverage: round(combined.quote_coverage),
     combined_label_coverage: round(combined.label_coverage),
     selected_span_ids: selected.map((span) => span.id),
+    raw_assertion_conflict: rawAssertionConflict,
+    raw_label_risk: rawLabelRisk,
+    normalized_label_risk: normalizedLabelRisk,
+    active_assertion_conflict: assertionConflict,
+    active_label_risk: labelRisk,
   };
 }
 
@@ -332,6 +395,21 @@ function isHighRiskLabelOnlyUnion(selected, combined, status) {
   const sections = new Set(selected.map((span) => span.section || "unknown").filter((section) => section !== "unknown"));
   const spanWindow = ordinals.length ? Math.max(...ordinals) - Math.min(...ordinals) + 1 : 0;
   return sections.size > 1 || spanWindow > 40 || selected.length > 3;
+}
+
+function isBudgetNormalizedLabelRiskUnion(selected, combined, status) {
+  const labelOnly = /^query_label_/.test(status || "")
+    || (Number(combined?.label_coverage || 0) >= 0.72 && Number(combined?.quote_coverage || 0) < 0.72);
+  if (!labelOnly) return false;
+  const ordinals = selected.map((span) => Number(span.ordinal)).filter(Number.isFinite);
+  const sections = new Set(selected.map((span) => span.section || "unknown").filter((section) => section !== "unknown"));
+  const spanWindow = ordinals.length ? Math.max(...ordinals) - Math.min(...ordinals) + 1 : 0;
+  const contextWords = wordCount(selected.map((span) => span.text).join(" "));
+  const spanCount = Math.max(1, selected.length);
+  return sections.size > Math.min(3, spanCount)
+    || spanWindow > 40 * spanCount
+    || contextWords > 24 * spanCount
+    || (selected.length > 3 && Number(combined?.quote_coverage || 0) < 0.5);
 }
 
 function querySupport(spans, combined) {
@@ -599,6 +677,47 @@ function summarizeSpanBudgetCurves(taskResults) {
   return out;
 }
 
+function summarizeGuardCalibrationCurves(taskResults) {
+  const out = {};
+  for (const matcher of Object.keys(SPAN_BUDGET_MATCHERS)) {
+    out[matcher] = {};
+    for (const condition of Object.keys(GUARD_CONDITIONS)) {
+      out[matcher][condition] = {};
+      for (const budget of SPAN_BUDGETS) {
+        const results = taskResults
+          .map((task) => task.guard_calibration_curve?.[matcher]?.[condition]?.[String(budget)])
+          .filter(Boolean);
+        const supported = results.filter((item) => item.supported);
+        out[matcher][condition][String(budget)] = {
+          tasks: results.length,
+          supported_tasks: supported.length,
+          support_rate: ratio(supported.length, results.length),
+          mean_selected_context_words: round(mean(results.map((item) => item.selected_context_words))),
+          mean_selected_context_words_supported: round(mean(supported.map((item) => item.selected_context_words))),
+          raw_assertion_conflict_tasks: results.filter((item) => item.raw_assertion_conflict).length,
+          raw_label_risk_tasks: results.filter((item) => item.raw_label_risk).length,
+          normalized_label_risk_tasks: results.filter((item) => item.normalized_label_risk).length,
+          active_assertion_conflict_tasks: results.filter((item) => item.active_assertion_conflict).length,
+          active_label_risk_tasks: results.filter((item) => item.active_label_risk).length,
+          status_counts: countBy(results.map((item) => item.status)),
+        };
+      }
+    }
+  }
+  return out;
+}
+
+function summarizeAdaptiveSpanCounts(taskResults) {
+  const all = taskResults.map((task) => task.methods.query_aware_multispan).filter(Boolean);
+  const supported = all.filter((item) => item.supported);
+  return {
+    all_tasks: countBy(all.map((item) => String(item.selected_span_count))),
+    supported_tasks: countBy(supported.map((item) => String(item.selected_span_count))),
+    median_all_tasks: median(all.map((item) => item.selected_span_count)),
+    median_supported_tasks: median(supported.map((item) => item.selected_span_count)),
+  };
+}
+
 function bestMethod(methodReports) {
   return [...methodReports].sort((left, right) => right.support_rate - left.support_rate
     || left.mean_selected_context_words_supported - right.mean_selected_context_words_supported
@@ -634,6 +753,21 @@ function renderMarkdown(report) {
     }
     lines.push("");
   }
+  lines.push("", "## Guard Calibration", "");
+  lines.push(report.guard_calibration_definitions.interpretation, "");
+  for (const [matcher, conditions] of Object.entries(report.summary.guard_calibration_curves || {})) {
+    lines.push(`### ${matcher}`, "", "| Condition | Span budget | Supported tasks | Support rate | Raw assertion triggers | Raw label-risk triggers | Active assertion triggers | Active label-risk triggers |", "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |");
+    for (const [condition, budgets] of Object.entries(conditions)) {
+      for (const [budget, values] of Object.entries(budgets)) {
+        lines.push(`| \`${condition}\` | ${budget} | ${values.supported_tasks} | ${formatPercent(values.support_rate)} | ${values.raw_assertion_conflict_tasks} | ${values.raw_label_risk_tasks} | ${values.active_assertion_conflict_tasks} | ${values.active_label_risk_tasks} |`);
+      }
+    }
+    lines.push("");
+  }
+  lines.push("## Adaptive Query-Aware Span Counts", "", "| Population | Counts | Median selected spans |", "| --- | --- | ---: |");
+  const spanCounts = report.summary.adaptive_query_aware_span_counts || {};
+  lines.push(`| all selected tasks | \`${JSON.stringify(spanCounts.all_tasks || {})}\` | ${format(spanCounts.median_all_tasks)} |`);
+  lines.push(`| supported tasks | \`${JSON.stringify(spanCounts.supported_tasks || {})}\` | ${format(spanCounts.median_supported_tasks)} |`);
   lines.push("", "## Task Mix", "", "| Category | Count |", "| --- | ---: |");
   for (const [category, count] of Object.entries(report.summary.dominant_task_miss_categories)) {
     lines.push(`| \`${category}\` | ${count} |`);
@@ -696,6 +830,13 @@ function mean(values) {
   return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
 }
 
+function median(values) {
+  const sorted = values.filter(Number.isFinite).sort((left, right) => left - right);
+  if (!sorted.length) return null;
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
 function round(value) {
   return Number.isFinite(value) ? Number(value.toFixed(3)) : null;
 }
@@ -741,10 +882,13 @@ module.exports = {
   runDecompositionStressExperiment,
   evaluateMethod,
   buildSpanBudgetCurve,
+  buildGuardCalibrationCurve,
   transparentRerankSegments,
   isHighRiskLabelOnlyUnion,
+  isBudgetNormalizedLabelRiskUnion,
   isStrictLowOverlapRescue,
   METHOD_DEFINITIONS,
   SPAN_BUDGETS,
   SPAN_BUDGET_MATCHERS,
+  GUARD_CONDITIONS,
 };

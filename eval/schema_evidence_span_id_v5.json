@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://handofflens.local/schema/evidence-span-id-v5.json",
+  "title": "HandoffLens Evidence Span-ID Item v5",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "field",
+    "evidence_span_ids",
+    "normalized_value",
+    "assertion",
+    "support_status"
+  ],
+  "properties": {
+    "field": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_span_ids": {
+      "type": "array",
+      "maxItems": 3,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^S[1-9][0-9]*$"
+      }
+    },
+    "surface_form": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "span_id",
+        "token_start",
+        "token_end"
+      ],
+      "properties": {
+        "span_id": {
+          "type": "string",
+          "pattern": "^S[1-9][0-9]*$"
+        },
+        "token_start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "token_end": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "normalized_value": {
+      "type": "string"
+    },
+    "assertion": {
+      "enum": [
+        "present",
+        "absent",
+        "uncertain",
+        "conditional",
+        "historical"
+      ]
+    },
+    "support_status": {
+      "enum": [
+        "supported",
+        "insufficient_evidence",
+        "not_found"
+      ]
+    },
+    "entailment_scored": {
+      "type": "boolean",
+      "const": false
+    },
+    "entailment_score": {
+      "type": "null"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "support_status": {
+            "const": "supported"
+          }
+        },
+        "required": [
+          "support_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "evidence_span_ids": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ]
+}

@@ -32,6 +32,38 @@ All existing results generated before protocol version 1.0 are exploratory.
 - Source-fidelity analysis should report a paired difference at the `subject_id` level for outputs with at least one semantic source-fidelity error.
 - Stronger source-fidelity claims require Wilson intervals and held-out adjudicated source-fidelity labels.
 
+## Pre-Registered Minimal-Evidence Experiment Predictions
+
+Timestamp: 2026-08-08, before running the Phase 0 guard-calibration sweep on the private hard-20 diagnostic outputs.
+
+Decision rule: Phase 3 minimal selector work should proceed only after the budget cliff is separated from guard-threshold artifacts. If coverage-only support is flat or rising while the all-guards curve collapses, the result is a guard calibration problem, not evidence that broader context inherently destroys support.
+
+| Prediction | Expected result | Claim boundary |
+| --- | --- | --- |
+| Phase 0 all-guards versus disabled-guards sweep | The all-guards curve will reproduce the budget cliff, while the all-guards-disabled curve will decline gradually or remain higher at larger budgets rather than collapsing to zero | This diagnoses guard behavior, not clinical factuality |
+| Adaptive span selection versus fixed budgets | Adaptive query-aware selection will outperform every fixed top-k budget because it stops per item instead of forcing the same span count everywhere | Median selected span count describes output behavior, not a fixed setting |
+| Span-ID schema | Span-ID validity should approach 1.0 when IDs are selected from a pre-enumerated index | This is by construction and does not prove semantic entailment |
+| Non-contiguous quote misses | `quote_terms_present_noncontiguous` should largely disappear as a provenance-addressing failure in the span-ID arm | The unresolved question moves to whether the selected spans entail the normalized value |
+| Normalization misses | `normalization_or_punctuation` should move from pointer failure into `normalized_value` correctness review | Normalized correctness still needs review or a separate scorer |
+| Cross-provider ablation | The schema gain should hold across both frozen providers; if it does not, the provider interaction is itself a reportable result | Do not publish a single-provider generalization |
+| Case gates | Case-level gains will be smaller than item-level gains because case gates are conjunctive and item-count sensitive | Do not let item-level support imply complete-case clinical correctness |
+| Minimal selector recall cost | The selector will lose measurable recall on items requiring implicit inference or cross-section reasoning | Report recall cost explicitly rather than absorbing it into abstention |
+
+## Phase 0 Guard Calibration Result
+
+Timestamp: 2026-08-08, after running the guard-calibrated span-budget diagnostic on the private hard-20 aggregate outputs. Unit: failed exact-provenance evidence item. Case-level outputs, source text, raw model responses, and logprob traces remain private and uncommitted.
+
+Primary route: `cohere-json-schema:command-a-plus-05-2026`, transparent reranker-style top-k, 271 selected failed exact-provenance items.
+
+| Condition | Budget 1 | Budget 2 | Budget 4 | Budget 8 | Interpretation |
+| --- | ---: | ---: | ---: | ---: | --- |
+| All guards active | 164/271, 60.5% [54.6, 66.2] | 140/271, 51.7% [45.7, 57.6] | 0/271, 0.0% [0.0, 1.4] | 0/271, 0.0% [0.0, 1.4] | Reproduces the cliff |
+| Label-risk disabled, assertion active | 164/271, 60.5% [54.6, 66.2] | 232/271, 85.6% [80.9, 89.3] | 238/271, 87.8% [83.4, 91.2] | 227/271, 83.8% [78.9, 87.7] | The cliff is mostly label-risk threshold behavior |
+| All guards disabled | 165/271, 60.9% [55.0, 66.5] | 237/271, 87.5% [83.0, 90.9] | 262/271, 96.7% [93.8, 98.2] | 266/271, 98.2% [95.8, 99.2] | Coverage does not collapse with larger budgets |
+| Budget-normalized label risk, assertion active | 164/271, 60.5% [54.6, 66.2] | 179/271, 66.1% [60.2, 71.4] | 160/271, 59.0% [53.1, 64.7] | 198/271, 73.1% [67.5, 78.0] | Reduces the artifact but does not replace adaptive stopping |
+
+Decision: the fixed-budget cliff should not be cited as evidence that broader context inherently destroys provenance support. It is primarily a strict label-risk guard artifact. The next design should use minimal sufficient evidence selection with adaptive stopping, calibrated assertion/label-risk guards, and an explicit recall-cost report. The adaptive query-aware policy on the same primary route supported 214/271 items, 79.0%, with median selected span count 2; that number is item-level auditability under lexical/span support, not semantic entailment or clinical correctness.
+
 ## Evidence Needed For Stronger Claims
 
 - Entailment-backed source support: lexical overlap should be replaced or supplemented with a factuality/entailment scorer, such as MiniCheck, AlignScore, or a clinical NLI comparator, followed by manual review of disagreements.

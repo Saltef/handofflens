@@ -3,9 +3,13 @@
 const assert = require("node:assert/strict");
 const {
   runDecompositionStressExperiment,
+  buildGuardCalibrationCurve,
+  buildSpanBudgetCurve,
   isHighRiskLabelOnlyUnion,
+  isBudgetNormalizedLabelRiskUnion,
   isStrictLowOverlapRescue,
   METHOD_DEFINITIONS,
+  GUARD_CONDITIONS,
   SPAN_BUDGETS,
   SPAN_BUDGET_MATCHERS,
 } = require("./run-decomposition-stress-experiment");
@@ -93,10 +97,21 @@ const report = runDecompositionStressExperiment(payload, {
 assert.equal(Object.keys(METHOD_DEFINITIONS).length, 5);
 assert.deepEqual(SPAN_BUDGETS, [1, 2, 4, 8]);
 assert.equal(Object.keys(SPAN_BUDGET_MATCHERS).length, 2);
+assert.deepEqual(Object.keys(GUARD_CONDITIONS), [
+  "all_guards_active",
+  "label_risk_disabled",
+  "all_guards_disabled",
+  "budget_normalized_label_risk",
+]);
 assert.equal(report.summary.tasks, 6);
 assert.equal(report.summary.source_records, 1);
 assert.equal(report.summary.span_budget_curves.lexical_topk["1"].tasks, 6);
 assert.equal(report.summary.span_budget_curves.transparent_rerank_topk["8"].tasks, 6);
+assert.equal(report.summary.guard_calibration_curves.transparent_rerank_topk.all_guards_active["4"].tasks, 6);
+assert.equal(report.summary.guard_calibration_curves.transparent_rerank_topk.all_guards_disabled["4"].tasks, 6);
+assert.equal(report.summary.guard_calibration_curves.transparent_rerank_topk.all_guards_disabled["4"].active_label_risk_tasks, 0);
+assert.ok(report.summary.guard_calibration_curves.transparent_rerank_topk.all_guards_disabled["4"].raw_label_risk_tasks >= 0);
+assert.equal(typeof report.summary.adaptive_query_aware_span_counts.median_all_tasks, "number");
 
 const tasksByPath = Object.fromEntries(report.tasks.map((task) => [task.path, task]));
 
@@ -131,6 +146,7 @@ const assertionConflict = tasksByPath["diagnosis_changes.discharge[0]"];
 assert.equal(assertionConflict.methods.query_aware_multispan.supported, false);
 assert.equal(assertionConflict.methods.query_aware_multispan.status, "abstain_query_assertion_conflict");
 assert.equal(assertionConflict.span_budget_curve.transparent_rerank_topk["1"].supported, false);
+assert.equal(assertionConflict.guard_calibration_curve.transparent_rerank_topk.all_guards_disabled["1"].active_assertion_conflict, false);
 
 const unsupported = tasksByPath["procedures_and_tests[0]"];
 assert.equal(unsupported.methods.exact_full_note.supported, false);
@@ -171,5 +187,25 @@ assert.equal(isHighRiskLabelOnlyUnion(
   { quote_coverage: 0.2, label_coverage: 0.9 },
   "query_label_single_span_supported",
 ), false);
+assert.equal(isBudgetNormalizedLabelRiskUnion(
+  [
+    { section: "follow_up_safety", ordinal: 1, text: "follow up" },
+    { section: "follow_up_safety", ordinal: 20, text: "BMP" },
+    { section: "follow_up_safety", ordinal: 40, text: "cardiology" },
+    { section: "follow_up_safety", ordinal: 60, text: "visit" },
+  ],
+  { quote_coverage: 0.6, label_coverage: 0.9 },
+  "query_label_span_budget",
+), false);
+assert.equal(isBudgetNormalizedLabelRiskUnion(
+  [
+    { section: "follow_up_safety", ordinal: 1, text: "follow up" },
+    { section: "medications", ordinal: 120, text: "aspirin" },
+  ],
+  { quote_coverage: 0.2, label_coverage: 0.9 },
+  "query_label_span_budget",
+), true);
+assert.equal(typeof buildSpanBudgetCurve(assertionConflict, { segments: [] }), "object");
+assert.equal(typeof buildGuardCalibrationCurve(assertionConflict, { segments: [] }), "object");
 
-console.log("PASS decomposition stress experiment (44 assertions)");
+console.log("PASS decomposition stress experiment (57 assertions)");

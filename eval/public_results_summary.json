@@ -270,8 +270,72 @@
         "strict_tool_completion_vs_source_words": -0.445617,
         "flat_tool_completion_vs_source_words": -0.432323
       },
-      "interpretation": "On this hard diagnostic slice, full-note/request-mode changes did not solve dense-case evidence fidelity. Candidate-first v4 performed best on deterministic auditability because it materializes exact source candidates before model classification. That exact support is by construction and should not be read as semantic completeness, clinical correctness, or population performance."
+      "interpretation": "On this hard diagnostic slice, full-note/request-mode changes did not solve dense-case evidence fidelity. Candidate-first v4 performed best on deterministic auditability because it materializes exact source candidates before model classification. That exact support is by construction and should not be read as semantic completeness, clinical correctness, or population performance.",
+      "phase0_guard_calibration": {
+        "date": "2026-08-08",
+        "private_case_level_outputs_committed": false,
+        "unit": "failed exact-provenance evidence item",
+        "primary_route": "cohere-json-schema:command-a-plus-05-2026",
+        "primary_route_denominator": 271,
+        "transparent_rerank_topk_primary": {
+          "all_guards_active": {
+            "budget_1": { "supported": "164/271", "rate": 0.6052, "wilson_95": [0.5459, 0.6615], "active_label_risk_triggers": 0 },
+            "budget_2": { "supported": "140/271", "rate": 0.5166, "wilson_95": [0.4573, 0.5755], "active_label_risk_triggers": 109 },
+            "budget_4": { "supported": "0/271", "rate": 0, "wilson_95": [0, 0.014], "active_label_risk_triggers": 271 },
+            "budget_8": { "supported": "0/271", "rate": 0, "wilson_95": [0, 0.014], "active_label_risk_triggers": 271 }
+          },
+          "label_risk_disabled_assertion_active": {
+            "budget_1": { "supported": "164/271", "rate": 0.6052, "wilson_95": [0.5459, 0.6615] },
+            "budget_2": { "supported": "232/271", "rate": 0.8561, "wilson_95": [0.8093, 0.8929] },
+            "budget_4": { "supported": "238/271", "rate": 0.8782, "wilson_95": [0.8339, 0.912] },
+            "budget_8": { "supported": "227/271", "rate": 0.8376, "wilson_95": [0.7891, 0.8768] }
+          },
+          "all_guards_disabled": {
+            "budget_1": { "supported": "165/271", "rate": 0.6089, "wilson_95": [0.5496, 0.665] },
+            "budget_2": { "supported": "237/271", "rate": 0.8745, "wilson_95": [0.8298, 0.9088] },
+            "budget_4": { "supported": "262/271", "rate": 0.9668, "wilson_95": [0.9381, 0.9824] },
+            "budget_8": { "supported": "266/271", "rate": 0.9815, "wilson_95": [0.9575, 0.9921] }
+          },
+          "budget_normalized_label_risk_assertion_active": {
+            "budget_1": { "supported": "164/271", "rate": 0.6052, "wilson_95": [0.5459, 0.6615], "active_label_risk_triggers": 0 },
+            "budget_2": { "supported": "179/271", "rate": 0.6605, "wilson_95": [0.6022, 0.7143], "active_label_risk_triggers": 62 },
+            "budget_4": { "supported": "160/271", "rate": 0.5904, "wilson_95": [0.531, 0.6473], "active_label_risk_triggers": 92 },
+            "budget_8": { "supported": "198/271", "rate": 0.7306, "wilson_95": [0.6749, 0.78], "active_label_risk_triggers": 38 }
+          }
+        },
+        "adaptive_query_aware_selector": {
+          "supported": "214/271",
+          "rate": 0.7897,
+          "median_selected_spans_all_tasks": 2,
+          "median_selected_spans_supported_tasks": 2,
+          "selected_span_count_distribution_all_tasks": { "0": 13, "1": 75, "2": 118, "3": 46, "4": 19 }
+        },
+        "decision": "The fixed-budget cliff is primarily a strict label-risk guard artifact: support rises when guards are disabled and remains high when only label-risk is disabled. Minimal sufficient evidence selection should use adaptive stopping plus calibrated risk guards, not the old fixed-budget strict label-risk curve.",
+        "claim_boundary": "Selected hard-slice item-level auditability diagnostic only; not semantic entailment, clinical correctness, or population performance."
+      }
     }
+  },
+  "schema_ablation": {
+    "status": "deterministic_span_id_substrate_ready; cross_provider_model_repeats_not_yet_run",
+    "span_id_schema": "eval/schema_evidence_span_id_v5.json",
+    "span_index": {
+      "script": "scripts/span-index.js",
+      "default_granularity": "clause",
+      "supported_granularities": ["sentence", "line", "clause"],
+      "deterministic_ids": "S1..Sn in document order",
+      "offset_policy": "char_start/char_end must slice exactly to span.text"
+    },
+    "span_id_validator": {
+      "script": "scripts/span-id-validator.js",
+      "max_supported_evidence_span_ids": 3,
+      "invalid_id_policy": "retry up to two times, then route to support_status not_found rather than accepting an unresolved pointer"
+    },
+    "minimal_selector": {
+      "script": "scripts/minimal-evidence-selector.js",
+      "policy": "greedy set cover over claim tokens with adaptive stopping and budget-normalized label-risk checks",
+      "phase0_dependency": "built after guard calibration showed the fixed-budget cliff was a guard-threshold artifact"
+    },
+    "remaining_ablation_work": "Run v2/v3 generated quote arms against v5 span-ID arms across both frozen providers with at least three repeats per cell; report non-completion, item-level support, case gates, and recall cost."
   },
   "architecture_development": {
     "evidence_span_v2_final_rerun": {
