@@ -231,8 +231,11 @@ function queryAwareMultiSpan(task, context) {
 
   const assertionConflict = hasAssertionCueConflict(selected.map((span) => span.text).join(" "), task.label, task);
   const lowOverlapRescue = isStrictLowOverlapRescue(task, selected, combined);
-  const supported = !assertionConflict && ((!lowOverlap && querySupport(selected, combined)) || lowOverlapRescue);
-  const unsupportedStatus = assertionConflict ? "abstain_query_assertion_conflict" : "abstain_query_weak";
+  const highRiskLabelOnly = isHighRiskLabelOnlyUnion(selected, combined, status);
+  const supported = !assertionConflict && !highRiskLabelOnly && ((!lowOverlap && querySupport(selected, combined)) || lowOverlapRescue);
+  const unsupportedStatus = assertionConflict
+    ? "abstain_query_assertion_conflict"
+    : highRiskLabelOnly ? "abstain_query_label_risk" : "abstain_query_weak";
   return result({
     supported,
     status: supported ? (lowOverlapRescue ? "query_low_overlap_review_supported" : status) : unsupportedStatus,
@@ -253,6 +256,16 @@ function isStrictLowOverlapRescue(task, selected, combined) {
   return contextWords <= 40
     && Number(combined?.quote_coverage || 0) >= 0.86
     && Number(combined?.label_coverage || 0) >= 0.6;
+}
+
+function isHighRiskLabelOnlyUnion(selected, combined, status) {
+  const labelOnly = /^query_label_/.test(status || "")
+    || (Number(combined?.label_coverage || 0) >= 0.72 && Number(combined?.quote_coverage || 0) < 0.72);
+  if (!labelOnly) return false;
+  const ordinals = selected.map((span) => Number(span.ordinal)).filter(Number.isFinite);
+  const sections = new Set(selected.map((span) => span.section || "unknown").filter((section) => section !== "unknown"));
+  const spanWindow = ordinals.length ? Math.max(...ordinals) - Math.min(...ordinals) + 1 : 0;
+  return sections.size > 1 || spanWindow > 40 || selected.length > 3;
 }
 
 function querySupport(spans, combined) {
@@ -627,6 +640,7 @@ function parseArgs(argv) {
 module.exports = {
   runDecompositionStressExperiment,
   evaluateMethod,
+  isHighRiskLabelOnlyUnion,
   isStrictLowOverlapRescue,
   METHOD_DEFINITIONS,
 };

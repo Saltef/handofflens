@@ -119,7 +119,7 @@ function summarizeDecompositionReports({ stressReports, coherenceReports, labels
     policy: "Aggregate only sanitized per-cell stress/coherence metrics. No case text, case IDs, task paths, model outputs, or source quotes are emitted.",
     aggregate,
     cells,
-    interpretation: "Expanded stress summary for parsing/chunking policies on deliberately hard exact-provenance misses. Metrics are lexical/span-support diagnostics, not semantic entailment, population estimates, or clinical correctness claims.",
+    interpretation: "Expanded stress summary for parsing/chunking policies on selected failed exact-provenance misses. Metrics are lexical/span-support diagnostics, not semantic entailment, population estimates, or clinical correctness claims.",
   };
 }
 

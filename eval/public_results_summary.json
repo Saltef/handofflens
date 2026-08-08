@@ -22,7 +22,7 @@
       "date": "2026-08-08",
       "private_case_level_outputs_committed": false,
       "task_selection": "200 failed exact-provenance evidence items from each of three held-out Cohere cells, selected from the lowest exact-provenance records.",
-      "query_aware_revision": "Clause-aware quote splitting recovers generated pseudo-quotes that join admission/discharge snippets, slash-separated clauses, or source-heading-prefixed fragments. The original strict greedy token-union pass still runs first; relaxed greedy is used only after strict greedy fails. Target-aware assertion-cue scope checks then block only cues whose local scope overlaps the extracted item target, with a narrow lab/procedure exception for negative test results or uncomplicated procedures. Strict low-overlap review rescue accepts only short local spans with high quote coverage and meaningful label coverage, and routes those cases to review-required support.",
+      "query_aware_revision": "Clause-aware quote splitting recovers generated pseudo-quotes that join admission/discharge snippets, slash-separated clauses, or source-heading-prefixed fragments. The original strict greedy token-union pass still runs first; relaxed greedy is used only after strict greedy fails. Target-aware assertion-cue scope checks then block only cues whose local scope overlaps the extracted item target, with a narrow lab/procedure exception for negative test results or uncomplicated procedures. Strict low-overlap review rescue accepts only short local spans with high quote coverage and meaningful label coverage, and routes those cases to review-required support. A label-only risk guard abstains when label-only support is diffuse, cross-section, or low-quote-coverage.",
       "total_tasks": 600,
       "aggregate_supported_tasks": {
         "exact_full_note": 0,
@@ -116,7 +116,57 @@
           "best_support_rate": 0.6
         }
       ],
-      "interpretation": "Expanded targeted decomposition still favors query-aware multi-span retrieval over full-note normalization and one-span baselines. The sample is now 600 failed exact-provenance items from the lowest-performing held-out records. Query-aware support reaches 395/600, with 238 auto-accepted supports, 157 review-required supports, 205 abstentions, and 0 high-risk supported items. Strict low-overlap review rescue adds only 3 supported items in this expanded run, all review-required. The broader hard slice is still not solved: 190 weak-overlap items and 15 assertion-conflict items still abstain, and the result is parsing-policy failure analysis rather than semantic factuality or proof that note length causally drives errors."
+      "full_failed_exact_pool_validation": {
+        "task_selection": "All failed exact-provenance evidence items selected by the runner across the same three held-out cells. This pool includes easier exact-match failures than the 600-item hard slice and is reported as a scaling check, not as a population estimate.",
+        "total_tasks": 13038,
+        "source_records_observed_within_cells": 879,
+        "aggregate_supported_tasks": {
+          "exact_full_note": 0,
+          "normalized_full_note": 379,
+          "line_span_id": 7502,
+          "section_filtered_span": 5296,
+          "query_aware_multispan": 11001
+        },
+        "aggregate_support_rates": {
+          "exact_full_note": 0,
+          "normalized_full_note": 0.029069,
+          "line_span_id": 0.575395,
+          "section_filtered_span": 0.406197,
+          "query_aware_multispan": 0.843764
+        },
+        "mean_context_words_on_supported_items": {
+          "normalized_full_note": 1690.3,
+          "line_span_id": 7.8,
+          "section_filtered_span": 8.2,
+          "query_aware_multispan": 16.4
+        },
+        "query_aware_status_counts": {
+          "abstain_query_assertion_conflict": 312,
+          "abstain_query_label_risk": 332,
+          "abstain_query_weak": 1393,
+          "query_greedy_multispan_supported": 4758,
+          "query_label_multispan_supported": 84,
+          "query_label_single_span_supported": 503,
+          "query_low_overlap_review_supported": 3,
+          "query_multispan_supported": 2593,
+          "query_relaxed_greedy_multispan_supported": 102,
+          "query_single_span_supported": 2958
+        },
+        "coherence_audit": {
+          "supported_tasks": 11001,
+          "high_risk_supported_tasks": 0,
+          "medium_risk_supported_tasks": 3172,
+          "low_risk_supported_tasks": 7829,
+          "auto_accepted_supported_tasks": 7829,
+          "review_required_supported_tasks": 3172,
+          "blocked_supported_tasks": 0,
+          "abstained_tasks": 2037,
+          "low_overlap_review_rescue_supported_tasks": 3,
+          "label_only_risk_abstentions": 332
+        },
+        "interpretation": "The full-pool run shows that the stricter label-only risk guard removes high-risk supported items at scale while preserving most query-aware support. It should not be read as an easier headline replacement for the hard-slice stress result."
+      },
+      "interpretation": "Expanded targeted decomposition still favors query-aware multi-span retrieval over full-note normalization and one-span baselines. In the 600-item hard slice from the lowest-performing held-out records, query-aware support reaches 395/600, with 238 auto-accepted supports, 157 review-required supports, 205 abstentions, and 0 high-risk supported items. Strict low-overlap review rescue adds only 3 supported items in this expanded run, all review-required. The full failed-exact pool then scales the same policy to 13,038 items: query-aware support reaches 11,001/13,038, with 7,829 auto-accepted supports, 3,172 review-required supports, 2,037 abstentions, and 0 high-risk supported items after converting 332 diffuse label-only unions to abstentions. The remaining failures show that the result is parsing-policy failure analysis, not semantic factuality, population prevalence, or proof that note length causally drives errors."
     }
   },
   "architecture_development": {

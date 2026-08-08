@@ -29,6 +29,8 @@ That number is not a hallucination rate. A follow-up miss-taxonomy and span-ID r
 
 A targeted decomposition stress test then selected the 200 lowest exact-provenance evidence items from each of three held-out Cohere cells and compared five parsing policies. Across 600 deliberately difficult items, exact full-note matching supported 0/600, normalized full-note matching supported 39/600, simple line-span retrieval supported 113/600, section-filtered retrieval supported 86/600, and assertion-guarded clause-aware query retrieval supported 395/600. A coherence audit then split those 395 supported items into 238 auto-accepted supports and 157 review-required supports; 205/600 items abstained, and 0 high-risk supported items remained. The latest revision adds target-aware assertion-cue scope checks plus a strict low-overlap review rescue. The tradeoff is that the low-overlap rescue adds only 3 supported items in the expanded run, all review-required. Normalized full-note support consumed about 1,662 source words when it succeeded, while line-span and query-aware retrieval used about 9.1 and 21.5 words respectively. This supports a parsing/chunking experiment for dense notes, but it does not prove that length causes failure or that retrieval fixes semantic errors.
 
+The same policy was then run across the full available failed-exact-provenance pool from those three cells. Across 13,038 items, query-aware retrieval supported 11,001 items, with 7,829 auto-accepted, 3,172 review-required, 2,037 abstained, and 0 high-risk supported after a stricter label-only risk guard converted 332 diffuse label-only unions into abstentions. This broader pool includes easier exact-match failures than the 600-item hard slice, so it is useful as a scaling check, not a replacement for the harder stress result.
+
 HandoffLens responds with a candidate-first architecture. Instead of asking the model to freely extract and summarize, the system:
 
 1. deterministically identifies source candidates;
@@ -111,7 +113,7 @@ The Docker image does not copy `.env`, raw clinical data, benchmark corpora, gen
 | Attribution repair diagnostic | Public benchmark-shaped result | Pre-specified `compact_extractive` retains most ROUGE-L while reducing unsupported-sentence case rate; high lexical support is by construction, not semantic factuality proof |
 | BioScope assertion evaluation | Adjacent-domain component result | Sentence-level cue classification on biomedical literature, not clinical notes or BioScope scope-boundary resolution |
 | Structured-output baseline | Completed | High schema validity, poor exact-source provenance |
-| Decomposition stress diagnostic | Completed on worst exact-provenance items | Targeted line/query-aware spans recover more support than full-note normalization at far lower context cost; most selected hard items still abstain |
+| Decomposition stress diagnostic | Completed on hard slice and full failed-exact pool | Targeted line/query-aware spans recover more support than full-note normalization at far lower context cost; hard-slice failures still abstain, and full-pool scaling requires label-risk abstention |
 | Candidate-first v4 | Strongest current architecture | 19/20 deterministic-gate pass on fresh rerun; one abstention |
 | Extractive rematerialization | Added after audit | Removed unsupported numeric details from model-written summaries |
 | Stability testing | Completed on development subset | Passed gates; ambiguous candidate selection is not perfectly repeatable |

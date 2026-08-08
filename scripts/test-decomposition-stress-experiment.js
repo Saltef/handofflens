@@ -3,6 +3,7 @@
 const assert = require("node:assert/strict");
 const {
   runDecompositionStressExperiment,
+  isHighRiskLabelOnlyUnion,
   isStrictLowOverlapRescue,
   METHOD_DEFINITIONS,
 } = require("./run-decomposition-stress-experiment");
@@ -148,5 +149,18 @@ assert.equal(isStrictLowOverlapRescue(
   [{ text: "Follow-up with Dr. Cardio in two weeks." }],
   { quote_coverage: 1, label_coverage: 0.75 },
 ), false);
+assert.equal(isHighRiskLabelOnlyUnion(
+  [
+    { section: "follow_up_safety", ordinal: 10 },
+    { section: "medications", ordinal: 80 },
+  ],
+  { quote_coverage: 0.2, label_coverage: 0.9 },
+  "query_label_multispan_supported",
+), true);
+assert.equal(isHighRiskLabelOnlyUnion(
+  [{ section: "follow_up_safety", ordinal: 10 }],
+  { quote_coverage: 0.2, label_coverage: 0.9 },
+  "query_label_single_span_supported",
+), false);
 
-console.log("PASS decomposition stress experiment (34 assertions)");
+console.log("PASS decomposition stress experiment (36 assertions)");
