@@ -19,6 +19,14 @@ const FIELDS = ["medication", "diagnosis", "procedure_or_test", "lab", "follow_u
 const CAPTURE_LOGPROBS = envFlag("EVAL_CAPTURE_LOGPROBS");
 const STORE_RAW_LOGPROBS = envFlag("EVAL_STORE_RAW_LOGPROBS");
 const TOP_LOGPROBS = boundedInteger(process.env.EVAL_TOP_LOGPROBS, 5, 0, 20);
+const PREFIX_GATE_BUDGETS = [5, 10, 20, 30];
+const ITEM_COUNT_BUCKETS = [
+  { label: "1-10", min: 1, max: 10 },
+  { label: "11-20", min: 11, max: 20 },
+  { label: "21-30", min: 21, max: 30 },
+  { label: "31-40", min: 31, max: 40 },
+  { label: "41+", min: 41, max: Infinity },
+];
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
@@ -520,6 +528,7 @@ function summarizeScoredItems(scoredItems, arm) {
 }
 
 function buildReport({ casesPath, cases, models, arms, repeats, results }) {
+  const summary = summarizeAblation(results);
   return {
     generated_at: new Date().toISOString(),
     experiment_id: "span-id-v5-cross-provider-ablation",
@@ -544,7 +553,8 @@ function buildReport({ casesPath, cases, models, arms, repeats, results }) {
       field_level_logprobs: "exploratory_only; marked unavailable unless provider returns token offsets that can be mapped to evidence_span_ids",
     },
     claims_boundary: "Automated auditability evidence only; span-ID validity is by construction and does not prove semantic entailment, clinical correctness, safety, or completeness.",
-    summary: summarizeAblation(results),
+    summary,
+    volume_normalized_comparisons: summarizeVolumeNormalizedComparisons(results),
     results,
   };
 }
@@ -583,6 +593,8 @@ function summarizeAblation(results) {
       selector_support_rate: arm.endsWith("_minimal") ? rateSummary(selectorSupportedItems, itemCount) : null,
       mean_items_per_successful_run: round(mean(successes.map((record) => record.scoring.item_count))),
       mean_selected_context_words: round(mean(successes.map((record) => record.scoring.mean_selected_context_words).filter(Number.isFinite))),
+      fixed_prefix_gates: summarizeFixedPrefixGates(successes),
+      item_count_bucket_gates: summarizeItemCountBuckets(successes),
       support_status_counts: countBy(successes.flatMap((record) => Object.entries(record.scoring.support_status_counts).flatMap(([name, count]) => Array(count).fill(name)))),
       validation_error_counts: countBy(successes.flatMap((record) => Object.entries(record.scoring.validation_error_counts).flatMap(([name, count]) => Array(count).fill(name)))),
       span_resolution_error_counts: countBy(successes.flatMap((record) => Object.entries(record.scoring.span_resolution_error_counts || {}).flatMap(([name, count]) => Array(count).fill(name)))),
@@ -591,6 +603,107 @@ function summarizeAblation(results) {
       error_counts: countBy(records.filter((record) => record.error).map((record) => record.error_category || "error")),
     }];
   }).sort(([left], [right]) => left.localeCompare(right)));
+}
+
+function summarizeFixedPrefixGates(records) {
+  return Object.fromEntries(PREFIX_GATE_BUDGETS.map((budget) => {
+    const eligible = records.filter((record) => (record.scoring.scored_items || []).length >= budget);
+    const supportedPrefixItems = sum(eligible.map((record) => prefixSupportedCount(record, budget)));
+    const prefixCasePasses = eligible.filter((record) => prefixSupportedCount(record, budget) === budget).length;
+    return [`first_${budget}_items`, {
+      item_budget: budget,
+      eligible_runs: eligible.length,
+      prefix_item_support_rate: rateSummary(supportedPrefixItems, eligible.length * budget),
+      prefix_case_gate_rate: rateSummary(prefixCasePasses, eligible.length),
+    }];
+  }));
+}
+
+function summarizeItemCountBuckets(records) {
+  return Object.fromEntries(ITEM_COUNT_BUCKETS.map((bucket) => {
+    const members = records.filter((record) => {
+      const count = record.scoring.item_count;
+      return count >= bucket.min && count <= bucket.max;
+    });
+    const itemCount = sum(members.map((record) => record.scoring.item_count));
+    const supportedItems = sum(members.map((record) => record.scoring.item_support_rate.numerator));
+    const casePasses = members.filter((record) => record.scoring.case_gate_passed).length;
+    return [bucket.label, {
+      runs: members.length,
+      item_count: itemCount,
+      mean_items_per_run: round(mean(members.map((record) => record.scoring.item_count))),
+      item_support_rate: rateSummary(supportedItems, itemCount),
+      case_gate_rate: rateSummary(casePasses, members.length),
+    }];
+  }));
+}
+
+function summarizeVolumeNormalizedComparisons(results) {
+  const comparisons = [
+    { referenceArm: "quote_v2", comparisonArm: "span_id_v5" },
+    { referenceArm: "quote_v2_minimal", comparisonArm: "span_id_v5_minimal" },
+  ];
+  const models = [...new Set(results.map((record) => record.model))].sort();
+  const output = {};
+  for (const model of models) {
+    for (const comparison of comparisons) {
+      const reference = successfulRecordsByRunKey(results, model, comparison.referenceArm);
+      const candidate = successfulRecordsByRunKey(results, model, comparison.comparisonArm);
+      const paired = [];
+      for (const [runKey, referenceRecord] of reference) {
+        const comparisonRecord = candidate.get(runKey);
+        if (comparisonRecord) paired.push({ referenceRecord, comparisonRecord });
+      }
+      const matched = paired
+        .map(({ referenceRecord, comparisonRecord }) => {
+          const matchedCount = Math.min(referenceRecord.scoring.item_count, comparisonRecord.scoring.item_count);
+          return { referenceRecord, comparisonRecord, matchedCount };
+        })
+        .filter((item) => item.matchedCount > 0);
+      const matchedItemCount = sum(matched.map((item) => item.matchedCount));
+      const referenceSupported = sum(matched.map((item) => prefixSupportedCount(item.referenceRecord, item.matchedCount)));
+      const comparisonSupported = sum(matched.map((item) => prefixSupportedCount(item.comparisonRecord, item.matchedCount)));
+      const referenceCasePasses = matched.filter((item) => prefixSupportedCount(item.referenceRecord, item.matchedCount) === item.matchedCount).length;
+      const comparisonCasePasses = matched.filter((item) => prefixSupportedCount(item.comparisonRecord, item.matchedCount) === item.matchedCount).length;
+      const comparisonPrefixPassRawFail = matched.filter((item) => (
+        prefixSupportedCount(item.comparisonRecord, item.matchedCount) === item.matchedCount
+        && !item.comparisonRecord.scoring.case_gate_passed
+      )).length;
+      output[`${model}||${comparison.comparisonArm}_vs_${comparison.referenceArm}`] = {
+        model,
+        reference_arm: comparison.referenceArm,
+        comparison_arm: comparison.comparisonArm,
+        paired_runs: matched.length,
+        matched_item_count: matchedItemCount,
+        mean_reference_items_per_run: round(mean(matched.map((item) => item.referenceRecord.scoring.item_count))),
+        mean_comparison_items_per_run: round(mean(matched.map((item) => item.comparisonRecord.scoring.item_count))),
+        mean_matched_items_per_run: round(mean(matched.map((item) => item.matchedCount))),
+        reference_item_support_at_matched_count: rateSummary(referenceSupported, matchedItemCount),
+        comparison_item_support_at_matched_count: rateSummary(comparisonSupported, matchedItemCount),
+        reference_case_gate_at_matched_count: rateSummary(referenceCasePasses, matched.length),
+        comparison_case_gate_at_matched_count: rateSummary(comparisonCasePasses, matched.length),
+        reference_raw_case_gate_rate: rateSummary(matched.filter((item) => item.referenceRecord.scoring.case_gate_passed).length, matched.length),
+        comparison_raw_case_gate_rate: rateSummary(matched.filter((item) => item.comparisonRecord.scoring.case_gate_passed).length, matched.length),
+        comparison_prefix_pass_raw_fail_count: comparisonPrefixPassRawFail,
+        interpretation: "Matched-count gates compare only the first min(reference item count, comparison item count) items within the same model/case/repeat. This controls the conjunctive case-gate volume confound but does not prove the two arms extracted identical clinical targets.",
+      };
+    }
+  }
+  return output;
+}
+
+function successfulRecordsByRunKey(results, model, arm) {
+  return new Map(results
+    .filter((record) => record.success && record.model === model && record.arm === arm)
+    .map((record) => [runKey(record), record]));
+}
+
+function runKey(record) {
+  return `${record.case_id}||${record.repeat}`;
+}
+
+function prefixSupportedCount(record, budget) {
+  return (record.scoring.scored_items || []).slice(0, budget).filter((item) => item.supported).length;
 }
 
 function summarizeRepeats(records) {
@@ -647,6 +760,7 @@ function updatePublicSummary(publicSummaryPath, report) {
     telemetry_policy: report.telemetry_policy,
     claims_boundary: report.claims_boundary,
     aggregate_results: summarizeForPublic(report.summary),
+    volume_normalized_comparisons: report.volume_normalized_comparisons,
     interpretation: "The v5 span-ID arm tests whether provenance can be made a constrained selection over a pre-enumerated source index. Resolvable span-ID validity is expected by construction when provider-side enums are honored and should not be read as semantic factuality. Full v5 contract validity is stricter because hosted providers did not enforce the max-3 span cap or optional token offsets; those violations remain local validation failures.",
   };
   fs.writeFileSync(publicSummaryPath, `${JSON.stringify(publicSummary, null, 2)}\n`);
@@ -669,6 +783,8 @@ function summarizeForPublic(summary) {
     selector_support_rate: value.selector_support_rate,
     mean_items_per_successful_run: value.mean_items_per_successful_run,
     mean_selected_context_words: value.mean_selected_context_words,
+    fixed_prefix_gates: value.fixed_prefix_gates,
+    item_count_bucket_gates: value.item_count_bucket_gates,
     repeat_spread: value.repeat_spread,
     span_resolution_error_counts: value.span_resolution_error_counts,
     span_count_error_counts: value.span_count_error_counts,
@@ -702,6 +818,28 @@ function renderMarkdownReport(report) {
       value.span_validity_rate ? formatRate(value.span_validity_rate) : "N/A",
       value.v5_contract_validity_rate ? formatRate(value.v5_contract_validity_rate) : "N/A",
       value.selector_support_rate ? formatRate(value.selector_support_rate) : "N/A",
+    ].join(" | ").replace(/^/, "| ").replace(/$/, " |"));
+  }
+  lines.push("");
+  lines.push("## Matched-volume confound check");
+  lines.push("");
+  lines.push("Matched-count gates compare only the first `min(reference item count, comparison item count)` items within the same model/case/repeat. They control the conjunctive case-gate volume confound but do not prove the two arms extracted identical clinical targets.");
+  lines.push("");
+  lines.push("| Model | Comparison | Paired runs | Matched items | Reference items/run | Comparison items/run | Reference item support @ matched count | Comparison item support @ matched count | Reference case gate @ matched count | Comparison case gate @ matched count | Comparison prefix pass, raw fail |");
+  lines.push("| --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- | --- | ---: |");
+  for (const value of Object.values(report.volume_normalized_comparisons || {})) {
+    lines.push([
+      value.model,
+      `${value.reference_arm} vs ${value.comparison_arm}`,
+      value.paired_runs,
+      value.matched_item_count,
+      value.mean_reference_items_per_run,
+      value.mean_comparison_items_per_run,
+      formatRate(value.reference_item_support_at_matched_count),
+      formatRate(value.comparison_item_support_at_matched_count),
+      formatRate(value.reference_case_gate_at_matched_count),
+      formatRate(value.comparison_case_gate_at_matched_count),
+      value.comparison_prefix_pass_raw_fail_count,
     ].join(" | ").replace(/^/, "| ").replace(/$/, " |"));
   }
   lines.push("");
@@ -1059,5 +1197,6 @@ module.exports = {
   toCohereCompatibleSchema,
   scoreAblationRecord,
   summarizeAblation,
+  summarizeVolumeNormalizedComparisons,
   updatePublicSummary,
 };

@@ -82,7 +82,7 @@ Recall-loss categories: assertion conflict 3, budget-normalized label risk 3, ol
 
 Timestamp: 2026-08-08. Unit: provider run and extracted evidence item. The 20 private hard cases were run across Cohere Command A+ and Anthropic Claude Haiku 4.5, with three repeats per model/arm cell. Raw case-level model outputs, source text, and raw provider telemetry remain private and uncommitted.
 
-| Model and arm | Successful runs | Items | Item support | Case gate | Span IDs resolve | Full v5 contract | Interpretation |
+| Model and arm | Successful runs | Items | Item support | Raw case gate | Span IDs resolve | Full v5 contract | Interpretation |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | Haiku quote-v2 | 60/60 | 1,825 | 1,709/1,825, 93.6% [92.4, 94.7] | 20/60, 33.3% [22.7, 45.9] | N/A | N/A | Strong generated-quote baseline on this slice |
 | Haiku quote-v2 + minimal selector | 60/60 | 1,825 | 1,719/1,825, 94.2% [93.0, 95.2] | 17/60, 28.3% [18.5, 40.8] | N/A | N/A | Slight item gain, worse complete-case gate |
@@ -93,7 +93,16 @@ Timestamp: 2026-08-08. Unit: provider run and extracted evidence item. The 20 pr
 | Cohere span-ID-v5 | 59/60 | 1,276 | 1,127/1,276, 88.3% [86.4, 90.0] | 18/59, 30.5% [20.3, 43.2] | 1,276/1,276, 100.0% [99.7, 100.0] | 1,102/1,276, 86.4% [84.4, 88.1] | Span IDs improve pointer integrity and support versus quote-v2 |
 | Cohere span-ID-v5 + minimal selector | 59/60 | 1,276 | 1,185/1,276, 92.9% [91.3, 94.2] | 21/59, 35.6% [24.6, 48.3] | 1,276/1,276, 100.0% [99.7, 100.0] | 1,102/1,276, 86.4% [84.4, 88.1] | Better than raw span-ID support, but below quote-v2 minimal on this slice |
 
-Decision: span IDs are useful as a provenance-addressing interface because unresolved pointers disappear when provider-side enums are honored. They do not solve semantic support. The full v5 contract is the honest metric because hosted structured-output compatibility required removing some local schema constraints, including the max-3 evidence-span cap; Haiku's 703 too-many-span-ID violations are a design failure, not a harmless formatting issue. The next engineering step is a cap-violation retry or repair loop plus learned reranking or entailment checks, not another claim that pointer validity equals factuality.
+Raw case gates are not a like-for-like arm comparison because item counts differ by arm. A paired matched-count check compares only the first `min(reference item count, comparison item count)` items within the same model, case, and repeat:
+
+| Pair | Paired runs | Matched items | Reference item support | Comparison item support | Reference case gate | Comparison case gate | Comparison prefix pass, raw fail |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Haiku quote-v2 vs span-ID-v5 | 60 | 1,747 | 1,634/1,747, 93.5% [92.3, 94.6] | 1,145/1,747, 65.5% [63.3, 67.7] | 20/60, 33.3% [22.7, 45.9] | 3/60, 5.0% [1.7, 13.7] | 1 |
+| Haiku quote-v2 minimal vs span-ID-v5 minimal | 60 | 1,747 | 1,650/1,747, 94.4% [93.3, 95.4] | 1,564/1,747, 89.5% [88.0, 90.9] | 17/60, 28.3% [18.5, 40.8] | 12/60, 20.0% [11.8, 31.8] | 3 |
+| Cohere quote-v2 vs span-ID-v5 | 59 | 996 | 658/996, 66.1% [63.1, 68.9] | 872/996, 87.6% [85.4, 89.5] | 6/59, 10.2% [4.7, 20.5] | 24/59, 40.7% [29.1, 53.4] | 6 |
+| Cohere quote-v2 minimal vs span-ID-v5 minimal | 59 | 996 | 954/996, 95.8% [94.4, 96.9] | 929/996, 93.3% [91.5, 94.7] | 30/59, 50.8% [38.4, 63.2] | 26/59, 44.1% [32.2, 56.7] | 5 |
+
+Decision: span IDs are useful as a provenance-addressing interface because unresolved pointers disappear when provider-side enums are honored. They do not solve semantic support. The raw case-gate column should be read as operational burden under the emitted item volume, not as a fair arm ranking. The matched-count check shows that Cohere's raw span-ID improvement is not merely a volume artifact, and Haiku's raw span-ID degradation is not merely a volume artifact either. The full v5 contract is the honest metric because hosted structured-output compatibility required removing some local schema constraints, including the max-3 evidence-span cap; Haiku's 703 too-many-span-ID violations are a design failure, not a harmless formatting issue. The next engineering step is a cap-violation retry or repair loop plus learned reranking or entailment checks, not another claim that pointer validity equals factuality.
 
 ## Phase 5 Length Versus Density Result
 

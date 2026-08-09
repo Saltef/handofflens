@@ -670,6 +670,207 @@
         "selector_support_rate": null,
         "mean_items_per_successful_run": 30.417,
         "mean_selected_context_words": null,
+        "fixed_prefix_gates": {
+          "first_5_items": {
+            "item_budget": 5,
+            "eligible_runs": 60,
+            "prefix_item_support_rate": {
+              "numerator": 276,
+              "denominator": 300,
+              "rate": 0.92,
+              "wilson_95": [
+                0.8837,
+                0.9457
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 41,
+              "denominator": 60,
+              "rate": 0.683333,
+              "wilson_95": [
+                0.5577,
+                0.7869
+              ]
+            }
+          },
+          "first_10_items": {
+            "item_budget": 10,
+            "eligible_runs": 60,
+            "prefix_item_support_rate": {
+              "numerator": 567,
+              "denominator": 600,
+              "rate": 0.945,
+              "wilson_95": [
+                0.9238,
+                0.9606
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 33,
+              "denominator": 60,
+              "rate": 0.55,
+              "wilson_95": [
+                0.4249,
+                0.6691
+              ]
+            }
+          },
+          "first_20_items": {
+            "item_budget": 20,
+            "eligible_runs": 50,
+            "prefix_item_support_rate": {
+              "numerator": 942,
+              "denominator": 1000,
+              "rate": 0.942,
+              "wilson_95": [
+                0.9258,
+                0.9549
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 19,
+              "denominator": 50,
+              "rate": 0.38,
+              "wilson_95": [
+                0.2586,
+                0.5185
+              ]
+            }
+          },
+          "first_30_items": {
+            "item_budget": 30,
+            "eligible_runs": 31,
+            "prefix_item_support_rate": {
+              "numerator": 873,
+              "denominator": 930,
+              "rate": 0.93871,
+              "wilson_95": [
+                0.9214,
+                0.9524
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 11,
+              "denominator": 31,
+              "rate": 0.354839,
+              "wilson_95": [
+                0.2112,
+                0.5305
+              ]
+            }
+          }
+        },
+        "item_count_bucket_gates": {
+          "1-10": {
+            "runs": 0,
+            "item_count": 0,
+            "mean_items_per_run": null,
+            "item_support_rate": {
+              "numerator": 0,
+              "denominator": 0,
+              "rate": null,
+              "wilson_95": null
+            },
+            "case_gate_rate": {
+              "numerator": 0,
+              "denominator": 0,
+              "rate": null,
+              "wilson_95": null
+            }
+          },
+          "11-20": {
+            "runs": 10,
+            "item_count": 141,
+            "mean_items_per_run": 14.1,
+            "item_support_rate": {
+              "numerator": 132,
+              "denominator": 141,
+              "rate": 0.93617,
+              "wilson_95": [
+                0.8831,
+                0.9661
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 5,
+              "denominator": 10,
+              "rate": 0.5,
+              "wilson_95": [
+                0.2366,
+                0.7634
+              ]
+            }
+          },
+          "21-30": {
+            "runs": 21,
+            "item_count": 520,
+            "mean_items_per_run": 24.762,
+            "item_support_rate": {
+              "numerator": 494,
+              "denominator": 520,
+              "rate": 0.95,
+              "wilson_95": [
+                0.9277,
+                0.9657
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 8,
+              "denominator": 21,
+              "rate": 0.380952,
+              "wilson_95": [
+                0.2075,
+                0.5912
+              ]
+            }
+          },
+          "31-40": {
+            "runs": 16,
+            "item_count": 572,
+            "mean_items_per_run": 35.75,
+            "item_support_rate": {
+              "numerator": 524,
+              "denominator": 572,
+              "rate": 0.916084,
+              "wilson_95": [
+                0.8905,
+                0.9361
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 3,
+              "denominator": 16,
+              "rate": 0.1875,
+              "wilson_95": [
+                0.0659,
+                0.4301
+              ]
+            }
+          },
+          "41+": {
+            "runs": 13,
+            "item_count": 592,
+            "mean_items_per_run": 45.538,
+            "item_support_rate": {
+              "numerator": 559,
+              "denominator": 592,
+              "rate": 0.944257,
+              "wilson_95": [
+                0.9227,
+                0.96
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 4,
+              "denominator": 13,
+              "rate": 0.307692,
+              "wilson_95": [
+                0.1268,
+                0.5763
+              ]
+            }
+          }
+        },
         "repeat_spread": {
           "1": {
             "successful_runs": 20,
@@ -798,6 +999,207 @@
         },
         "mean_items_per_successful_run": 30.417,
         "mean_selected_context_words": 11.139,
+        "fixed_prefix_gates": {
+          "first_5_items": {
+            "item_budget": 5,
+            "eligible_runs": 60,
+            "prefix_item_support_rate": {
+              "numerator": 293,
+              "denominator": 300,
+              "rate": 0.976667,
+              "wilson_95": [
+                0.9526,
+                0.9887
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 53,
+              "denominator": 60,
+              "rate": 0.883333,
+              "wilson_95": [
+                0.7782,
+                0.9423
+              ]
+            }
+          },
+          "first_10_items": {
+            "item_budget": 10,
+            "eligible_runs": 60,
+            "prefix_item_support_rate": {
+              "numerator": 585,
+              "denominator": 600,
+              "rate": 0.975,
+              "wilson_95": [
+                0.9592,
+                0.9848
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 51,
+              "denominator": 60,
+              "rate": 0.85,
+              "wilson_95": [
+                0.7389,
+                0.919
+              ]
+            }
+          },
+          "first_20_items": {
+            "item_budget": 20,
+            "eligible_runs": 50,
+            "prefix_item_support_rate": {
+              "numerator": 952,
+              "denominator": 1000,
+              "rate": 0.952,
+              "wilson_95": [
+                0.9369,
+                0.9636
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 26,
+              "denominator": 50,
+              "rate": 0.52,
+              "wilson_95": [
+                0.3851,
+                0.652
+              ]
+            }
+          },
+          "first_30_items": {
+            "item_budget": 30,
+            "eligible_runs": 31,
+            "prefix_item_support_rate": {
+              "numerator": 894,
+              "denominator": 930,
+              "rate": 0.96129,
+              "wilson_95": [
+                0.9469,
+                0.9719
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 10,
+              "denominator": 31,
+              "rate": 0.322581,
+              "wilson_95": [
+                0.1857,
+                0.4986
+              ]
+            }
+          }
+        },
+        "item_count_bucket_gates": {
+          "1-10": {
+            "runs": 0,
+            "item_count": 0,
+            "mean_items_per_run": null,
+            "item_support_rate": {
+              "numerator": 0,
+              "denominator": 0,
+              "rate": null,
+              "wilson_95": null
+            },
+            "case_gate_rate": {
+              "numerator": 0,
+              "denominator": 0,
+              "rate": null,
+              "wilson_95": null
+            }
+          },
+          "11-20": {
+            "runs": 10,
+            "item_count": 141,
+            "mean_items_per_run": 14.1,
+            "item_support_rate": {
+              "numerator": 136,
+              "denominator": 141,
+              "rate": 0.964539,
+              "wilson_95": [
+                0.9197,
+                0.9848
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 7,
+              "denominator": 10,
+              "rate": 0.7,
+              "wilson_95": [
+                0.3968,
+                0.8922
+              ]
+            }
+          },
+          "21-30": {
+            "runs": 21,
+            "item_count": 520,
+            "mean_items_per_run": 24.762,
+            "item_support_rate": {
+              "numerator": 480,
+              "denominator": 520,
+              "rate": 0.923077,
+              "wilson_95": [
+                0.8969,
+                0.943
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 7,
+              "denominator": 21,
+              "rate": 0.333333,
+              "wilson_95": [
+                0.1719,
+                0.5463
+              ]
+            }
+          },
+          "31-40": {
+            "runs": 16,
+            "item_count": 572,
+            "mean_items_per_run": 35.75,
+            "item_support_rate": {
+              "numerator": 539,
+              "denominator": 572,
+              "rate": 0.942308,
+              "wilson_95": [
+                0.9201,
+                0.9586
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 2,
+              "denominator": 16,
+              "rate": 0.125,
+              "wilson_95": [
+                0.035,
+                0.3602
+              ]
+            }
+          },
+          "41+": {
+            "runs": 13,
+            "item_count": 592,
+            "mean_items_per_run": 45.538,
+            "item_support_rate": {
+              "numerator": 564,
+              "denominator": 592,
+              "rate": 0.952703,
+              "wilson_95": [
+                0.9325,
+                0.9671
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 1,
+              "denominator": 13,
+              "rate": 0.076923,
+              "wilson_95": [
+                0.0137,
+                0.3331
+              ]
+            }
+          }
+        },
         "repeat_spread": {
           "1": {
             "successful_runs": 20,
@@ -934,6 +1336,207 @@
         "selector_support_rate": null,
         "mean_items_per_successful_run": 36.133,
         "mean_selected_context_words": 22.74,
+        "fixed_prefix_gates": {
+          "first_5_items": {
+            "item_budget": 5,
+            "eligible_runs": 60,
+            "prefix_item_support_rate": {
+              "numerator": 146,
+              "denominator": 300,
+              "rate": 0.486667,
+              "wilson_95": [
+                0.4306,
+                0.543
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 8,
+              "denominator": 60,
+              "rate": 0.133333,
+              "wilson_95": [
+                0.0691,
+                0.2417
+              ]
+            }
+          },
+          "first_10_items": {
+            "item_budget": 10,
+            "eligible_runs": 60,
+            "prefix_item_support_rate": {
+              "numerator": 335,
+              "denominator": 600,
+              "rate": 0.558333,
+              "wilson_95": [
+                0.5184,
+                0.5976
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 7,
+              "denominator": 60,
+              "rate": 0.116667,
+              "wilson_95": [
+                0.0577,
+                0.2218
+              ]
+            }
+          },
+          "first_20_items": {
+            "item_budget": 20,
+            "eligible_runs": 55,
+            "prefix_item_support_rate": {
+              "numerator": 671,
+              "denominator": 1100,
+              "rate": 0.61,
+              "wilson_95": [
+                0.5808,
+                0.6384
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 3,
+              "denominator": 55,
+              "rate": 0.054545,
+              "wilson_95": [
+                0.0187,
+                0.1485
+              ]
+            }
+          },
+          "first_30_items": {
+            "item_budget": 30,
+            "eligible_runs": 43,
+            "prefix_item_support_rate": {
+              "numerator": 840,
+              "denominator": 1290,
+              "rate": 0.651163,
+              "wilson_95": [
+                0.6247,
+                0.6767
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 2,
+              "denominator": 43,
+              "rate": 0.046512,
+              "wilson_95": [
+                0.0128,
+                0.1546
+              ]
+            }
+          }
+        },
+        "item_count_bucket_gates": {
+          "1-10": {
+            "runs": 0,
+            "item_count": 0,
+            "mean_items_per_run": null,
+            "item_support_rate": {
+              "numerator": 0,
+              "denominator": 0,
+              "rate": null,
+              "wilson_95": null
+            },
+            "case_gate_rate": {
+              "numerator": 0,
+              "denominator": 0,
+              "rate": null,
+              "wilson_95": null
+            }
+          },
+          "11-20": {
+            "runs": 6,
+            "item_count": 90,
+            "mean_items_per_run": 15,
+            "item_support_rate": {
+              "numerator": 69,
+              "denominator": 90,
+              "rate": 0.766667,
+              "wilson_95": [
+                0.6695,
+                0.842
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 0,
+              "denominator": 6,
+              "rate": 0,
+              "wilson_95": [
+                0,
+                0.3903
+              ]
+            }
+          },
+          "21-30": {
+            "runs": 12,
+            "item_count": 303,
+            "mean_items_per_run": 25.25,
+            "item_support_rate": {
+              "numerator": 195,
+              "denominator": 303,
+              "rate": 0.643564,
+              "wilson_95": [
+                0.5881,
+                0.6954
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 1,
+              "denominator": 12,
+              "rate": 0.083333,
+              "wilson_95": [
+                0.0149,
+                0.3539
+              ]
+            }
+          },
+          "31-40": {
+            "runs": 19,
+            "item_count": 645,
+            "mean_items_per_run": 33.947,
+            "item_support_rate": {
+              "numerator": 420,
+              "denominator": 645,
+              "rate": 0.651163,
+              "wilson_95": [
+                0.6136,
+                0.687
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 1,
+              "denominator": 19,
+              "rate": 0.052632,
+              "wilson_95": [
+                0.0094,
+                0.2464
+              ]
+            }
+          },
+          "41+": {
+            "runs": 23,
+            "item_count": 1130,
+            "mean_items_per_run": 49.13,
+            "item_support_rate": {
+              "numerator": 769,
+              "denominator": 1130,
+              "rate": 0.680531,
+              "wilson_95": [
+                0.6528,
+                0.7071
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 0,
+              "denominator": 23,
+              "rate": 0,
+              "wilson_95": [
+                0,
+                0.1431
+              ]
+            }
+          }
+        },
         "repeat_spread": {
           "1": {
             "successful_runs": 20,
@@ -1080,6 +1683,207 @@
         },
         "mean_items_per_successful_run": 36.133,
         "mean_selected_context_words": 13.609,
+        "fixed_prefix_gates": {
+          "first_5_items": {
+            "item_budget": 5,
+            "eligible_runs": 60,
+            "prefix_item_support_rate": {
+              "numerator": 265,
+              "denominator": 300,
+              "rate": 0.883333,
+              "wilson_95": [
+                0.8421,
+                0.9149
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 38,
+              "denominator": 60,
+              "rate": 0.633333,
+              "wilson_95": [
+                0.5068,
+                0.7438
+              ]
+            }
+          },
+          "first_10_items": {
+            "item_budget": 10,
+            "eligible_runs": 60,
+            "prefix_item_support_rate": {
+              "numerator": 531,
+              "denominator": 600,
+              "rate": 0.885,
+              "wilson_95": [
+                0.857,
+                0.9081
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 27,
+              "denominator": 60,
+              "rate": 0.45,
+              "wilson_95": [
+                0.3309,
+                0.5751
+              ]
+            }
+          },
+          "first_20_items": {
+            "item_budget": 20,
+            "eligible_runs": 55,
+            "prefix_item_support_rate": {
+              "numerator": 987,
+              "denominator": 1100,
+              "rate": 0.897273,
+              "wilson_95": [
+                0.8779,
+                0.9139
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 15,
+              "denominator": 55,
+              "rate": 0.272727,
+              "wilson_95": [
+                0.1728,
+                0.4023
+              ]
+            }
+          },
+          "first_30_items": {
+            "item_budget": 30,
+            "eligible_runs": 43,
+            "prefix_item_support_rate": {
+              "numerator": 1160,
+              "denominator": 1290,
+              "rate": 0.899225,
+              "wilson_95": [
+                0.8816,
+                0.9145
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 9,
+              "denominator": 43,
+              "rate": 0.209302,
+              "wilson_95": [
+                0.1142,
+                0.3521
+              ]
+            }
+          }
+        },
+        "item_count_bucket_gates": {
+          "1-10": {
+            "runs": 0,
+            "item_count": 0,
+            "mean_items_per_run": null,
+            "item_support_rate": {
+              "numerator": 0,
+              "denominator": 0,
+              "rate": null,
+              "wilson_95": null
+            },
+            "case_gate_rate": {
+              "numerator": 0,
+              "denominator": 0,
+              "rate": null,
+              "wilson_95": null
+            }
+          },
+          "11-20": {
+            "runs": 6,
+            "item_count": 90,
+            "mean_items_per_run": 15,
+            "item_support_rate": {
+              "numerator": 84,
+              "denominator": 90,
+              "rate": 0.933333,
+              "wilson_95": [
+                0.8621,
+                0.9691
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 3,
+              "denominator": 6,
+              "rate": 0.5,
+              "wilson_95": [
+                0.1876,
+                0.8124
+              ]
+            }
+          },
+          "21-30": {
+            "runs": 12,
+            "item_count": 303,
+            "mean_items_per_run": 25.25,
+            "item_support_rate": {
+              "numerator": 277,
+              "denominator": 303,
+              "rate": 0.914191,
+              "wilson_95": [
+                0.8772,
+                0.9408
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 1,
+              "denominator": 12,
+              "rate": 0.083333,
+              "wilson_95": [
+                0.0149,
+                0.3539
+              ]
+            }
+          },
+          "31-40": {
+            "runs": 19,
+            "item_count": 645,
+            "mean_items_per_run": 33.947,
+            "item_support_rate": {
+              "numerator": 558,
+              "denominator": 645,
+              "rate": 0.865116,
+              "wilson_95": [
+                0.8366,
+                0.8893
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 4,
+              "denominator": 19,
+              "rate": 0.210526,
+              "wilson_95": [
+                0.0851,
+                0.4333
+              ]
+            }
+          },
+          "41+": {
+            "runs": 23,
+            "item_count": 1130,
+            "mean_items_per_run": 49.13,
+            "item_support_rate": {
+              "numerator": 1015,
+              "denominator": 1130,
+              "rate": 0.89823,
+              "wilson_95": [
+                0.8792,
+                0.9145
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 1,
+              "denominator": 23,
+              "rate": 0.043478,
+              "wilson_95": [
+                0.0077,
+                0.2099
+              ]
+            }
+          }
+        },
         "repeat_spread": {
           "1": {
             "successful_runs": 20,
@@ -1202,6 +2006,213 @@
         "selector_support_rate": null,
         "mean_items_per_successful_run": 19.867,
         "mean_selected_context_words": null,
+        "fixed_prefix_gates": {
+          "first_5_items": {
+            "item_budget": 5,
+            "eligible_runs": 60,
+            "prefix_item_support_rate": {
+              "numerator": 213,
+              "denominator": 300,
+              "rate": 0.71,
+              "wilson_95": [
+                0.6563,
+                0.7584
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 29,
+              "denominator": 60,
+              "rate": 0.483333,
+              "wilson_95": [
+                0.3617,
+                0.6069
+              ]
+            }
+          },
+          "first_10_items": {
+            "item_budget": 10,
+            "eligible_runs": 57,
+            "prefix_item_support_rate": {
+              "numerator": 402,
+              "denominator": 570,
+              "rate": 0.705263,
+              "wilson_95": [
+                0.6666,
+                0.7412
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 14,
+              "denominator": 57,
+              "rate": 0.245614,
+              "wilson_95": [
+                0.1523,
+                0.371
+              ]
+            }
+          },
+          "first_20_items": {
+            "item_budget": 20,
+            "eligible_runs": 26,
+            "prefix_item_support_rate": {
+              "numerator": 321,
+              "denominator": 520,
+              "rate": 0.617308,
+              "wilson_95": [
+                0.5748,
+                0.6581
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 1,
+              "denominator": 26,
+              "rate": 0.038462,
+              "wilson_95": [
+                0.0068,
+                0.1889
+              ]
+            }
+          },
+          "first_30_items": {
+            "item_budget": 30,
+            "eligible_runs": 6,
+            "prefix_item_support_rate": {
+              "numerator": 106,
+              "denominator": 180,
+              "rate": 0.588889,
+              "wilson_95": [
+                0.5159,
+                0.6582
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 0,
+              "denominator": 6,
+              "rate": 0,
+              "wilson_95": [
+                0,
+                0.3903
+              ]
+            }
+          }
+        },
+        "item_count_bucket_gates": {
+          "1-10": {
+            "runs": 3,
+            "item_count": 23,
+            "mean_items_per_run": 7.667,
+            "item_support_rate": {
+              "numerator": 15,
+              "denominator": 23,
+              "rate": 0.652174,
+              "wilson_95": [
+                0.4489,
+                0.8119
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 2,
+              "denominator": 3,
+              "rate": 0.666667,
+              "wilson_95": [
+                0.2077,
+                0.9385
+              ]
+            }
+          },
+          "11-20": {
+            "runs": 37,
+            "item_count": 576,
+            "mean_items_per_run": 15.568,
+            "item_support_rate": {
+              "numerator": 393,
+              "denominator": 576,
+              "rate": 0.682292,
+              "wilson_95": [
+                0.6432,
+                0.719
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 3,
+              "denominator": 37,
+              "rate": 0.081081,
+              "wilson_95": [
+                0.028,
+                0.213
+              ]
+            }
+          },
+          "21-30": {
+            "runs": 14,
+            "item_count": 351,
+            "mean_items_per_run": 25.071,
+            "item_support_rate": {
+              "numerator": 228,
+              "denominator": 351,
+              "rate": 0.649573,
+              "wilson_95": [
+                0.5983,
+                0.6976
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 0,
+              "denominator": 14,
+              "rate": 0,
+              "wilson_95": [
+                0,
+                0.2153
+              ]
+            }
+          },
+          "31-40": {
+            "runs": 4,
+            "item_count": 142,
+            "mean_items_per_run": 35.5,
+            "item_support_rate": {
+              "numerator": 105,
+              "denominator": 142,
+              "rate": 0.739437,
+              "wilson_95": [
+                0.6616,
+                0.8046
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 0,
+              "denominator": 4,
+              "rate": 0,
+              "wilson_95": [
+                0,
+                0.4899
+              ]
+            }
+          },
+          "41+": {
+            "runs": 2,
+            "item_count": 100,
+            "mean_items_per_run": 50,
+            "item_support_rate": {
+              "numerator": 28,
+              "denominator": 100,
+              "rate": 0.28,
+              "wilson_95": [
+                0.2014,
+                0.3749
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 0,
+              "denominator": 2,
+              "rate": 0,
+              "wilson_95": [
+                0,
+                0.6576
+              ]
+            }
+          }
+        },
         "repeat_spread": {
           "1": {
             "successful_runs": 20,
@@ -1330,6 +2341,213 @@
         },
         "mean_items_per_successful_run": 19.867,
         "mean_selected_context_words": 10.497,
+        "fixed_prefix_gates": {
+          "first_5_items": {
+            "item_budget": 5,
+            "eligible_runs": 60,
+            "prefix_item_support_rate": {
+              "numerator": 296,
+              "denominator": 300,
+              "rate": 0.986667,
+              "wilson_95": [
+                0.9662,
+                0.9948
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 56,
+              "denominator": 60,
+              "rate": 0.933333,
+              "wilson_95": [
+                0.8407,
+                0.9738
+              ]
+            }
+          },
+          "first_10_items": {
+            "item_budget": 10,
+            "eligible_runs": 57,
+            "prefix_item_support_rate": {
+              "numerator": 562,
+              "denominator": 570,
+              "rate": 0.985965,
+              "wilson_95": [
+                0.9726,
+                0.9929
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 50,
+              "denominator": 57,
+              "rate": 0.877193,
+              "wilson_95": [
+                0.7675,
+                0.9392
+              ]
+            }
+          },
+          "first_20_items": {
+            "item_budget": 20,
+            "eligible_runs": 26,
+            "prefix_item_support_rate": {
+              "numerator": 506,
+              "denominator": 520,
+              "rate": 0.973077,
+              "wilson_95": [
+                0.9553,
+                0.9839
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 15,
+              "denominator": 26,
+              "rate": 0.576923,
+              "wilson_95": [
+                0.3895,
+                0.7446
+              ]
+            }
+          },
+          "first_30_items": {
+            "item_budget": 30,
+            "eligible_runs": 6,
+            "prefix_item_support_rate": {
+              "numerator": 174,
+              "denominator": 180,
+              "rate": 0.966667,
+              "wilson_95": [
+                0.9292,
+                0.9846
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 2,
+              "denominator": 6,
+              "rate": 0.333333,
+              "wilson_95": [
+                0.0968,
+                0.7
+              ]
+            }
+          }
+        },
+        "item_count_bucket_gates": {
+          "1-10": {
+            "runs": 3,
+            "item_count": 23,
+            "mean_items_per_run": 7.667,
+            "item_support_rate": {
+              "numerator": 23,
+              "denominator": 23,
+              "rate": 1,
+              "wilson_95": [
+                0.8569,
+                1
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 3,
+              "denominator": 3,
+              "rate": 1,
+              "wilson_95": [
+                0.4385,
+                1
+              ]
+            }
+          },
+          "11-20": {
+            "runs": 37,
+            "item_count": 576,
+            "mean_items_per_run": 15.568,
+            "item_support_rate": {
+              "numerator": 552,
+              "denominator": 576,
+              "rate": 0.958333,
+              "wilson_95": [
+                0.9388,
+                0.9718
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 20,
+              "denominator": 37,
+              "rate": 0.540541,
+              "wilson_95": [
+                0.3838,
+                0.6896
+              ]
+            }
+          },
+          "21-30": {
+            "runs": 14,
+            "item_count": 351,
+            "mean_items_per_run": 25.071,
+            "item_support_rate": {
+              "numerator": 334,
+              "denominator": 351,
+              "rate": 0.951567,
+              "wilson_95": [
+                0.9238,
+                0.9695
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 1,
+              "denominator": 14,
+              "rate": 0.071429,
+              "wilson_95": [
+                0.0127,
+                0.3147
+              ]
+            }
+          },
+          "31-40": {
+            "runs": 4,
+            "item_count": 142,
+            "mean_items_per_run": 35.5,
+            "item_support_rate": {
+              "numerator": 134,
+              "denominator": 142,
+              "rate": 0.943662,
+              "wilson_95": [
+                0.8928,
+                0.9712
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 0,
+              "denominator": 4,
+              "rate": 0,
+              "wilson_95": [
+                0,
+                0.4899
+              ]
+            }
+          },
+          "41+": {
+            "runs": 2,
+            "item_count": 100,
+            "mean_items_per_run": 50,
+            "item_support_rate": {
+              "numerator": 88,
+              "denominator": 100,
+              "rate": 0.88,
+              "wilson_95": [
+                0.8019,
+                0.93
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 0,
+              "denominator": 2,
+              "rate": 0,
+              "wilson_95": [
+                0,
+                0.6576
+              ]
+            }
+          }
+        },
         "repeat_spread": {
           "1": {
             "successful_runs": 20,
@@ -1466,6 +2684,213 @@
         "selector_support_rate": null,
         "mean_items_per_successful_run": 21.627,
         "mean_selected_context_words": 18.221,
+        "fixed_prefix_gates": {
+          "first_5_items": {
+            "item_budget": 5,
+            "eligible_runs": 59,
+            "prefix_item_support_rate": {
+              "numerator": 243,
+              "denominator": 295,
+              "rate": 0.823729,
+              "wilson_95": [
+                0.7762,
+                0.863
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 36,
+              "denominator": 59,
+              "rate": 0.610169,
+              "wilson_95": [
+                0.4827,
+                0.7242
+              ]
+            }
+          },
+          "first_10_items": {
+            "item_budget": 10,
+            "eligible_runs": 56,
+            "prefix_item_support_rate": {
+              "numerator": 487,
+              "denominator": 560,
+              "rate": 0.869643,
+              "wilson_95": [
+                0.8392,
+                0.895
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 32,
+              "denominator": 56,
+              "rate": 0.571429,
+              "wilson_95": [
+                0.4414,
+                0.6923
+              ]
+            }
+          },
+          "first_20_items": {
+            "item_budget": 20,
+            "eligible_runs": 28,
+            "prefix_item_support_rate": {
+              "numerator": 497,
+              "denominator": 560,
+              "rate": 0.8875,
+              "wilson_95": [
+                0.8586,
+                0.9111
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 13,
+              "denominator": 28,
+              "rate": 0.464286,
+              "wilson_95": [
+                0.2953,
+                0.6419
+              ]
+            }
+          },
+          "first_30_items": {
+            "item_budget": 30,
+            "eligible_runs": 6,
+            "prefix_item_support_rate": {
+              "numerator": 165,
+              "denominator": 180,
+              "rate": 0.916667,
+              "wilson_95": [
+                0.8671,
+                0.9489
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 3,
+              "denominator": 6,
+              "rate": 0.5,
+              "wilson_95": [
+                0.1876,
+                0.8124
+              ]
+            }
+          }
+        },
+        "item_count_bucket_gates": {
+          "1-10": {
+            "runs": 4,
+            "item_count": 37,
+            "mean_items_per_run": 9.25,
+            "item_support_rate": {
+              "numerator": 27,
+              "denominator": 37,
+              "rate": 0.72973,
+              "wilson_95": [
+                0.5702,
+                0.846
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 1,
+              "denominator": 4,
+              "rate": 0.25,
+              "wilson_95": [
+                0.0456,
+                0.6994
+              ]
+            }
+          },
+          "11-20": {
+            "runs": 30,
+            "item_count": 511,
+            "mean_items_per_run": 17.033,
+            "item_support_rate": {
+              "numerator": 450,
+              "denominator": 511,
+              "rate": 0.880626,
+              "wilson_95": [
+                0.8496,
+                0.9059
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 11,
+              "denominator": 30,
+              "rate": 0.366667,
+              "wilson_95": [
+                0.2187,
+                0.5449
+              ]
+            }
+          },
+          "21-30": {
+            "runs": 20,
+            "item_count": 476,
+            "mean_items_per_run": 23.8,
+            "item_support_rate": {
+              "numerator": 412,
+              "denominator": 476,
+              "rate": 0.865546,
+              "wilson_95": [
+                0.832,
+                0.8933
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 5,
+              "denominator": 20,
+              "rate": 0.25,
+              "wilson_95": [
+                0.1119,
+                0.4687
+              ]
+            }
+          },
+          "31-40": {
+            "runs": 2,
+            "item_count": 71,
+            "mean_items_per_run": 35.5,
+            "item_support_rate": {
+              "numerator": 69,
+              "denominator": 71,
+              "rate": 0.971831,
+              "wilson_95": [
+                0.903,
+                0.9922
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 1,
+              "denominator": 2,
+              "rate": 0.5,
+              "wilson_95": [
+                0.0945,
+                0.9055
+              ]
+            }
+          },
+          "41+": {
+            "runs": 3,
+            "item_count": 181,
+            "mean_items_per_run": 60.333,
+            "item_support_rate": {
+              "numerator": 169,
+              "denominator": 181,
+              "rate": 0.933702,
+              "wilson_95": [
+                0.8877,
+                0.9617
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 0,
+              "denominator": 3,
+              "rate": 0,
+              "wilson_95": [
+                0,
+                0.5615
+              ]
+            }
+          }
+        },
         "repeat_spread": {
           "1": {
             "successful_runs": 20,
@@ -1615,6 +3040,213 @@
         },
         "mean_items_per_successful_run": 21.627,
         "mean_selected_context_words": 11.194,
+        "fixed_prefix_gates": {
+          "first_5_items": {
+            "item_budget": 5,
+            "eligible_runs": 59,
+            "prefix_item_support_rate": {
+              "numerator": 273,
+              "denominator": 295,
+              "rate": 0.925424,
+              "wilson_95": [
+                0.8897,
+                0.9502
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 43,
+              "denominator": 59,
+              "rate": 0.728814,
+              "wilson_95": [
+                0.604,
+                0.8256
+              ]
+            }
+          },
+          "first_10_items": {
+            "item_budget": 10,
+            "eligible_runs": 56,
+            "prefix_item_support_rate": {
+              "numerator": 530,
+              "denominator": 560,
+              "rate": 0.946429,
+              "wilson_95": [
+                0.9246,
+                0.9622
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 38,
+              "denominator": 56,
+              "rate": 0.678571,
+              "wilson_95": [
+                0.5482,
+                0.786
+              ]
+            }
+          },
+          "first_20_items": {
+            "item_budget": 20,
+            "eligible_runs": 28,
+            "prefix_item_support_rate": {
+              "numerator": 530,
+              "denominator": 560,
+              "rate": 0.946429,
+              "wilson_95": [
+                0.9246,
+                0.9622
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 16,
+              "denominator": 28,
+              "rate": 0.571429,
+              "wilson_95": [
+                0.3907,
+                0.7349
+              ]
+            }
+          },
+          "first_30_items": {
+            "item_budget": 30,
+            "eligible_runs": 6,
+            "prefix_item_support_rate": {
+              "numerator": 168,
+              "denominator": 180,
+              "rate": 0.933333,
+              "wilson_95": [
+                0.8871,
+                0.9615
+              ]
+            },
+            "prefix_case_gate_rate": {
+              "numerator": 1,
+              "denominator": 6,
+              "rate": 0.166667,
+              "wilson_95": [
+                0.0301,
+                0.5635
+              ]
+            }
+          }
+        },
+        "item_count_bucket_gates": {
+          "1-10": {
+            "runs": 4,
+            "item_count": 37,
+            "mean_items_per_run": 9.25,
+            "item_support_rate": {
+              "numerator": 29,
+              "denominator": 37,
+              "rate": 0.783784,
+              "wilson_95": [
+                0.628,
+                0.8861
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 1,
+              "denominator": 4,
+              "rate": 0.25,
+              "wilson_95": [
+                0.0456,
+                0.6994
+              ]
+            }
+          },
+          "11-20": {
+            "runs": 30,
+            "item_count": 511,
+            "mean_items_per_run": 17.033,
+            "item_support_rate": {
+              "numerator": 478,
+              "denominator": 511,
+              "rate": 0.935421,
+              "wilson_95": [
+                0.9107,
+                0.9536
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 13,
+              "denominator": 30,
+              "rate": 0.433333,
+              "wilson_95": [
+                0.2738,
+                0.608
+              ]
+            }
+          },
+          "21-30": {
+            "runs": 20,
+            "item_count": 476,
+            "mean_items_per_run": 23.8,
+            "item_support_rate": {
+              "numerator": 443,
+              "denominator": 476,
+              "rate": 0.930672,
+              "wilson_95": [
+                0.9042,
+                0.9502
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 7,
+              "denominator": 20,
+              "rate": 0.35,
+              "wilson_95": [
+                0.1812,
+                0.5671
+              ]
+            }
+          },
+          "31-40": {
+            "runs": 2,
+            "item_count": 71,
+            "mean_items_per_run": 35.5,
+            "item_support_rate": {
+              "numerator": 68,
+              "denominator": 71,
+              "rate": 0.957746,
+              "wilson_95": [
+                0.883,
+                0.9855
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 0,
+              "denominator": 2,
+              "rate": 0,
+              "wilson_95": [
+                0,
+                0.6576
+              ]
+            }
+          },
+          "41+": {
+            "runs": 3,
+            "item_count": 181,
+            "mean_items_per_run": 60.333,
+            "item_support_rate": {
+              "numerator": 167,
+              "denominator": 181,
+              "rate": 0.922652,
+              "wilson_95": [
+                0.8744,
+                0.9534
+              ]
+            },
+            "case_gate_rate": {
+              "numerator": 0,
+              "denominator": 3,
+              "rate": 0,
+              "wilson_95": [
+                0,
+                0.5615
+              ]
+            }
+          }
+        },
         "repeat_spread": {
           "1": {
             "successful_runs": 20,
@@ -1691,6 +3323,272 @@
         "error_counts": {
           "schema_or_parse": 1
         }
+      }
+    },
+    "volume_normalized_comparisons": {
+      "anthropic/claude-haiku-4.5||span_id_v5_vs_quote_v2": {
+        "model": "anthropic/claude-haiku-4.5",
+        "reference_arm": "quote_v2",
+        "comparison_arm": "span_id_v5",
+        "paired_runs": 60,
+        "matched_item_count": 1747,
+        "mean_reference_items_per_run": 30.417,
+        "mean_comparison_items_per_run": 36.133,
+        "mean_matched_items_per_run": 29.117,
+        "reference_item_support_at_matched_count": {
+          "numerator": 1634,
+          "denominator": 1747,
+          "rate": 0.935318,
+          "wilson_95": [
+            0.9228,
+            0.9459
+          ]
+        },
+        "comparison_item_support_at_matched_count": {
+          "numerator": 1145,
+          "denominator": 1747,
+          "rate": 0.655409,
+          "wilson_95": [
+            0.6328,
+            0.6773
+          ]
+        },
+        "reference_case_gate_at_matched_count": {
+          "numerator": 20,
+          "denominator": 60,
+          "rate": 0.333333,
+          "wilson_95": [
+            0.2273,
+            0.4594
+          ]
+        },
+        "comparison_case_gate_at_matched_count": {
+          "numerator": 3,
+          "denominator": 60,
+          "rate": 0.05,
+          "wilson_95": [
+            0.0171,
+            0.137
+          ]
+        },
+        "reference_raw_case_gate_rate": {
+          "numerator": 20,
+          "denominator": 60,
+          "rate": 0.333333,
+          "wilson_95": [
+            0.2273,
+            0.4594
+          ]
+        },
+        "comparison_raw_case_gate_rate": {
+          "numerator": 2,
+          "denominator": 60,
+          "rate": 0.033333,
+          "wilson_95": [
+            0.0092,
+            0.1136
+          ]
+        },
+        "comparison_prefix_pass_raw_fail_count": 1,
+        "interpretation": "Matched-count gates compare only the first min(reference item count, comparison item count) items within the same model/case/repeat. This controls the conjunctive case-gate volume confound but does not prove the two arms extracted identical clinical targets."
+      },
+      "anthropic/claude-haiku-4.5||span_id_v5_minimal_vs_quote_v2_minimal": {
+        "model": "anthropic/claude-haiku-4.5",
+        "reference_arm": "quote_v2_minimal",
+        "comparison_arm": "span_id_v5_minimal",
+        "paired_runs": 60,
+        "matched_item_count": 1747,
+        "mean_reference_items_per_run": 30.417,
+        "mean_comparison_items_per_run": 36.133,
+        "mean_matched_items_per_run": 29.117,
+        "reference_item_support_at_matched_count": {
+          "numerator": 1650,
+          "denominator": 1747,
+          "rate": 0.944476,
+          "wilson_95": [
+            0.9327,
+            0.9543
+          ]
+        },
+        "comparison_item_support_at_matched_count": {
+          "numerator": 1564,
+          "denominator": 1747,
+          "rate": 0.895249,
+          "wilson_95": [
+            0.88,
+            0.9088
+          ]
+        },
+        "reference_case_gate_at_matched_count": {
+          "numerator": 17,
+          "denominator": 60,
+          "rate": 0.283333,
+          "wilson_95": [
+            0.1851,
+            0.4077
+          ]
+        },
+        "comparison_case_gate_at_matched_count": {
+          "numerator": 12,
+          "denominator": 60,
+          "rate": 0.2,
+          "wilson_95": [
+            0.1183,
+            0.3178
+          ]
+        },
+        "reference_raw_case_gate_rate": {
+          "numerator": 17,
+          "denominator": 60,
+          "rate": 0.283333,
+          "wilson_95": [
+            0.1851,
+            0.4077
+          ]
+        },
+        "comparison_raw_case_gate_rate": {
+          "numerator": 9,
+          "denominator": 60,
+          "rate": 0.15,
+          "wilson_95": [
+            0.081,
+            0.2611
+          ]
+        },
+        "comparison_prefix_pass_raw_fail_count": 3,
+        "interpretation": "Matched-count gates compare only the first min(reference item count, comparison item count) items within the same model/case/repeat. This controls the conjunctive case-gate volume confound but does not prove the two arms extracted identical clinical targets."
+      },
+      "cohere-aplus:command-a-plus-05-2026||span_id_v5_vs_quote_v2": {
+        "model": "cohere-aplus:command-a-plus-05-2026",
+        "reference_arm": "quote_v2",
+        "comparison_arm": "span_id_v5",
+        "paired_runs": 59,
+        "matched_item_count": 996,
+        "mean_reference_items_per_run": 19.746,
+        "mean_comparison_items_per_run": 21.627,
+        "mean_matched_items_per_run": 16.881,
+        "reference_item_support_at_matched_count": {
+          "numerator": 658,
+          "denominator": 996,
+          "rate": 0.660643,
+          "wilson_95": [
+            0.6307,
+            0.6894
+          ]
+        },
+        "comparison_item_support_at_matched_count": {
+          "numerator": 872,
+          "denominator": 996,
+          "rate": 0.875502,
+          "wilson_95": [
+            0.8535,
+            0.8946
+          ]
+        },
+        "reference_case_gate_at_matched_count": {
+          "numerator": 6,
+          "denominator": 59,
+          "rate": 0.101695,
+          "wilson_95": [
+            0.0474,
+            0.2046
+          ]
+        },
+        "comparison_case_gate_at_matched_count": {
+          "numerator": 24,
+          "denominator": 59,
+          "rate": 0.40678,
+          "wilson_95": [
+            0.2909,
+            0.5341
+          ]
+        },
+        "reference_raw_case_gate_rate": {
+          "numerator": 5,
+          "denominator": 59,
+          "rate": 0.084746,
+          "wilson_95": [
+            0.0367,
+            0.1835
+          ]
+        },
+        "comparison_raw_case_gate_rate": {
+          "numerator": 18,
+          "denominator": 59,
+          "rate": 0.305085,
+          "wilson_95": [
+            0.2025,
+            0.4315
+          ]
+        },
+        "comparison_prefix_pass_raw_fail_count": 6,
+        "interpretation": "Matched-count gates compare only the first min(reference item count, comparison item count) items within the same model/case/repeat. This controls the conjunctive case-gate volume confound but does not prove the two arms extracted identical clinical targets."
+      },
+      "cohere-aplus:command-a-plus-05-2026||span_id_v5_minimal_vs_quote_v2_minimal": {
+        "model": "cohere-aplus:command-a-plus-05-2026",
+        "reference_arm": "quote_v2_minimal",
+        "comparison_arm": "span_id_v5_minimal",
+        "paired_runs": 59,
+        "matched_item_count": 996,
+        "mean_reference_items_per_run": 19.746,
+        "mean_comparison_items_per_run": 21.627,
+        "mean_matched_items_per_run": 16.881,
+        "reference_item_support_at_matched_count": {
+          "numerator": 954,
+          "denominator": 996,
+          "rate": 0.957831,
+          "wilson_95": [
+            0.9435,
+            0.9687
+          ]
+        },
+        "comparison_item_support_at_matched_count": {
+          "numerator": 929,
+          "denominator": 996,
+          "rate": 0.932731,
+          "wilson_95": [
+            0.9155,
+            0.9467
+          ]
+        },
+        "reference_case_gate_at_matched_count": {
+          "numerator": 30,
+          "denominator": 59,
+          "rate": 0.508475,
+          "wilson_95": [
+            0.3843,
+            0.6316
+          ]
+        },
+        "comparison_case_gate_at_matched_count": {
+          "numerator": 26,
+          "denominator": 59,
+          "rate": 0.440678,
+          "wilson_95": [
+            0.3215,
+            0.5671
+          ]
+        },
+        "reference_raw_case_gate_rate": {
+          "numerator": 24,
+          "denominator": 59,
+          "rate": 0.40678,
+          "wilson_95": [
+            0.2909,
+            0.5341
+          ]
+        },
+        "comparison_raw_case_gate_rate": {
+          "numerator": 21,
+          "denominator": 59,
+          "rate": 0.355932,
+          "wilson_95": [
+            0.246,
+            0.4834
+          ]
+        },
+        "comparison_prefix_pass_raw_fail_count": 5,
+        "interpretation": "Matched-count gates compare only the first min(reference item count, comparison item count) items within the same model/case/repeat. This controls the conjunctive case-gate volume confound but does not prove the two arms extracted identical clinical targets."
       }
     },
     "interpretation": "The v5 span-ID arm tests whether provenance can be made a constrained selection over a pre-enumerated source index. Resolvable span-ID validity is expected by construction when provider-side enums are honored and should not be read as semantic factuality. Full v5 contract validity is stricter because hosted providers did not enforce the max-3 span cap or optional token offsets; those violations remain local validation failures."
