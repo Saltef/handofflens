@@ -589,8 +589,12 @@
       "policy": "greedy set cover over claim tokens with adaptive stopping and budget-normalized label-risk checks",
       "phase0_dependency": "built after guard calibration showed the fixed-budget cliff was a guard-threshold artifact"
     },
+    "cap_repair": {
+      "policy": "deterministically drop unknown IDs, reduce supported span sets to <=3 with the minimal selector, remove invalid optional surface_form offsets, and route unrepaired supported items to insufficient_evidence/not_found",
+      "claim_boundary": "repair improves local contract compliance and auditability; it is not semantic entailment or target recall"
+    },
     "completed_ablation_work": "Ran quote-v2 and span-ID-v5 arms across both frozen providers with three repeats per cell; case-level outputs and raw provider traces remain private.",
-    "remaining_schema_work": "Test a retry/repair loop for max-3 evidence-span cap violations, then compare lexical matching with learned reranking and entailment-backed faithfulness.",
+    "remaining_schema_work": "Test live provider retry prompts for contract-invalid items, then compare lexical matching with learned reranking and entailment-backed faithfulness.",
     "experiment_id": "span-id-v5-cross-provider-ablation",
     "private_case_level_outputs_committed": false,
     "cases": 20,
@@ -667,6 +671,11 @@
         "span_validity_rate": null,
         "v5_contract_validity_rate": null,
         "evidence_span_count_validity_rate": null,
+        "cap_repair_needed_rate": null,
+        "cap_repaired_item_support_rate": null,
+        "cap_repaired_case_gate_rate": null,
+        "cap_repaired_v5_contract_validity_rate": null,
+        "cap_repaired_evidence_span_count_validity_rate": null,
         "selector_support_rate": null,
         "mean_items_per_successful_run": 30.417,
         "mean_selected_context_words": null,
@@ -941,6 +950,8 @@
         },
         "span_resolution_error_counts": {},
         "span_count_error_counts": {},
+        "cap_repair_action_counts": {},
+        "cap_repair_error_counts": {},
         "error_counts": {}
       },
       "anthropic/claude-haiku-4.5||quote_v2_minimal": {
@@ -988,6 +999,11 @@
         "span_validity_rate": null,
         "v5_contract_validity_rate": null,
         "evidence_span_count_validity_rate": null,
+        "cap_repair_needed_rate": null,
+        "cap_repaired_item_support_rate": null,
+        "cap_repaired_case_gate_rate": null,
+        "cap_repaired_v5_contract_validity_rate": null,
+        "cap_repaired_evidence_span_count_validity_rate": null,
         "selector_support_rate": {
           "numerator": 1719,
           "denominator": 1825,
@@ -1270,6 +1286,8 @@
         },
         "span_resolution_error_counts": {},
         "span_count_error_counts": {},
+        "cap_repair_action_counts": {},
+        "cap_repair_error_counts": {},
         "error_counts": {}
       },
       "anthropic/claude-haiku-4.5||span_id_v5": {
@@ -1331,6 +1349,51 @@
           "wilson_95": [
             0.6557,
             0.6951
+          ]
+        },
+        "cap_repair_needed_rate": {
+          "numerator": 1024,
+          "denominator": 2168,
+          "rate": 0.472325,
+          "wilson_95": [
+            0.4514,
+            0.4934
+          ]
+        },
+        "cap_repaired_item_support_rate": {
+          "numerator": 1978,
+          "denominator": 2168,
+          "rate": 0.912362,
+          "wilson_95": [
+            0.8997,
+            0.9235
+          ]
+        },
+        "cap_repaired_case_gate_rate": {
+          "numerator": 15,
+          "denominator": 60,
+          "rate": 0.25,
+          "wilson_95": [
+            0.1578,
+            0.3723
+          ]
+        },
+        "cap_repaired_v5_contract_validity_rate": {
+          "numerator": 2168,
+          "denominator": 2168,
+          "rate": 1,
+          "wilson_95": [
+            0.9982,
+            1
+          ]
+        },
+        "cap_repaired_evidence_span_count_validity_rate": {
+          "numerator": 2168,
+          "denominator": 2168,
+          "rate": 1,
+          "wilson_95": [
+            0.9982,
+            1
           ]
         },
         "selector_support_rate": null,
@@ -1609,6 +1672,15 @@
         "span_count_error_counts": {
           "too_many_span_ids": 703
         },
+        "cap_repair_action_counts": {
+          "drop_invalid_surface_form": 489,
+          "minimal_selector_recap_abstained": 152,
+          "minimal_selector_recap_supported": 525,
+          "none": 1144,
+          "repair_too_many_span_ids": 703,
+          "truncate_non_supported_spans": 26
+        },
+        "cap_repair_error_counts": {},
         "error_counts": {}
       },
       "anthropic/claude-haiku-4.5||span_id_v5_minimal": {
@@ -1670,6 +1742,51 @@
           "wilson_95": [
             0.6557,
             0.6951
+          ]
+        },
+        "cap_repair_needed_rate": {
+          "numerator": 1024,
+          "denominator": 2168,
+          "rate": 0.472325,
+          "wilson_95": [
+            0.4514,
+            0.4934
+          ]
+        },
+        "cap_repaired_item_support_rate": {
+          "numerator": 1978,
+          "denominator": 2168,
+          "rate": 0.912362,
+          "wilson_95": [
+            0.8997,
+            0.9235
+          ]
+        },
+        "cap_repaired_case_gate_rate": {
+          "numerator": 15,
+          "denominator": 60,
+          "rate": 0.25,
+          "wilson_95": [
+            0.1578,
+            0.3723
+          ]
+        },
+        "cap_repaired_v5_contract_validity_rate": {
+          "numerator": 2168,
+          "denominator": 2168,
+          "rate": 1,
+          "wilson_95": [
+            0.9982,
+            1
+          ]
+        },
+        "cap_repaired_evidence_span_count_validity_rate": {
+          "numerator": 2168,
+          "denominator": 2168,
+          "rate": 1,
+          "wilson_95": [
+            0.9982,
+            1
           ]
         },
         "selector_support_rate": {
@@ -1956,6 +2073,15 @@
         "span_count_error_counts": {
           "too_many_span_ids": 703
         },
+        "cap_repair_action_counts": {
+          "drop_invalid_surface_form": 489,
+          "minimal_selector_recap_abstained": 152,
+          "minimal_selector_recap_supported": 525,
+          "none": 1144,
+          "repair_too_many_span_ids": 703,
+          "truncate_non_supported_spans": 26
+        },
+        "cap_repair_error_counts": {},
         "error_counts": {}
       },
       "cohere-aplus:command-a-plus-05-2026||quote_v2": {
@@ -2003,6 +2129,11 @@
         "span_validity_rate": null,
         "v5_contract_validity_rate": null,
         "evidence_span_count_validity_rate": null,
+        "cap_repair_needed_rate": null,
+        "cap_repaired_item_support_rate": null,
+        "cap_repaired_case_gate_rate": null,
+        "cap_repaired_v5_contract_validity_rate": null,
+        "cap_repaired_evidence_span_count_validity_rate": null,
         "selector_support_rate": null,
         "mean_items_per_successful_run": 19.867,
         "mean_selected_context_words": null,
@@ -2283,6 +2414,8 @@
         },
         "span_resolution_error_counts": {},
         "span_count_error_counts": {},
+        "cap_repair_action_counts": {},
+        "cap_repair_error_counts": {},
         "error_counts": {}
       },
       "cohere-aplus:command-a-plus-05-2026||quote_v2_minimal": {
@@ -2330,6 +2463,11 @@
         "span_validity_rate": null,
         "v5_contract_validity_rate": null,
         "evidence_span_count_validity_rate": null,
+        "cap_repair_needed_rate": null,
+        "cap_repaired_item_support_rate": null,
+        "cap_repaired_case_gate_rate": null,
+        "cap_repaired_v5_contract_validity_rate": null,
+        "cap_repaired_evidence_span_count_validity_rate": null,
         "selector_support_rate": {
           "numerator": 1131,
           "denominator": 1192,
@@ -2618,6 +2756,8 @@
         },
         "span_resolution_error_counts": {},
         "span_count_error_counts": {},
+        "cap_repair_action_counts": {},
+        "cap_repair_error_counts": {},
         "error_counts": {}
       },
       "cohere-aplus:command-a-plus-05-2026||span_id_v5": {
@@ -2679,6 +2819,51 @@
           "wilson_95": [
             0.8786,
             0.9121
+          ]
+        },
+        "cap_repair_needed_rate": {
+          "numerator": 174,
+          "denominator": 1276,
+          "rate": 0.136364,
+          "wilson_95": [
+            0.1186,
+            0.1563
+          ]
+        },
+        "cap_repaired_item_support_rate": {
+          "numerator": 1224,
+          "denominator": 1276,
+          "rate": 0.959248,
+          "wilson_95": [
+            0.9469,
+            0.9688
+          ]
+        },
+        "cap_repaired_case_gate_rate": {
+          "numerator": 34,
+          "denominator": 59,
+          "rate": 0.576271,
+          "wilson_95": [
+            0.4493,
+            0.6939
+          ]
+        },
+        "cap_repaired_v5_contract_validity_rate": {
+          "numerator": 1276,
+          "denominator": 1276,
+          "rate": 1,
+          "wilson_95": [
+            0.997,
+            1
+          ]
+        },
+        "cap_repaired_evidence_span_count_validity_rate": {
+          "numerator": 1276,
+          "denominator": 1276,
+          "rate": 1,
+          "wilson_95": [
+            0.997,
+            1
           ]
         },
         "selector_support_rate": null,
@@ -2964,6 +3149,15 @@
           "empty_supported_span_ids": 2,
           "too_many_span_ids": 130
         },
+        "cap_repair_action_counts": {
+          "drop_invalid_surface_form": 50,
+          "minimal_selector_recap_abstained": 34,
+          "minimal_selector_recap_supported": 97,
+          "none": 1102,
+          "repair_too_many_span_ids": 130,
+          "truncate_non_supported_spans": 1
+        },
+        "cap_repair_error_counts": {},
         "error_counts": {
           "schema_or_parse": 1
         }
@@ -3027,6 +3221,51 @@
           "wilson_95": [
             0.8786,
             0.9121
+          ]
+        },
+        "cap_repair_needed_rate": {
+          "numerator": 174,
+          "denominator": 1276,
+          "rate": 0.136364,
+          "wilson_95": [
+            0.1186,
+            0.1563
+          ]
+        },
+        "cap_repaired_item_support_rate": {
+          "numerator": 1224,
+          "denominator": 1276,
+          "rate": 0.959248,
+          "wilson_95": [
+            0.9469,
+            0.9688
+          ]
+        },
+        "cap_repaired_case_gate_rate": {
+          "numerator": 34,
+          "denominator": 59,
+          "rate": 0.576271,
+          "wilson_95": [
+            0.4493,
+            0.6939
+          ]
+        },
+        "cap_repaired_v5_contract_validity_rate": {
+          "numerator": 1276,
+          "denominator": 1276,
+          "rate": 1,
+          "wilson_95": [
+            0.997,
+            1
+          ]
+        },
+        "cap_repaired_evidence_span_count_validity_rate": {
+          "numerator": 1276,
+          "denominator": 1276,
+          "rate": 1,
+          "wilson_95": [
+            0.997,
+            1
           ]
         },
         "selector_support_rate": {
@@ -3320,6 +3559,15 @@
           "empty_supported_span_ids": 2,
           "too_many_span_ids": 130
         },
+        "cap_repair_action_counts": {
+          "drop_invalid_surface_form": 50,
+          "minimal_selector_recap_abstained": 34,
+          "minimal_selector_recap_supported": 97,
+          "none": 1102,
+          "repair_too_many_span_ids": 130,
+          "truncate_non_supported_spans": 1
+        },
+        "cap_repair_error_counts": {},
         "error_counts": {
           "schema_or_parse": 1
         }
@@ -3353,6 +3601,15 @@
             0.6773
           ]
         },
+        "comparison_cap_repaired_item_support_at_matched_count": {
+          "numerator": 1597,
+          "denominator": 1747,
+          "rate": 0.914139,
+          "wilson_95": [
+            0.9001,
+            0.9264
+          ]
+        },
         "reference_case_gate_at_matched_count": {
           "numerator": 20,
           "denominator": 60,
@@ -3369,6 +3626,15 @@
           "wilson_95": [
             0.0171,
             0.137
+          ]
+        },
+        "comparison_cap_repaired_case_gate_at_matched_count": {
+          "numerator": 19,
+          "denominator": 60,
+          "rate": 0.316667,
+          "wilson_95": [
+            0.2131,
+            0.4423
           ]
         },
         "reference_raw_case_gate_rate": {
@@ -3390,7 +3656,7 @@
           ]
         },
         "comparison_prefix_pass_raw_fail_count": 1,
-        "interpretation": "Matched-count gates compare only the first min(reference item count, comparison item count) items within the same model/case/repeat. This controls the conjunctive case-gate volume confound but does not prove the two arms extracted identical clinical targets."
+        "interpretation": "Matched-count gates compare only the first min(reference item count, comparison item count) items within the same model/case/repeat. This controls the conjunctive case-gate volume confound but does not prove the two arms extracted identical clinical targets. Cap-repaired comparison columns apply deterministic local repair before scoring."
       },
       "anthropic/claude-haiku-4.5||span_id_v5_minimal_vs_quote_v2_minimal": {
         "model": "anthropic/claude-haiku-4.5",
@@ -3419,6 +3685,15 @@
             0.9088
           ]
         },
+        "comparison_cap_repaired_item_support_at_matched_count": {
+          "numerator": 1597,
+          "denominator": 1747,
+          "rate": 0.914139,
+          "wilson_95": [
+            0.9001,
+            0.9264
+          ]
+        },
         "reference_case_gate_at_matched_count": {
           "numerator": 17,
           "denominator": 60,
@@ -3435,6 +3710,15 @@
           "wilson_95": [
             0.1183,
             0.3178
+          ]
+        },
+        "comparison_cap_repaired_case_gate_at_matched_count": {
+          "numerator": 19,
+          "denominator": 60,
+          "rate": 0.316667,
+          "wilson_95": [
+            0.2131,
+            0.4423
           ]
         },
         "reference_raw_case_gate_rate": {
@@ -3456,7 +3740,7 @@
           ]
         },
         "comparison_prefix_pass_raw_fail_count": 3,
-        "interpretation": "Matched-count gates compare only the first min(reference item count, comparison item count) items within the same model/case/repeat. This controls the conjunctive case-gate volume confound but does not prove the two arms extracted identical clinical targets."
+        "interpretation": "Matched-count gates compare only the first min(reference item count, comparison item count) items within the same model/case/repeat. This controls the conjunctive case-gate volume confound but does not prove the two arms extracted identical clinical targets. Cap-repaired comparison columns apply deterministic local repair before scoring."
       },
       "cohere-aplus:command-a-plus-05-2026||span_id_v5_vs_quote_v2": {
         "model": "cohere-aplus:command-a-plus-05-2026",
@@ -3485,6 +3769,15 @@
             0.8946
           ]
         },
+        "comparison_cap_repaired_item_support_at_matched_count": {
+          "numerator": 957,
+          "denominator": 996,
+          "rate": 0.960843,
+          "wilson_95": [
+            0.9469,
+            0.9712
+          ]
+        },
         "reference_case_gate_at_matched_count": {
           "numerator": 6,
           "denominator": 59,
@@ -3501,6 +3794,15 @@
           "wilson_95": [
             0.2909,
             0.5341
+          ]
+        },
+        "comparison_cap_repaired_case_gate_at_matched_count": {
+          "numerator": 39,
+          "denominator": 59,
+          "rate": 0.661017,
+          "wilson_95": [
+            0.5337,
+            0.7686
           ]
         },
         "reference_raw_case_gate_rate": {
@@ -3522,7 +3824,7 @@
           ]
         },
         "comparison_prefix_pass_raw_fail_count": 6,
-        "interpretation": "Matched-count gates compare only the first min(reference item count, comparison item count) items within the same model/case/repeat. This controls the conjunctive case-gate volume confound but does not prove the two arms extracted identical clinical targets."
+        "interpretation": "Matched-count gates compare only the first min(reference item count, comparison item count) items within the same model/case/repeat. This controls the conjunctive case-gate volume confound but does not prove the two arms extracted identical clinical targets. Cap-repaired comparison columns apply deterministic local repair before scoring."
       },
       "cohere-aplus:command-a-plus-05-2026||span_id_v5_minimal_vs_quote_v2_minimal": {
         "model": "cohere-aplus:command-a-plus-05-2026",
@@ -3551,6 +3853,15 @@
             0.9467
           ]
         },
+        "comparison_cap_repaired_item_support_at_matched_count": {
+          "numerator": 957,
+          "denominator": 996,
+          "rate": 0.960843,
+          "wilson_95": [
+            0.9469,
+            0.9712
+          ]
+        },
         "reference_case_gate_at_matched_count": {
           "numerator": 30,
           "denominator": 59,
@@ -3567,6 +3878,15 @@
           "wilson_95": [
             0.3215,
             0.5671
+          ]
+        },
+        "comparison_cap_repaired_case_gate_at_matched_count": {
+          "numerator": 39,
+          "denominator": 59,
+          "rate": 0.661017,
+          "wilson_95": [
+            0.5337,
+            0.7686
           ]
         },
         "reference_raw_case_gate_rate": {
@@ -3588,7 +3908,7 @@
           ]
         },
         "comparison_prefix_pass_raw_fail_count": 5,
-        "interpretation": "Matched-count gates compare only the first min(reference item count, comparison item count) items within the same model/case/repeat. This controls the conjunctive case-gate volume confound but does not prove the two arms extracted identical clinical targets."
+        "interpretation": "Matched-count gates compare only the first min(reference item count, comparison item count) items within the same model/case/repeat. This controls the conjunctive case-gate volume confound but does not prove the two arms extracted identical clinical targets. Cap-repaired comparison columns apply deterministic local repair before scoring."
       }
     },
     "interpretation": "The v5 span-ID arm tests whether provenance can be made a constrained selection over a pre-enumerated source index. Resolvable span-ID validity is expected by construction when provider-side enums are honored and should not be read as semantic factuality. Full v5 contract validity is stricter because hosted providers did not enforce the max-3 span cap or optional token offsets; those violations remain local validation failures."

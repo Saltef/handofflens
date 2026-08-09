@@ -454,6 +454,7 @@ function scoreItem({ item, itemIndex, arm, sourceText, spanIndex }) {
   }, spanIndex);
   const resolution = spanIdResolution(item, spanIndex);
   const countValidity = evidenceSpanCountValidity(item);
+  const capRepair = repairSpanIdEvidenceItem(item, sourceText, spanIndex);
   const provenanceValid = resolution.valid && countValidity.valid;
   const spanText = spanTexts(item.evidence_span_ids || [], spanIndex).join(" ");
   const selector = arm.endsWith("_minimal") && item.support_status === "supported" ? selectMinimalEvidence(sourceText, {
@@ -471,6 +472,17 @@ function scoreItem({ item, itemIndex, arm, sourceText, spanIndex }) {
     validation_errors: validation.errors.map((error) => error.code),
     span_resolution_errors: resolution.errors,
     span_count_errors: countValidity.errors,
+    cap_repair_needed: capRepair.needed,
+    cap_repair_actions: capRepair.actions,
+    cap_repair_status: capRepair.status,
+    cap_repaired_evidence_span_ids: capRepair.item.evidence_span_ids,
+    cap_repaired_span_count: capRepair.item.evidence_span_ids.length,
+    cap_repaired_support_status: capRepair.item.support_status,
+    cap_repaired_span_valid: capRepair.span_resolution.valid,
+    cap_repaired_v5_contract_valid: capRepair.validation.valid,
+    cap_repaired_evidence_span_count_valid: capRepair.span_count.valid,
+    cap_repaired_supported: capRepair.supported,
+    cap_repair_errors: capRepair.validation.errors.map((error) => error.code),
     selector_status: selector?.support_status || null,
     selector_span_ids: selector?.evidence_span_ids || [],
     selected_context_words: selector ? selector.selected_context_words : contextWordsForSpanIds(item.evidence_span_ids || [], spanIndex),
@@ -498,6 +510,90 @@ function evidenceSpanCountValidity(item) {
   return { valid: errors.length === 0, errors };
 }
 
+function repairSpanIdEvidenceItem(item, sourceText, spanIndex) {
+  const byId = spanIndex.byId instanceof Map ? spanIndex.byId : new Map(spanIndex.spans.map((span) => [span.id, span]));
+  const originalIds = Array.isArray(item.evidence_span_ids) ? item.evidence_span_ids : [];
+  const knownIds = unique(originalIds.filter((spanId) => byId.has(spanId)));
+  const rawItem = {
+    ...item,
+    evidence_span_ids: originalIds,
+    entailment_scored: false,
+    entailment_score: null,
+  };
+  const rawValidation = validateSpanIdEvidenceItem(rawItem, spanIndex);
+  const rawErrors = rawValidation.errors.map((error) => error.code);
+  const actions = [];
+  let repairedIds = knownIds;
+  let supportStatus = item.support_status || "insufficient_evidence";
+  let selector = null;
+
+  if (originalIds.length !== knownIds.length) actions.push("drop_unknown_span_ids");
+  if (originalIds.length > 3) actions.push("repair_too_many_span_ids");
+
+  if (supportStatus === "supported") {
+    const needsSelectorRepair = originalIds.length > 3 || !knownIds.length;
+    if (needsSelectorRepair) {
+      selector = selectMinimalEvidence(sourceText, {
+        label: item.normalized_value || item.field || "",
+        source_quote: spanTexts(knownIds, spanIndex).join(" ") || item.normalized_value || item.field || "",
+        assertion: item.assertion || "present",
+        domain: item.field || "unknown",
+      }, { spanIndex, maxSpans: 3 });
+      if (selector.support_status === "supported" && selector.evidence_span_ids.length <= 3) {
+        repairedIds = selector.evidence_span_ids;
+        actions.push("minimal_selector_recap_supported");
+      } else {
+        repairedIds = selector.evidence_span_ids.slice(0, 3);
+        supportStatus = repairedIds.length ? "insufficient_evidence" : "not_found";
+        actions.push("minimal_selector_recap_abstained");
+      }
+    } else {
+      repairedIds = knownIds.slice(0, 3);
+    }
+  } else if (knownIds.length > 3) {
+    repairedIds = knownIds.slice(0, 3);
+    actions.push("truncate_non_supported_spans");
+  }
+
+  const withEvidenceRepair = {
+    ...item,
+    support_status: supportStatus,
+    evidence_span_ids: unique(repairedIds).slice(0, 3),
+    entailment_scored: false,
+    entailment_score: null,
+  };
+  const surfaceFormAction = maybeRepairSurfaceForm(withEvidenceRepair, spanIndex);
+  const repairedItem = surfaceFormAction.item;
+  if (surfaceFormAction.action) actions.push(surfaceFormAction.action);
+
+  const validation = validateSpanIdEvidenceItem(repairedItem, spanIndex);
+  const spanResolution = spanIdResolution(repairedItem, spanIndex);
+  const spanCount = evidenceSpanCountValidity(repairedItem);
+  const needed = actions.length > 0 || rawErrors.length > 0;
+  return {
+    needed,
+    status: validation.valid ? "valid_after_repair" : "invalid_after_repair",
+    actions: actions.length ? actions : ["none"],
+    raw_validation_errors: rawErrors,
+    selector_status: selector?.support_status || null,
+    item: repairedItem,
+    validation,
+    span_resolution: spanResolution,
+    span_count: spanCount,
+    supported: validation.valid && spanResolution.valid && spanCount.valid && repairedItem.support_status === "supported",
+  };
+}
+
+function maybeRepairSurfaceForm(item, spanIndex) {
+  if (item.surface_form === undefined) return { item, action: null };
+  const validation = validateSpanIdEvidenceItem(item, spanIndex);
+  const surfaceErrors = new Set(["surface_form_not_object", "unknown_surface_span_id", "surface_offsets_not_integers", "surface_offsets_out_of_range"]);
+  if (!validation.errors.some((error) => surfaceErrors.has(error.code))) return { item, action: null };
+  const repaired = { ...item };
+  delete repaired.surface_form;
+  return { item: repaired, action: "drop_invalid_surface_form" };
+}
+
 function summarizeScoredItems(scoredItems, arm) {
   const completed = scoredItems.length > 0;
   const supported = scoredItems.filter((item) => item.supported);
@@ -505,6 +601,10 @@ function summarizeScoredItems(scoredItems, arm) {
   const spanValidItems = scoredItems.filter((item) => item.span_valid === true);
   const contractValidItems = scoredItems.filter((item) => item.v5_contract_valid === true);
   const spanCountValidItems = scoredItems.filter((item) => item.evidence_span_count_valid === true);
+  const capRepairNeededItems = scoredItems.filter((item) => item.cap_repair_needed === true);
+  const capRepairedSupportedItems = scoredItems.filter((item) => item.cap_repaired_supported === true);
+  const capRepairedContractValidItems = scoredItems.filter((item) => item.cap_repaired_v5_contract_valid === true);
+  const capRepairedSpanCountValidItems = scoredItems.filter((item) => item.cap_repaired_evidence_span_count_valid === true);
   const exactQuoteItems = scoredItems.filter((item) => item.exact_quote_supported === true);
   const selectorSupported = scoredItems.filter((item) => item.selector_status === "supported");
   return {
@@ -517,11 +617,18 @@ function summarizeScoredItems(scoredItems, arm) {
     span_validity_rate: arm.startsWith("span_id") ? rateSummary(spanValidItems.length, scoredItems.length) : null,
     v5_contract_validity_rate: arm.startsWith("span_id") ? rateSummary(contractValidItems.length, scoredItems.length) : null,
     evidence_span_count_validity_rate: arm.startsWith("span_id") ? rateSummary(spanCountValidItems.length, scoredItems.length) : null,
+    cap_repair_needed_rate: arm.startsWith("span_id") ? rateSummary(capRepairNeededItems.length, scoredItems.length) : null,
+    cap_repaired_item_support_rate: arm.startsWith("span_id") ? rateSummary(capRepairedSupportedItems.length, scoredItems.length) : null,
+    cap_repaired_case_gate_rate: arm.startsWith("span_id") ? rateSummary(completed && capRepairedSupportedItems.length === scoredItems.length ? 1 : 0, completed ? 1 : 0) : null,
+    cap_repaired_v5_contract_validity_rate: arm.startsWith("span_id") ? rateSummary(capRepairedContractValidItems.length, scoredItems.length) : null,
+    cap_repaired_evidence_span_count_validity_rate: arm.startsWith("span_id") ? rateSummary(capRepairedSpanCountValidItems.length, scoredItems.length) : null,
     selector_support_rate: arm.endsWith("_minimal") ? rateSummary(selectorSupported.length, scoredItems.length) : null,
     support_status_counts: countBy(scoredItems.map((item) => item.support_status || "missing")),
     validation_error_counts: countBy(scoredItems.flatMap((item) => item.validation_errors || [])),
     span_resolution_error_counts: countBy(scoredItems.flatMap((item) => item.span_resolution_errors || [])),
     span_count_error_counts: countBy(scoredItems.flatMap((item) => item.span_count_errors || [])),
+    cap_repair_action_counts: countBy(scoredItems.flatMap((item) => item.cap_repair_actions || [])),
+    cap_repair_error_counts: countBy(scoredItems.flatMap((item) => item.cap_repair_errors || [])),
     mean_selected_context_words: round(mean(scoredItems.map((item) => item.selected_context_words).filter(Number.isFinite))),
     scored_items: scoredItems,
   };
@@ -575,8 +682,13 @@ function summarizeAblation(results) {
     const spanValidItems = sum(successes.map((record) => record.scoring.span_validity_rate?.numerator || 0));
     const contractValidItems = sum(successes.map((record) => record.scoring.v5_contract_validity_rate?.numerator || 0));
     const spanCountValidItems = sum(successes.map((record) => record.scoring.evidence_span_count_validity_rate?.numerator || 0));
+    const capRepairNeededItems = sum(successes.map((record) => record.scoring.cap_repair_needed_rate?.numerator || 0));
+    const capRepairedSupportedItems = sum(successes.map((record) => record.scoring.cap_repaired_item_support_rate?.numerator || 0));
+    const capRepairedContractValidItems = sum(successes.map((record) => record.scoring.cap_repaired_v5_contract_validity_rate?.numerator || 0));
+    const capRepairedSpanCountValidItems = sum(successes.map((record) => record.scoring.cap_repaired_evidence_span_count_validity_rate?.numerator || 0));
     const selectorSupportedItems = sum(successes.map((record) => record.scoring.selector_support_rate?.numerator || 0));
     const caseGatePasses = successes.filter((record) => record.scoring.case_gate_passed).length;
+    const capRepairedCaseGatePasses = successes.filter((record) => record.scoring.cap_repaired_case_gate_rate?.numerator === 1).length;
     return [key, {
       model,
       arm,
@@ -590,6 +702,11 @@ function summarizeAblation(results) {
       span_validity_rate: arm.startsWith("span_id") ? rateSummary(spanValidItems, itemCount) : null,
       v5_contract_validity_rate: arm.startsWith("span_id") ? rateSummary(contractValidItems, itemCount) : null,
       evidence_span_count_validity_rate: arm.startsWith("span_id") ? rateSummary(spanCountValidItems, itemCount) : null,
+      cap_repair_needed_rate: arm.startsWith("span_id") ? rateSummary(capRepairNeededItems, itemCount) : null,
+      cap_repaired_item_support_rate: arm.startsWith("span_id") ? rateSummary(capRepairedSupportedItems, itemCount) : null,
+      cap_repaired_case_gate_rate: arm.startsWith("span_id") ? rateSummary(capRepairedCaseGatePasses, successes.length) : null,
+      cap_repaired_v5_contract_validity_rate: arm.startsWith("span_id") ? rateSummary(capRepairedContractValidItems, itemCount) : null,
+      cap_repaired_evidence_span_count_validity_rate: arm.startsWith("span_id") ? rateSummary(capRepairedSpanCountValidItems, itemCount) : null,
       selector_support_rate: arm.endsWith("_minimal") ? rateSummary(selectorSupportedItems, itemCount) : null,
       mean_items_per_successful_run: round(mean(successes.map((record) => record.scoring.item_count))),
       mean_selected_context_words: round(mean(successes.map((record) => record.scoring.mean_selected_context_words).filter(Number.isFinite))),
@@ -599,6 +716,8 @@ function summarizeAblation(results) {
       validation_error_counts: countBy(successes.flatMap((record) => Object.entries(record.scoring.validation_error_counts).flatMap(([name, count]) => Array(count).fill(name)))),
       span_resolution_error_counts: countBy(successes.flatMap((record) => Object.entries(record.scoring.span_resolution_error_counts || {}).flatMap(([name, count]) => Array(count).fill(name)))),
       span_count_error_counts: countBy(successes.flatMap((record) => Object.entries(record.scoring.span_count_error_counts || {}).flatMap(([name, count]) => Array(count).fill(name)))),
+      cap_repair_action_counts: countBy(successes.flatMap((record) => Object.entries(record.scoring.cap_repair_action_counts || {}).flatMap(([name, count]) => Array(count).fill(name)))),
+      cap_repair_error_counts: countBy(successes.flatMap((record) => Object.entries(record.scoring.cap_repair_error_counts || {}).flatMap(([name, count]) => Array(count).fill(name)))),
       repeat_spread: summarizeRepeats(successes),
       error_counts: countBy(records.filter((record) => record.error).map((record) => record.error_category || "error")),
     }];
@@ -663,8 +782,10 @@ function summarizeVolumeNormalizedComparisons(results) {
       const matchedItemCount = sum(matched.map((item) => item.matchedCount));
       const referenceSupported = sum(matched.map((item) => prefixSupportedCount(item.referenceRecord, item.matchedCount)));
       const comparisonSupported = sum(matched.map((item) => prefixSupportedCount(item.comparisonRecord, item.matchedCount)));
+      const comparisonCapRepairedSupported = sum(matched.map((item) => prefixCapRepairedSupportedCount(item.comparisonRecord, item.matchedCount)));
       const referenceCasePasses = matched.filter((item) => prefixSupportedCount(item.referenceRecord, item.matchedCount) === item.matchedCount).length;
       const comparisonCasePasses = matched.filter((item) => prefixSupportedCount(item.comparisonRecord, item.matchedCount) === item.matchedCount).length;
+      const comparisonCapRepairedCasePasses = matched.filter((item) => prefixCapRepairedSupportedCount(item.comparisonRecord, item.matchedCount) === item.matchedCount).length;
       const comparisonPrefixPassRawFail = matched.filter((item) => (
         prefixSupportedCount(item.comparisonRecord, item.matchedCount) === item.matchedCount
         && !item.comparisonRecord.scoring.case_gate_passed
@@ -680,12 +801,14 @@ function summarizeVolumeNormalizedComparisons(results) {
         mean_matched_items_per_run: round(mean(matched.map((item) => item.matchedCount))),
         reference_item_support_at_matched_count: rateSummary(referenceSupported, matchedItemCount),
         comparison_item_support_at_matched_count: rateSummary(comparisonSupported, matchedItemCount),
+        comparison_cap_repaired_item_support_at_matched_count: rateSummary(comparisonCapRepairedSupported, matchedItemCount),
         reference_case_gate_at_matched_count: rateSummary(referenceCasePasses, matched.length),
         comparison_case_gate_at_matched_count: rateSummary(comparisonCasePasses, matched.length),
+        comparison_cap_repaired_case_gate_at_matched_count: rateSummary(comparisonCapRepairedCasePasses, matched.length),
         reference_raw_case_gate_rate: rateSummary(matched.filter((item) => item.referenceRecord.scoring.case_gate_passed).length, matched.length),
         comparison_raw_case_gate_rate: rateSummary(matched.filter((item) => item.comparisonRecord.scoring.case_gate_passed).length, matched.length),
         comparison_prefix_pass_raw_fail_count: comparisonPrefixPassRawFail,
-        interpretation: "Matched-count gates compare only the first min(reference item count, comparison item count) items within the same model/case/repeat. This controls the conjunctive case-gate volume confound but does not prove the two arms extracted identical clinical targets.",
+        interpretation: "Matched-count gates compare only the first min(reference item count, comparison item count) items within the same model/case/repeat. This controls the conjunctive case-gate volume confound but does not prove the two arms extracted identical clinical targets. Cap-repaired comparison columns apply deterministic local repair before scoring.",
       };
     }
   }
@@ -704,6 +827,10 @@ function runKey(record) {
 
 function prefixSupportedCount(record, budget) {
   return (record.scoring.scored_items || []).slice(0, budget).filter((item) => item.supported).length;
+}
+
+function prefixCapRepairedSupportedCount(record, budget) {
+  return (record.scoring.scored_items || []).slice(0, budget).filter((item) => item.cap_repaired_supported).length;
 }
 
 function summarizeRepeats(records) {
@@ -748,8 +875,12 @@ function updatePublicSummary(publicSummaryPath, report) {
       policy: "greedy set cover over claim tokens with adaptive stopping and budget-normalized label-risk checks",
       phase0_dependency: "built after guard calibration showed the fixed-budget cliff was a guard-threshold artifact",
     },
+    cap_repair: {
+      policy: "deterministically drop unknown IDs, reduce supported span sets to <=3 with the minimal selector, remove invalid optional surface_form offsets, and route unrepaired supported items to insufficient_evidence/not_found",
+      claim_boundary: "repair improves local contract compliance and auditability; it is not semantic entailment or target recall",
+    },
     completed_ablation_work: "Ran quote-v2 and span-ID-v5 arms across both frozen providers with three repeats per cell; case-level outputs and raw provider traces remain private.",
-    remaining_schema_work: "Test a retry/repair loop for max-3 evidence-span cap violations, then compare lexical matching with learned reranking and entailment-backed faithfulness.",
+    remaining_schema_work: "Test live provider retry prompts for contract-invalid items, then compare lexical matching with learned reranking and entailment-backed faithfulness.",
     experiment_id: report.experiment_id,
     private_case_level_outputs_committed: false,
     cases: report.cases.length,
@@ -780,6 +911,11 @@ function summarizeForPublic(summary) {
     span_validity_rate: value.span_validity_rate,
     v5_contract_validity_rate: value.v5_contract_validity_rate,
     evidence_span_count_validity_rate: value.evidence_span_count_validity_rate,
+    cap_repair_needed_rate: value.cap_repair_needed_rate,
+    cap_repaired_item_support_rate: value.cap_repaired_item_support_rate,
+    cap_repaired_case_gate_rate: value.cap_repaired_case_gate_rate,
+    cap_repaired_v5_contract_validity_rate: value.cap_repaired_v5_contract_validity_rate,
+    cap_repaired_evidence_span_count_validity_rate: value.cap_repaired_evidence_span_count_validity_rate,
     selector_support_rate: value.selector_support_rate,
     mean_items_per_successful_run: value.mean_items_per_successful_run,
     mean_selected_context_words: value.mean_selected_context_words,
@@ -788,6 +924,8 @@ function summarizeForPublic(summary) {
     repeat_spread: value.repeat_spread,
     span_resolution_error_counts: value.span_resolution_error_counts,
     span_count_error_counts: value.span_count_error_counts,
+    cap_repair_action_counts: value.cap_repair_action_counts,
+    cap_repair_error_counts: value.cap_repair_error_counts,
     error_counts: value.error_counts,
   }]));
 }
@@ -802,8 +940,8 @@ function renderMarkdownReport(report) {
     "",
     "Resolvable span-ID validity is by construction when provider-side enums are honored. Full v5 contract validity is stricter and includes local cap/offset checks. Neither is semantic entailment or clinical correctness.",
     "",
-    "| Model | Arm | Runs | Completion | Items | Item support | Case gate | Exact quote | Span-ID resolves | V5 contract | Selector support |",
-    "| --- | --- | ---: | --- | ---: | --- | --- | --- | --- | --- | --- |",
+    "| Model | Arm | Runs | Completion | Items | Item support | Case gate | Exact quote | Span-ID resolves | V5 contract | Repaired support | Repaired case gate | Repaired V5 contract | Selector support |",
+    "| --- | --- | ---: | --- | ---: | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
   ];
   for (const value of Object.values(report.summary)) {
     lines.push([
@@ -817,16 +955,19 @@ function renderMarkdownReport(report) {
       value.exact_quote_support_rate ? formatRate(value.exact_quote_support_rate) : "N/A",
       value.span_validity_rate ? formatRate(value.span_validity_rate) : "N/A",
       value.v5_contract_validity_rate ? formatRate(value.v5_contract_validity_rate) : "N/A",
+      value.cap_repaired_item_support_rate ? formatRate(value.cap_repaired_item_support_rate) : "N/A",
+      value.cap_repaired_case_gate_rate ? formatRate(value.cap_repaired_case_gate_rate) : "N/A",
+      value.cap_repaired_v5_contract_validity_rate ? formatRate(value.cap_repaired_v5_contract_validity_rate) : "N/A",
       value.selector_support_rate ? formatRate(value.selector_support_rate) : "N/A",
     ].join(" | ").replace(/^/, "| ").replace(/$/, " |"));
   }
   lines.push("");
   lines.push("## Matched-volume confound check");
   lines.push("");
-  lines.push("Matched-count gates compare only the first `min(reference item count, comparison item count)` items within the same model/case/repeat. They control the conjunctive case-gate volume confound but do not prove the two arms extracted identical clinical targets.");
+  lines.push("Matched-count gates compare only the first `min(reference item count, comparison item count)` items within the same model/case/repeat. They control the conjunctive case-gate volume confound but do not prove the two arms extracted identical clinical targets. Cap-repaired comparison columns apply deterministic local repair before scoring.");
   lines.push("");
-  lines.push("| Model | Comparison | Paired runs | Matched items | Reference items/run | Comparison items/run | Reference item support @ matched count | Comparison item support @ matched count | Reference case gate @ matched count | Comparison case gate @ matched count | Comparison prefix pass, raw fail |");
-  lines.push("| --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- | --- | ---: |");
+  lines.push("| Model | Comparison | Paired runs | Matched items | Reference items/run | Comparison items/run | Reference item support @ matched count | Comparison item support @ matched count | Cap-repaired comparison item support | Reference case gate @ matched count | Comparison case gate @ matched count | Cap-repaired comparison case gate | Comparison prefix pass, raw fail |");
+  lines.push("| --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- | --- | --- | --- | ---: |");
   for (const value of Object.values(report.volume_normalized_comparisons || {})) {
     lines.push([
       value.model,
@@ -837,8 +978,10 @@ function renderMarkdownReport(report) {
       value.mean_comparison_items_per_run,
       formatRate(value.reference_item_support_at_matched_count),
       formatRate(value.comparison_item_support_at_matched_count),
+      formatRate(value.comparison_cap_repaired_item_support_at_matched_count),
       formatRate(value.reference_case_gate_at_matched_count),
       formatRate(value.comparison_case_gate_at_matched_count),
+      formatRate(value.comparison_cap_repaired_case_gate_at_matched_count),
       value.comparison_prefix_pass_raw_fail_count,
     ].join(" | ").replace(/^/, "| ").replace(/$/, " |"));
   }
@@ -1008,6 +1151,10 @@ function spanTexts(spanIds, spanIndex) {
 
 function contextWordsForSpanIds(spanIds, spanIndex) {
   return wordCount(spanTexts(spanIds, spanIndex).join(" "));
+}
+
+function unique(values) {
+  return [...new Set(values.filter((value) => value !== undefined && value !== null && value !== ""))];
 }
 
 function normalizeExact(value) {
@@ -1196,6 +1343,7 @@ module.exports = {
   buildAblationJob,
   toCohereCompatibleSchema,
   scoreAblationRecord,
+  repairSpanIdEvidenceItem,
   summarizeAblation,
   summarizeVolumeNormalizedComparisons,
   updatePublicSummary,

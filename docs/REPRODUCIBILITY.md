@@ -120,6 +120,8 @@ EVAL_CAPTURE_LOGPROBS=1 EVAL_STORE_RAW_LOGPROBS=1 npm run span:id:v5:ablation --
 
 Hosted chat APIs do not return raw logits. Cohere logprobs are requested when supported; the OpenRouter Haiku structured-output route rejected logprob requests in smoke testing, so logprobs are skipped there by default unless explicitly overridden. Raw provider traces and source records must remain ignored.
 
+The same runner computes deterministic cap-repair diagnostics during scoring/rescoring. Cap repair is local post-processing: it reduces supported evidence-span sets to three or fewer with the minimal selector, drops invalid optional surface offsets, and routes unrepaired supported items to abstention statuses. Report raw and repaired rates separately.
+
 ## Human-review workflow
 
 Review packets and method keys contain source excerpts and remain under ignored local output directories. Commit only blank schemas, protocols, and aggregate analyses.
