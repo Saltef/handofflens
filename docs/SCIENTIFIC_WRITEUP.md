@@ -153,7 +153,7 @@ The limitations are substantial and should be stated plainly:
 The next evidence step is not more framework design. It is measurement:
 
 1. Entailment-backed source support on ACI generated and repaired notes. A factuality or NLI-style scorer such as MiniCheck, AlignScore, or a clinical NLI model should be run over claim/source pairs, with a small human disagreement read. This would test whether compact repair improves semantic faithfulness, not only lexical overlap.
-2. In-domain clinical assertion validation. The target-aware item-quote checks should be measured on clinical-note text with an adjudicated clinical gold set. Until then, BioScope remains adjacent-domain component evidence.
+2. In-domain clinical assertion validation. BioScope is adjacent-domain component evidence, not clinical-note text, so the target-aware item-quote checks are not yet validated in-domain.
 3. Live retry, reranker, and entailment follow-up. The deterministic cap-repair pass has now run. The next measurement should test a live retry prompt for contract-invalid items, then compare the lexical matcher with an embedding or reranker-backed matcher under matched item-count, span-budget, and review-routing policies.
 
 ## Our claim today

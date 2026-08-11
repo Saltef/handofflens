@@ -168,7 +168,7 @@ The evidence supports engineering claims about schema reliability, source proven
 Two measurements would most improve the project without expanding its scope into a product:
 
 1. Entailment-backed source support. The current ACI repair metric is lexical: it asks whether output text is recoverable from source tokens. A stronger faithfulness result would run an entailment or factual-consistency scorer, such as MiniCheck, AlignScore, or a clinical NLI model when available, over generated and repaired note claims, then manually review a small disagreement slice.
-2. In-domain clinical assertion validation. BioScope gives adjacent-domain assertion evidence on biomedical literature. The HandoffLens-specific target-aware item-quote checks still need validation on clinical-note text with an adjudicated clinical gold set.
+2. In-domain clinical assertion validation. BioScope is adjacent-domain assertion evidence on biomedical literature, not clinical notes, so the target-aware item-quote checks are not yet validated in-domain.
 3. Reranker/embedding matcher and real-label calibration. The live-retry pass and the entailment-judge bake-off have now run (see Recent experiments): retry recovers ~79% of Command A+ contract-invalid items, and a task-aligned Command A+ judge separates paraphrased assertion errors that lexical/cue scores miss. The remaining design comparison is an embedding- or reranker-backed matcher against the current lexical matcher under the same review-routing metrics, and recalibrating the conformal support gate on adjudicated (not synthetic) labels before any real-setting guarantee.
 
 ## Repository map

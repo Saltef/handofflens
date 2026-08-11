@@ -190,7 +190,6 @@ npm run benchmark:bioscope:conformal -- --input <bioscope>/abstracts.xml;<biosco
 The remaining high-value work is evidence, not architecture polish:
 
 1. Run entailment-backed source support on the ACI generated and repaired notes. MiniCheck, AlignScore, or a clinical NLI comparator would test semantic faithfulness beyond lexical source overlap. A small human review of scorer disagreements should be retained so the automated scorer does not become hidden ground truth.
-2. Run an in-domain clinical assertion/source-fidelity benchmark on clinical-note text with an adjudicated clinical gold set, to test the HandoffLens-specific target-aware item-quote checks directly.
 
 ## Non-Claims
 
