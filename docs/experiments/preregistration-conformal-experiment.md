@@ -1,4 +1,4 @@
-# Pre-Registration — Conformal Risk Control on the Support Decision
+# Pre-Registration -- Conformal Risk Control on the Support Decision
 
 Experiment ID: `conformal-support-v1`
 Timestamp: 2026-08-11, written before analyzing any extraction outputs.

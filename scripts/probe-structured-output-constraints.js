@@ -132,7 +132,7 @@ function dryRun(args) {
   const onlyInTreatment = [...treatmentKw].filter((k) => !controlKw.has(k));
   const onlyInControl = [...controlKw].filter((k) => !treatmentKw.has(k));
 
-  console.log(`DRY RUN — case ${testCase.case_id}, model ${model}`);
+  console.log(`DRY RUN -- case ${testCase.case_id}, model ${model}`);
   console.log(`cases: ${casesPath} (${cases.length} loaded)`);
   console.log(`control keywords:   ${[...controlKw].sort().join(", ")}`);
   console.log(`treatment keywords: ${[...treatmentKw].sort().join(", ")}`);
@@ -143,7 +143,7 @@ function dryRun(args) {
   console.log(
     singleVariable
       ? "OK: the two arms differ by exactly one keyword (maxItems)."
-      : "PROBLEM: arms differ by more than maxItems — fix before spending.",
+      : "PROBLEM: arms differ by more than maxItems -- fix before spending.",
   );
   process.exitCode = singleVariable ? 0 : 1;
 }

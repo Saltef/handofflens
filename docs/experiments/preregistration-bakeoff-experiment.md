@@ -1,4 +1,4 @@
-# Pre-Registration — Support-Score Bake-off Under Conformal Risk Control
+# Pre-Registration -- Support-Score Bake-off Under Conformal Risk Control
 
 Experiment ID: `support-score-bakeoff-v1`
 Timestamp: 2026-08-11, written before the entailment judge run completes.
@@ -13,7 +13,7 @@ LLM entailment score?
 
 ## Design
 
-- Pool: construction-true (value, quote, label) pairs from 60 synthetic cases —
+- Pool: construction-true (value, quote, label) pairs from 60 synthetic cases --
   300 supported (present facts) and 300 unsupported, the latter split into
   template distractors (negated / historical / conditional, cue-marked) and
   subtle distractors (held / completed-in-past, no cue words). 50/50 base rate is
@@ -29,7 +29,7 @@ LLM entailment score?
 
 | Prediction | Expected | Claim boundary |
 | --- | --- | --- |
-| Lexical | Near-zero coverage — fooled by every distractor (value is in the quote) | Adversarial 50/50 pool, not real prevalence |
+| Lexical | Near-zero coverage -- fooled by every distractor (value is in the quote) | Adversarial 50/50 pool, not real prevalence |
 | Cue-aware | Beats lexical on template distractors but still fooled by the two subtle kinds, so still low coverage | Brittle to phrasings outside the cue list |
 | Entailment | Highest coverage at every alpha; the only score that scores subtle distractors low | Judge is itself a model; entailment score is not ground truth |
 | All scores | Realized risk <= alpha (CRC validity holds regardless of score quality) | Coverage, not risk, is the differentiator |

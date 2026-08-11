@@ -64,7 +64,7 @@ function main() {
   }
 
   const lines = [];
-  lines.push("# Conformal Risk Control on the Support Decision — Results");
+  lines.push("# Conformal Risk Control on the Support Decision -- Results");
   lines.push("");
   lines.push(`Experiment: \`${data.experiment_id}\`, model ${data.model}, ${data.cases} synthetic cases.`);
   lines.push(`Present-asserted items: ${overall.items} (${overall.supported} supported, ${overall.unsupported} unsupported by construction).`);

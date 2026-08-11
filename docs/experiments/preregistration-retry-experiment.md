@@ -41,11 +41,11 @@ The only manipulated variable is the presence of the corrective retry turn.
 ## Outcomes
 
 Per provider, paired by case:
-1. **Violation recovery** — violating items before vs after retry (primary).
-2. **Supported-item preservation** — supported items before vs after (guards
+1. **Violation recovery** -- violating items before vs after retry (primary).
+2. **Supported-item preservation** -- supported items before vs after (guards
    against the retry fixing the cap by deleting items, the failure mode seen in
    the prompt-cap experiment).
-3. **Item-count stability** — total items before vs after (should stay ~equal if
+3. **Item-count stability** -- total items before vs after (should stay ~equal if
    the retry only trims spans).
 
 ## Pre-registered predictions

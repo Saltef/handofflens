@@ -41,7 +41,7 @@ function buildCase(caseIndex) {
   const gold = [];
   const push = (text) => { sentences.push(text); return sentences.length - 1; };
 
-  push("SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.");
+  push("SYNTHETIC TRAINING EXAMPLE -- NOT A PATIENT RECORD.");
   push("HOSPITAL COURSE:");
 
   // Present facts (supported gold). Values appear verbatim in their sentence.
@@ -75,7 +75,7 @@ function buildCase(caseIndex) {
   { const s = `If ${cLab} falls below ${cVal}, replete and recheck.`; push(s); distractors.push({ kind: "conditional", value: `${cLab} ${cVal}`, text: s }); }
 
   // Subtle distractors: value present, NOT a current fact, but phrased WITHOUT
-  // template negation/history cue words — so a cue-matching score misses them
+  // template negation/history cue words -- so a cue-matching score misses them
   // and only semantic entailment should catch them.
   const [sDrug, sDose] = pick(MEDS, caseIndex * 19 + 8);
   { const s = `Held ${sDrug} ${sDose} pending specialist input.`; push(s); distractors.push({ kind: "subtle_held", value: `${sDrug} ${sDose}`, text: s, subtle: true }); }

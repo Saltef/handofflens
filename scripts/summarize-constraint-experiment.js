@@ -93,7 +93,7 @@ function main() {
   const testArm = flags.test || arms.find((a) => a !== baseArm && a !== "treatment") || arms[1];
 
   const out = [];
-  out.push(`# Constraint Experiment Results — ${report.experiment_id}`);
+  out.push(`# Constraint Experiment Results -- ${report.experiment_id}`);
   out.push("");
   out.push(`Generated: ${report.generated_at}`);
   out.push(`Cases: ${report.cases_used} (from \`${report.cases_path}\`), repeats: ${report.repeats}, models: ${report.models.join(", ")}`);
@@ -111,10 +111,10 @@ function main() {
     out.push("");
     out.push(`- Pairs: ${contrast.pairs}`);
     out.push(`- Violation rate: control ${contrast.mean_violation_rate_base}, prompt_cap ${contrast.mean_violation_rate_test}`);
-    out.push(`- Mean paired Δ violation rate: ${contrast.mean_paired_delta_violation_rate} [${contrast.delta_violation_rate_ci95.join(", ")}]`);
-    out.push(`- Mean paired Δ item count: ${contrast.mean_paired_delta_item_count} [${contrast.delta_item_count_ci95.join(", ")}]`);
-    out.push(`- Mean paired Δ SUPPORTED items: ${contrast.mean_paired_delta_supported_items} [${contrast.delta_supported_items_ci95.join(", ")}]  (recall proxy: negative = supported items lost)`);
-    out.push(`- Mean paired Δ UNSUPPORTED items: ${contrast.mean_paired_delta_unsupported_items} [${contrast.delta_unsupported_items_ci95.join(", ")}]  (benign if the drop is concentrated here)`);
+    out.push(`- Mean paired Delta violation rate: ${contrast.mean_paired_delta_violation_rate} [${contrast.delta_violation_rate_ci95.join(", ")}]`);
+    out.push(`- Mean paired Delta item count: ${contrast.mean_paired_delta_item_count} [${contrast.delta_item_count_ci95.join(", ")}]`);
+    out.push(`- Mean paired Delta SUPPORTED items: ${contrast.mean_paired_delta_supported_items} [${contrast.delta_supported_items_ci95.join(", ")}]  (recall proxy: negative = supported items lost)`);
+    out.push(`- Mean paired Delta UNSUPPORTED items: ${contrast.mean_paired_delta_unsupported_items} [${contrast.delta_unsupported_items_ci95.join(", ")}]  (benign if the drop is concentrated here)`);
     out.push("");
   }
 

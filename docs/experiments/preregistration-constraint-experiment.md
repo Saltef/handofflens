@@ -54,8 +54,8 @@ route). The two routes differ, so the result is reported per provider, not poole
 ## Outcomes
 
 Per arm, per provider:
-1. **Request acceptance** — HTTP 2xx vs provider schema-rejection error.
-2. **Too-many-span violation rate** — items with more than 3 `evidence_span_ids`
+1. **Request acceptance** -- HTTP 2xx vs provider schema-rejection error.
+2. **Too-many-span violation rate** -- items with more than 3 `evidence_span_ids`
    (primary endpoint).
 3. **Mean `evidence_span_ids` per item.**
 4. **Raw item support rate** and **v5 contract validity rate** (secondary,
@@ -68,13 +68,13 @@ Wilson 95% interval.
 ## Pre-registered predictions
 
 Each provider falls into exactly one of three outcomes:
-- **Honors** — treatment accepted and violation rate drops to ~0. The cap is free
+- **Honors** -- treatment accepted and violation rate drops to ~0. The cap is free
   at generation time; post-hoc repair becomes unnecessary. (Predicted most likely
   for the Cohere `json_object` route.)
-- **Accepts but ignores** — treatment accepted, violation rate unchanged. Confirms
+- **Accepts but ignores** -- treatment accepted, violation rate unchanged. Confirms
   the silent-drop failure mode end-to-end; the compat layer was right to strip it
   because keeping it changes nothing.
-- **Rejects** — treatment returns a schema error. The route does not support
+- **Rejects** -- treatment returns a schema error. The route does not support
   cardinality constraints; the compat stripping is mandatory, and the cap must
   live in post-processing. (Considered plausible for the OpenRouter `strict`
   `json_schema` route.)
@@ -88,7 +88,7 @@ Prompt-cap predictions (registered before its full run):
   `(case, repeat)`, per provider, absolute difference with Wilson 95%.
 - Directional prediction: the appended instruction reduces the violation rate
   relative to control on at least one provider. A null or negative effect is
-  equally reportable — it would show the models do not reliably self-limit span
+  equally reportable -- it would show the models do not reliably self-limit span
   emission from instruction alone, so deterministic cap repair remains necessary.
 - Secondary: check that item count and raw item support do not collapse under the
   instruction (i.e. the cap does not simply suppress extraction).
@@ -99,7 +99,7 @@ Prompt-cap predictions (registered before its full run):
   schema for that route and drop the corresponding cap-repair step; re-measure raw
   (non-repaired) support as the new baseline.
 - If **accepts but ignores** or **rejects**: keep post-hoc cap repair, and report
-  to Cohere that the constraint does not survive that route — a concrete
+  to Cohere that the constraint does not survive that route -- a concrete
   structured-output request, not a model-capability claim.
 
 ## Claim boundary

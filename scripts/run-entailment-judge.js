@@ -29,7 +29,7 @@ function buildPairs(cases) {
 // low. Examples are definitional (they specify the task), reported transparently.
 function judgeMessages(pair) {
   const system = [
-    "You judge whether an evidence sentence AFFIRMS a candidate clinical fact as a real, applicable item for THIS admission — something a clinician would extract for the handoff.",
+    "You judge whether an evidence sentence AFFIRMS a candidate clinical fact as a real, applicable item for THIS admission -- something a clinician would extract for the handoff.",
     "Score HIGH when the sentence states the fact as started, given, measured, ordered, or planned as follow-up.",
     "Score LOW when the fact is negated (not started), hypothetical or conditional (if/should), held or paused, or discontinued/completed in the past.",
     "Judge the framing, not mere word overlap: the value can appear verbatim and still be unsupported.",

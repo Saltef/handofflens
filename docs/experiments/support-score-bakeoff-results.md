@@ -1,4 +1,4 @@
-# Support-Score Bake-off Under Conformal Risk Control — Results
+# Support-Score Bake-off Under Conformal Risk Control -- Results
 
 Experiment ID: `support-score-bakeoff-v1`
 Pre-registration: `docs/preregistration-bakeoff-experiment.md`
@@ -26,7 +26,7 @@ correct verdict reflects generalizing the definition, not template matching).
 - **Cue-aware** catches the three cue-marked kinds (-> 0) but is still fooled by
   the two subtle kinds (no cue word).
 - **Entailment (Command A+)** separates every distractor kind, including the
-  subtle paraphrased ones, while affirming all present facts — perfect separation
+  subtle paraphrased ones, while affirming all present facts -- perfect separation
   on this slice.
 
 ## Conformal bake-off (case-clustered, 200 splits)
@@ -38,12 +38,13 @@ correct verdict reflects generalizing the definition, not template matching).
 | 0.20 | 0.000 | 0.059 | 0.500 | 0.000 |
 
 Entailment wins at every alpha and accepts the entire supported set (0.500 = the
-supported base rate) at zero realized false-support risk. Lexical and cue-aware
+supported base rate) at zero realized marginal false-acceptance risk (fraction of
+all items wrongly accepted; not the FDR among accepted). Lexical and cue-aware
 cannot separate the subtle distractors from real facts at any threshold, so CRC
 must reject almost everything to hold the risk target. CRC validity holds for all
 scores.
 
-## The finding — the ceiling was task specification, not the model
+## The finding -- the ceiling was task specification, not the model
 
 A first judge (v1) with a narrow "current active fact" definition had perfect
 precision but only 0.185 coverage: it scored ~63% of **true** present facts as 0
@@ -54,7 +55,7 @@ cross-phrasing calibration examples (judge v2) lifted Command A+ to perfect
 separation: every present fact affirmed, every distractor rejected, coverage
 0.500 at zero risk.
 
-So the useful reading is not "conformal is limited" — it is that **Command A+ is a
+So the useful reading is not "conformal is limited" -- it is that **Command A+ is a
 strong grounding verifier once the support task is specified**, catching
 negation, conditionality, historical framing, and paraphrased held/discontinued
 distractors that lexical and cue-based scores cannot. The before/after (v1 -> v2)
@@ -66,9 +67,21 @@ is itself the lesson: judge definition, not model capability, was the constraint
   discrimination under a fixed risk budget, and only entailment survives the
   subtle assertion errors.
 - The result also shows why a guarantee is not enough on its own: CRC bounds the
-  false-support rate for any score, but the useful score is the one that delivers
+  marginal false-acceptance rate for any score, but the useful score is the one that delivers
   the bound at high coverage. Here that is entailment, but a stricter/miscalibrated
   judge trades coverage away.
+
+## Reproducibility
+
+The deterministic score columns (lexical, cue-aware) regenerate directly from
+`eval/synthetic_gold_cases.json` via `scripts/run-support-score-bakeoff.js`. The
+entailment column depends on a judge-output artifact: `run-support-score-bakeoff.js`
+only reproduces the lexical/cue-aware rows unless an augmented entailment pool is
+supplied, and that pool is produced by `scripts/run-entailment-judge.js` (a live
+Command A+ run needing `COHERE_API_KEY`). Raw per-item judge outputs are kept
+private per repo policy; the committed public verification artifact is
+`eval/bakeoff_entailment_aggregate.json` (per-kind means + CRC coverage), which
+reproduces every number in the tables above.
 
 ## Claim boundary
 

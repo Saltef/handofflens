@@ -48,9 +48,14 @@ function run() {
     const meanRisk = sumRisk / SPLITS;
     const meanCov = sumCov / SPLITS;
     rows.push({ alpha, meanRisk, meanCov, violationSplits: violations / SPLITS });
-    // Core guarantee: mean realized risk <= alpha (allow tiny MC slack).
-    if (meanRisk > alpha + 0.01) {
-      failures.push(`alpha=${alpha}: mean realized risk ${meanRisk.toFixed(4)} exceeds alpha`);
+    // CRC targets E[risk] <= alpha and is TIGHT (it picks the most permissive
+    // lambda still satisfying the bound), so the true expected risk sits at ~alpha
+    // and finite-sample Monte-Carlo estimates land at alpha +/- MC noise, sometimes
+    // marginally above. We therefore check the estimate is within a Monte-Carlo
+    // tolerance of the target, not strictly below it.
+    const MC_TOL = 0.01;
+    if (meanRisk > alpha + MC_TOL) {
+      failures.push(`alpha=${alpha}: mean realized risk ${meanRisk.toFixed(4)} exceeds target by > ${MC_TOL} (not MC noise)`);
     }
     // Sanity: a lower alpha should not yield HIGHER coverage.
   }
@@ -61,11 +66,12 @@ function run() {
     }
   }
 
-  console.log("Conformal risk control — Monte-Carlo validity (400 splits, pool 600, 50/50)");
-  console.log("alpha | mean realized risk | mean coverage | frac splits over alpha");
+  console.log("Conformal risk control -- Monte-Carlo validity (400 splits, pool 600, 50/50)");
+  console.log("alpha(target) | mean realized marginal risk | mean coverage | frac splits over target");
   for (const r of rows) {
+    const delta = r.meanRisk - r.alpha;
     console.log(
-      `${r.alpha.toFixed(2)}  |  ${r.meanRisk.toFixed(4)}  (<= ${r.alpha})  |  ${r.meanCov.toFixed(3)}  |  ${r.violationSplits.toFixed(3)}`,
+      `${r.alpha.toFixed(2)}  |  ${r.meanRisk.toFixed(4)} (${delta >= 0 ? "+" : ""}${delta.toFixed(4)} vs target, MC tol 0.01)  |  ${r.meanCov.toFixed(3)}  |  ${r.violationSplits.toFixed(3)}`,
     );
   }
 
@@ -75,7 +81,7 @@ function run() {
     process.exitCode = 1;
     return;
   }
-  console.log("\nPASS: mean realized risk <= alpha at every level; coverage monotone in alpha.");
+  console.log("\nPASS: mean realized marginal risk tracks the alpha target within Monte-Carlo tolerance (CRC is tight, so estimates sit at ~alpha, not strictly below); coverage monotone in alpha.");
 }
 
 run();

@@ -15,7 +15,7 @@ The compat layer preserves `enum`. This experiment tests a schema redesign that
 uses only `enum`: replace the array with three optional named fields
 `evidence_span_1`, `evidence_span_2`, `evidence_span_3`, each `{type: string,
 enum: <span index ids>}`. "At most 3" then holds by construction (three fields),
-and the model is not told to extract fewer items — only to distribute up to three
+and the model is not told to extract fewer items -- only to distribute up to three
 span IDs across named fields.
 
 ## Design (arms)
@@ -30,11 +30,11 @@ provider.
 
 ## Outcomes (per provider, paired by case)
 
-1. **Acceptance** — does the slots schema submit without a provider 400?
-2. **Too-many-span rate** — expected 0 for slots by construction; measured to
+1. **Acceptance** -- does the slots schema submit without a provider 400?
+2. **Too-many-span rate** -- expected 0 for slots by construction; measured to
    confirm the model cannot exceed three named fields.
-3. **Item count** — should stay comparable to array_control (recall preserved).
-4. **Supported items** — span IDs resolve in the frozen index and
+3. **Item count** -- should stay comparable to array_control (recall preserved).
+4. **Supported items** -- span IDs resolve in the frozen index and
    `support_status == supported`; should not drop relative to array_control.
 
 ## Pre-registered predictions
@@ -50,7 +50,7 @@ provider.
 ## Decision rule
 
 - If slots is accepted, yields 0 violations, and preserves item/support counts:
-  recommend the named-slot schema as the primary provenance representation — it
+  recommend the named-slot schema as the primary provenance representation -- it
   removes the need for both `maxItems` and post-hoc cap repair without recall loss.
 - If slots preserves compliance but reduces items/support, or is rejected: fall
   back to deterministic cap repair (still the safe primary lever).

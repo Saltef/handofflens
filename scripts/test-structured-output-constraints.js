@@ -86,7 +86,7 @@ function run() {
   const probeOutKw = collectKeywords(probeOut);
   for (const kw of EXPECTED_STRIPPED) {
     if (!probeRawKw.has(kw)) {
-      failures.push(`test bug: synthetic probe is missing "${kw}" — cannot guard it`);
+      failures.push(`test bug: synthetic probe is missing "${kw}" -- cannot guard it`);
     } else if (probeOutKw.has(kw)) {
       failures.push(`LEAK: "${kw}" survived the compat layer (should be stripped)`);
     }
@@ -103,7 +103,7 @@ function run() {
   const submitted = toCohereCompatibleSchema(rawSchema);
   const submittedKeywords = collectKeywords(submitted);
 
-  // 2b. Real span_id_v5 schema, pattern branch (spanIds empty) — exercises the
+  // 2b. Real span_id_v5 schema, pattern branch (spanIds empty) -- exercises the
   //     one stripped keyword the enum branch does not use.
   const patternBranch = toCohereCompatibleSchema(buildOutputSchema({ arm: "span_id_v5", spanIds: [] }));
   if (collectKeywords(patternBranch).has("pattern")) {

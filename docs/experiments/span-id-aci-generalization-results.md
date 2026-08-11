@@ -1,4 +1,4 @@
-# Span-ID Interface — Generalization to Real ACI Notes
+# Span-ID Interface -- Generalization to Real ACI Notes
 
 Experiment ID: `span-id-v5-ablation` on 20 real ACI-Bench records (public, CC BY
 4.0), arms quote_v2 vs span_id_v5, both providers, 2 repeats. Run 2026-08-11.

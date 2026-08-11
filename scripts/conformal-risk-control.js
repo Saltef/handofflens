@@ -7,10 +7,19 @@
 //
 // Setup here: each item has a support score s in [0, 1] (higher = better
 // supported) and a construction-true label supported: boolean. We ACCEPT an
-// item as supported iff s >= lambda. The loss we control is the false-support
-// rate — accepting an item that is truly unsupported:
+// item as supported iff s >= lambda. The per-item loss is:
 //
 //     l_i(lambda) = 1  iff  s_i >= lambda AND NOT supported_i
+//
+// IMPORTANT -- what is controlled: CRC bounds E[ mean_i l_i(lambda) ], i.e. the
+// expected fraction of ALL items that are wrongly accepted (a MARGINAL /
+// unconditional false-acceptance rate). This is NOT the false discovery rate
+// (FDR) among accepted items -- accepted-and-unsupported / accepted. The two
+// coincide only at full coverage (accept everything); when some items are
+// rejected the marginal rate is <= the FDR, so a marginal bound does not by
+// itself bound the FDR. `evaluate()` reports both; only the marginal rate is
+// guaranteed. Reviewers should read "false-acceptance rate" as the marginal
+// quantity, not FDR.
 //
 // l_i is monotone non-increasing in lambda (raising the threshold accepts fewer
 // items, so it can only remove false accepts), which is exactly the structure
@@ -20,7 +29,7 @@
 //     lambda_hat = inf { lambda : (n * Rhat(lambda) + B) / (n + 1) <= alpha }
 //
 // with B = 1 the loss upper bound. The +B/(n+1) term is the finite-sample
-// correction that makes E[ loss(lambda_hat) ] <= alpha hold on a fresh
+// correction that makes E[ mean_i l_i(lambda_hat) ] <= alpha hold on a fresh
 // exchangeable point.
 
 function falseSupportLoss(item, lambda) {

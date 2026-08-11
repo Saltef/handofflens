@@ -1,0 +1,22 @@
+{
+  "note": "Public synthetic aggregate for support-score-bakeoff-v1. Per-kind mean scores and CRC coverage let the reported bake-off numbers be verified without the private per-item judge outputs or live model calls. entailment = Command A+ judge v2 (schema-aligned definition + cross-phrasing calibration examples). Synthetic construction-true labels only; not clinical.",
+  "experiment_id": "support-score-bakeoff-v1",
+  "entailment_model": "cohere:command-a-plus-05-2026 (judge v2)",
+  "pairs": 600,
+  "supported": 300,
+  "unsupported": 300,
+  "per_kind_mean_score": {
+    "present":          { "n": 300, "lexical": 0.956, "cue_aware": 0.956, "entailment": 1.000 },
+    "negated":          { "n": 60,  "lexical": 1.000, "cue_aware": 0.000, "entailment": 0.000 },
+    "historical":       { "n": 60,  "lexical": 1.000, "cue_aware": 0.000, "entailment": 0.000 },
+    "conditional":      { "n": 60,  "lexical": 1.000, "cue_aware": 0.000, "entailment": 0.000 },
+    "subtle_held":      { "n": 60,  "lexical": 1.000, "cue_aware": 1.000, "entailment": 0.000 },
+    "subtle_completed": { "n": 60,  "lexical": 1.000, "cue_aware": 1.000, "entailment": 0.000 }
+  },
+  "crc_coverage_at_alpha_zero_realized_risk": {
+    "0.05": { "lexical": 0.000, "cue_aware": 0.000, "entailment": 0.500 },
+    "0.10": { "lexical": 0.000, "cue_aware": 0.000, "entailment": 0.500 },
+    "0.20": { "lexical": 0.000, "cue_aware": 0.059, "entailment": 0.500 }
+  },
+  "reproduce": "Deterministic scores (lexical, cue_aware) regenerate from eval/synthetic_gold_cases.json via scripts/run-support-score-bakeoff.js. The entailment column requires running scripts/run-entailment-judge.js (live; needs COHERE_API_KEY) to regenerate per-item scores; raw per-item judge outputs are kept private per repo policy, so this committed aggregate is the public verification artifact."
+}

@@ -9,7 +9,7 @@ only aggregates are recorded here.
 Unit: extracted evidence item, and provider run. Endpoint: too-many-span
 violation rate (items with more than 3 `evidence_span_ids`).
 
-## Result 1 — Schema-level cap is rejected by both providers (Treatment)
+## Result 1 -- Schema-level cap is rejected by both providers (Treatment)
 
 Retaining `maxItems` in the submitted schema produced a deterministic HTTP 400 on
 **every** run, on both providers:
@@ -24,44 +24,44 @@ The 3-span cap cannot be enforced end to end through the structured-output schem
 on either route. The compatibility layer's stripping of `maxItems` is therefore
 mandatory, not incidental. The cap must live in post-processing or in the prompt.
 
-## Result 2 — A prompt-level cap sharply reduces over-emission (Prompt-cap)
+## Result 2 -- A prompt-level cap sharply reduces over-emission (Prompt-cap)
 
 Appending one instruction ("emit at most 3 `evidence_span_ids` per item") to the
 control prompt, with the control schema, caused a large paired reduction in the
 violation rate on both providers:
 
-| Provider | Control violation rate | Prompt-cap violation rate | Mean paired Δ (rate) [95%] |
+| Provider | Control violation rate | Prompt-cap violation rate | Mean paired Delta (rate) [95%] |
 | --- | ---: | ---: | ---: |
-| Cohere Command A+ | 47/468, 10.0% [7.6, 13.1] | 4/252, 1.6% [0.6, 4.0] | −8.8 pp [−14.1, −3.4] |
-| Claude Haiku 4.5 | 235/702, 33.5% [30.1, 37.0] | 6/551, 1.1% [0.5, 2.4] | −29.5 pp [−38.1, −20.9] |
+| Cohere Command A+ | 47/468, 10.0% [7.6, 13.1] | 4/252, 1.6% [0.6, 4.0] | -8.8 pp [-14.1, -3.4] |
+| Claude Haiku 4.5 | 235/702, 33.5% [30.1, 37.0] | 6/551, 1.1% [0.5, 2.4] | -29.5 pp [-38.1, -20.9] |
 
 Both paired intervals exclude zero. The effect is much larger on Haiku, which
 over-emitted far more at baseline (33.5% vs Cohere 10.0%). This is a real,
 causal, single-variable effect: the only change from control was the appended
 instruction.
 
-## Result 3 — The prompt cap reduces violations by dropping SUPPORTED items (recall loss)
+## Result 3 -- The prompt cap reduces violations by dropping SUPPORTED items (recall loss)
 
 A second run (control + prompt-cap, capturing per-item provenance support) shows
-the instruction both caps the per-item span tail **and** drops items — and the
+the instruction both caps the per-item span tail **and** drops items -- and the
 dropped items are almost entirely supported ones, not over-extraction.
 
-| Provider | Span tail 4+ control → cap | Items control → cap | Supported-item rate both arms | Mean paired Δ supported items [95%] | Mean paired Δ unsupported items [95%] |
+| Provider | Span tail 4+ control -> cap | Items control -> cap | Supported-item rate both arms | Mean paired Delta supported items [95%] | Mean paired Delta unsupported items [95%] |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Cohere Command A+ | 41 → 5 | 430 → 288 | 98.6% → 97.6% | **−7.15 [−12.6, −1.7]** | +0.05 [−0.36, +0.46] |
-| Claude Haiku 4.5 | 244 → 4 | 724 → 539 | 98.6% → 98.9% | **−9.05 [−13.7, −4.4]** | −0.20 [−0.64, +0.24] |
+| Cohere Command A+ | 41 -> 5 | 430 -> 288 | 98.6% -> 97.6% | **-7.15 [-12.6, -1.7]** | +0.05 [-0.36, +0.46] |
+| Claude Haiku 4.5 | 244 -> 4 | 724 -> 539 | 98.6% -> 98.9% | **-9.05 [-13.7, -4.4]** | -0.20 [-0.64, +0.24] |
 
-The span-tail collapse is real (4+ spans/item → ~0), so the instruction does cap
+The span-tail collapse is real (4+ spans/item -> ~0), so the instruction does cap
 spans. But baseline unsupported extraction was already negligible (~98.6%
 supported in both arms), so there was almost no over-extraction to shed. The
-entire item drop lands on **supported** items (Δ supported ≈ Δ total; Δ
-unsupported ≈ 0, interval spans zero on both providers). The violation-rate
+entire item drop lands on **supported** items (Delta supported ~= Delta total; Delta
+unsupported ~= 0, interval spans zero on both providers). The violation-rate
 improvement is therefore bought with coverage, not with cleaner selection.
 
 Proxy caveat: "supported" here means the item's span IDs resolve in the frozen
 span index and its self-reported `support_status` is `supported`. This is a
 provenance-support proxy, not adjudicated gold recall. The direction is
-unambiguous — the cap does not remove unsupported items — but the magnitude of
+unambiguous -- the cap does not remove unsupported items -- but the magnitude of
 true recall loss needs gold targets to confirm.
 
 ## Interpretation and decision
@@ -83,18 +83,18 @@ true recall loss needs gold targets to confirm.
 
 A repeats=3 rerun reproduced the constraint findings: `maxItems` still rejected on
 both providers (treatment 0/60 accepted); the prompt-cap paired violation-rate
-drop held (Cohere Δ −0.091 [−0.136, −0.047], matching the earlier −0.073 to
-−0.088); and the recall-loss pattern reproduced (Cohere items 1,231 → 781 with
+drop held (Cohere Delta -0.091 [-0.136, -0.047], matching the earlier -0.073 to
+-0.088); and the recall-loss pattern reproduced (Cohere items 1,231 -> 781 with
 supported rate ~98% in both arms, i.e. the drop is supported items). Unlike the
-retry experiment — whose repeats=1 100% figure fell to ~79% for Command A+ under
-repeats=3 — the constraint conclusions are stable across repeats.
+retry experiment -- whose repeats=1 100% figure fell to ~79% for Command A+ under
+repeats=3 -- the constraint conclusions are stable across repeats.
 
 ## Cluster-robust inference note
 
 Items are nested in 20 cases and correlated within case. A case-level cluster
-bootstrap (resample cases, 20k draws) confirms the paired causal deltas — which
-were already computed per case — are essentially unchanged (e.g. Cohere Δ
-supported/case bootstrap [−12.8, −1.6] vs normal-z [−12.6, −1.7]). The *per-arm
+bootstrap (resample cases, 20k draws) confirms the paired causal deltas -- which
+were already computed per case -- are essentially unchanged (e.g. Cohere Delta
+supported/case bootstrap [-12.8, -1.6] vs normal-z [-12.6, -1.7]). The *per-arm
 pooled* violation rates, however, were reported with item-level Wilson intervals
 that ignore clustering and are too narrow; the cluster-robust versions are wider
 (Cohere control 9.5% [4.6, 15.6] vs item-Wilson [7.1, 12.7]; Haiku control 33.7%

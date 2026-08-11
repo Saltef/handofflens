@@ -120,7 +120,7 @@ function dryRun(args) {
   const slotsSubmitted = toCohereCompatibleSchema(toSlotsSchema(spanIds));
   const kw = collectKeywords(slotsSubmitted);
   const item = slotsSubmitted.properties.items.items;
-  console.log(`DRY RUN — case ${cases[0].case_id}`);
+  console.log(`DRY RUN -- case ${cases[0].case_id}`);
   console.log(`slots item fields: ${Object.keys(item.properties).join(", ")}`);
   console.log(`has evidence_span_ids: ${"evidence_span_ids" in item.properties}`);
   console.log(`has evidence_span_1/2/3: ${["evidence_span_1", "evidence_span_2", "evidence_span_3"].every((f) => f in item.properties)}`);

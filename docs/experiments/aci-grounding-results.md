@@ -1,4 +1,4 @@
-# Real-Data Grounding Pass — Command A+ Judge on ACI-Bench Notes
+# Real-Data Grounding Pass -- Command A+ Judge on ACI-Bench Notes
 
 Experiment ID: `aci-grounding-judge-v1`
 Run: 2026-08-11. 25 real ACI-Bench records (public, CC BY 4.0). The Command A+
@@ -7,7 +7,7 @@ conversation. Aggregates only; raw outputs local/uncommitted.
 
 Purpose: put the grounding judge (perfect on the synthetic bake-off) onto real
 clinical text. ACI has no per-sentence grounding gold, so this is a DESCRIPTIVE
-behavior pass — flag rate plus inspectable examples — not validated accuracy.
+behavior pass -- flag rate plus inspectable examples -- not validated accuracy.
 
 ## Result
 
@@ -21,12 +21,12 @@ behavior pass — flag rate plus inspectable examples — not validated accuracy
 ## What the flags are (manual inspection)
 
 The flagged claim sentences are a mix:
-- **Genuine grounding gaps** — historical or comparative details a discharge note
+- **Genuine grounding gaps** -- historical or comparative details a discharge note
   carries that the source conversation does not state, e.g. "colonoscopy about 3
   years ago", "echocardiogram appears unchanged in comparison to last year".
-- **Negated findings** — "Denies anxiety", "Denies chest pain": the judge is
+- **Negated findings** -- "Denies anxiety", "Denies chest pain": the judge is
   strict about scoring negations as source-supported facts.
-- **Residual parsing artifacts** — sub-section labels ("Gastrointestinal") and a
+- **Residual parsing artifacts** -- sub-section labels ("Gastrointestinal") and a
   sentence-splitter error ("Deniesswelling") that a cleaner segmenter would drop.
 
 ## Interpretation
@@ -34,7 +34,7 @@ The flagged claim sentences are a mix:
 On real clinical notes the Command A+ grounding judge behaves sensibly: it
 affirms most sentences and concentrates its low scores on synthesized,
 historical, and comparative content that a strict source-grounding check should
-question. The 12.8% figure is a descriptive flag rate, not an error rate — some
+question. The 12.8% figure is a descriptive flag rate, not an error rate -- some
 flags are legitimate grounding gaps, some are judge strictness, and some are
 segmentation noise. A production use would add a claim/segment filter and, for a
 real accuracy number, human adjudication of a flagged sample.
