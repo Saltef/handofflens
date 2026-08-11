@@ -130,7 +130,7 @@ The limitations are substantial and should be stated plainly:
 - The dataset cannot be redistributed in this repository.
 - The current public artifact contains no private source records or case-level model outputs.
 - The study has no true external validation cohort.
-- The case records do not have usable dates or times, so temporal validation is not available.
+- Temporal correctness is out of scope; the source records carry no usable timestamps.
 - Human factual review is pending.
 - Clinical review is pending and may not be available.
 - Non-clinician reviewers can assess source support, quote completeness, and extraction consistency, but not clinical harmfulness or care appropriateness.
@@ -153,7 +153,7 @@ The limitations are substantial and should be stated plainly:
 The next evidence step is not more framework design. It is measurement:
 
 1. Entailment-backed source support on ACI generated and repaired notes. A factuality or NLI-style scorer such as MiniCheck, AlignScore, or a clinical NLI model should be run over claim/source pairs, with a small human disagreement read. This would test whether compact repair improves semantic faithfulness, not only lexical overlap.
-2. In-domain clinical assertion validation. The target-aware item-quote checks should be measured on clinical-note text through DUA-controlled i2b2/n2c2 data or a private adjudicated clinical gold set. Until then, BioScope remains adjacent-domain component evidence.
+2. In-domain clinical assertion validation. The target-aware item-quote checks should be measured on clinical-note text with an adjudicated clinical gold set. Until then, BioScope remains adjacent-domain component evidence.
 3. Live retry, reranker, and entailment follow-up. The deterministic cap-repair pass has now run. The next measurement should test a live retry prompt for contract-invalid items, then compare the lexical matcher with an embedding or reranker-backed matcher under matched item-count, span-budget, and review-routing policies.
 
 ## Our claim today

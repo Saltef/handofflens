@@ -69,7 +69,7 @@ These are engineering results. They are not clinical accuracy estimates.
 Update (2026-08): the live-retry test and an LLM-judge entailment score have since been run (see the "Recent experiments" section of the README, `docs/experiments/retry-recovery-results.md`, and `docs/experiments/support-score-bakeoff-results.md`). What remains below is updated accordingly.
 
 - Replace or augment lexical source support with a **dedicated** entailment/faithfulness scorer (MiniCheck, AlignScore, or a clinical NLI comparator). The bake-off used an LLM-as-judge entailment score, which is a model estimate, not a calibrated faithfulness metric.
-- Measure the target-aware item-quote assertion checks on in-domain clinical text, either through DUA-controlled i2b2/n2c2 access or a private adjudicated clinical gold set.
+- Measure the target-aware item-quote assertion checks on in-domain clinical-note text with an adjudicated clinical gold set.
 - **Done:** a live retry prompt for span-ID contract failures was tested (recovers ~79% of Command A+ over-emissions, 100% Haiku; residual needs deterministic cap repair). Still pending: compare an embedding/reranker-backed span matcher against the lexical matcher under matched budgets.
 - Human-review a small slice of entailment/scorer disagreements so automated factuality scores do not become hidden ground truth.
 

@@ -1,12 +1,6 @@
 # Public Benchmark Run Results - 2026-07-22
 
-This note records the current public benchmark execution after the benchmark, Docker, and assertion-baseline refactor. It contains aggregate results only. No downloaded corpus files, raw case records, private provider outputs, API keys, or reviewer packets are committed.
-
-## Data Access
-
-- ACI-Bench was downloaded from the public GitHub JSON files under CC BY 4.0. All 30 public challenge JSON files were ingested: train, validation, three held-out challenge splits, their `_full` aliases, and four section-specific files for each split.
-- BioScope was downloaded from the public BioScope corpus zip for research use.
-- i2b2 and n2c2 datasets were not present locally and remain DUA-gated. No i2b2/n2c2 scores are claimed here.
+Aggregate public benchmark results on two datasets: ACI-Bench (clinician-patient dialogues with expert reference notes, CC BY 4.0) and the BioScope corpus (assertion-annotated biomedical text). Raw corpus files and per-record outputs are not committed.
 
 ## ACI-Bench Note Generation
 
@@ -196,7 +190,7 @@ npm run benchmark:bioscope:conformal -- --input <bioscope>/abstracts.xml;<biosco
 The remaining high-value work is evidence, not architecture polish:
 
 1. Run entailment-backed source support on the ACI generated and repaired notes. MiniCheck, AlignScore, or a clinical NLI comparator would test semantic faithfulness beyond lexical source overlap. A small human review of scorer disagreements should be retained so the automated scorer does not become hidden ground truth.
-2. Run an in-domain clinical assertion/source-fidelity benchmark when data access allows. i2b2/n2c2 or private adjudicated clinical gold would finally test the HandoffLens-specific target-aware item-quote checks on clinical note text.
+2. Run an in-domain clinical assertion/source-fidelity benchmark on clinical-note text with an adjudicated clinical gold set, to test the HandoffLens-specific target-aware item-quote checks directly.
 
 ## Non-Claims
 
@@ -215,5 +209,3 @@ The remaining high-value work is evidence, not architecture polish:
 - The redacted BioScope clinical XML result is a data-redaction diagnostic, not clinical assertion performance.
 - BioScope conformal coverage is marginal prediction-set coverage for the assertion subtask, not clinical safety coverage.
 - BioScope conformal set-size and abstention numbers should be regenerated after score-normalization changes before being used as headline metrics.
-- The small transformer comparator was not run because no suitable local model/runtime was available in the public repo.
-- No i2b2 or n2c2 result is claimed without DUA-controlled data.
