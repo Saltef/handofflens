@@ -52,6 +52,21 @@ HandoffLens responds with a candidate-first architecture. Instead of asking the 
 
 In the fresh June 23 validation rerun, candidate-first v4 passed the deterministic provenance gate on 19 of 20 development cases, with one principled abstention. The remaining open question is whether its higher item count reflects recovered evidence or over-extraction; that is prepared for factual review.
 
+## Recent experiments (2026-08): contract enforcement, verification, calibration
+
+A second wave of pre-registered experiments extends the grounding work from parsing and recovery into contract enforcement, self-verification, and calibrated gating. Each has a results document under `docs/`, a pre-registration, and a row in the claims register.
+
+| Experiment | Finding | Boundary |
+| --- | --- | --- |
+| Span-ID generalization on real ACI ([results](docs/span-id-aci-generalization-results.md)) | Command A+'s constrained span-ID benefit replicates on 67 real ACI-Bench notes (65.9% -> 91.5%, tight CIs), matching the hard slice; the hard-slice "span IDs hurt Haiku" divergence did **not** generalize (Haiku also improved) | item-level support, not entailment; Haiku n=67 partial (credit limit) |
+| Cardinality constraint ([results](docs/constraint-experiment-results.md)) | Both providers reject `maxItems` on array types in structured output (HTTP 400); a prompt-level cap lowers violations only by dropping supported items (recall loss) | submission-contract behavior, not model capability |
+| Live-retry recovery ([results](docs/retry-recovery-results.md)) | One corrective retry recovers 78.8% of Command A+ contract-invalid items (100% Haiku), content preserved; the residual needs deterministic cap repair | repeats=3 corrected an optimistic repeats=1 100% |
+| Conformal risk control ([results](docs/conformal-support-results.md)) | CRC controls the false-support rate at a chosen alpha on construction-true labels; validated by Monte-Carlo | synthetic distribution; a clinical guarantee needs real labels |
+| Support-score bake-off ([results](docs/support-score-bakeoff-results.md)) | Command A+ as a grounding judge separates negation, history, conditional, and paraphrased distractors that lexical and cue scores miss (perfect separation on the synthetic pool) | judge is a model estimate, not gold |
+| Real-note grounding pass ([results](docs/aci-grounding-results.md)) | The Command A+ judge on 25 real ACI notes scores the median sentence 0.95, with a 12.8% claim-level flag rate and inspectable flags | descriptive; no per-sentence gold |
+
+Two methodological notes, because they show the discipline as much as the results: the repeats=3 rerun **corrected** the retry claim from a lucky 100% down to 78.8%, and the real-ACI run **scoped down** the cross-provider span-ID divergence rather than letting the hard-slice pattern stand. Finding the boundary of a claim is part of the result. Statistical methods used include conformal risk control, case-level cluster bootstrap, and Wilson intervals; the reusable pieces are `scripts/conformal-risk-control.js` (with a Monte-Carlo validity test) and `scripts/support-scores.js`.
+
 ## Start here
 
 For a quick review, these are the most useful files:
@@ -152,7 +167,7 @@ Two measurements would most improve the project without expanding its scope into
 
 1. Entailment-backed source support. The current ACI repair metric is lexical: it asks whether output text is recoverable from source tokens. A stronger faithfulness result would run an entailment or factual-consistency scorer, such as MiniCheck, AlignScore, or a clinical NLI model when available, over generated and repaired note claims, then manually review a small disagreement slice.
 2. In-domain clinical assertion validation. BioScope gives adjacent-domain assertion evidence on biomedical literature. The HandoffLens-specific target-aware item-quote checks still need an in-domain clinical benchmark or private adjudicated clinical gold, such as i2b2/n2c2 when data-use access permits.
-3. Live retry, reranker, and entailment follow-up. The deterministic cap-repair pass has now run. The next design comparison should test a live retry prompt for contract-invalid items, keep evidence-span IDs provider-constrained, and compare the current lexical matcher against an embedding or reranker-backed matcher under the same item-count and review-routing metrics.
+3. Reranker/embedding matcher and real-label calibration. The live-retry pass and the entailment-judge bake-off have now run (see Recent experiments): retry recovers ~79% of Command A+ contract-invalid items, and a task-aligned Command A+ judge separates paraphrased assertion errors that lexical/cue scores miss. The remaining design comparison is an embedding- or reranker-backed matcher against the current lexical matcher under the same review-routing metrics, and recalibrating the conformal support gate on adjudicated (not synthetic) labels before any real-setting guarantee.
 
 ## Repository map
 

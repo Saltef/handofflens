@@ -1,0 +1,4082 @@
+[
+  {
+    "case_id": "SYNTH_GOLD_0001",
+    "subject_id": "SYNTH_SUBJECT_0001",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted metoprolol 25 mg BID for ongoing management.\nStarted apixaban 5 mg BID for ongoing management.\nAdmission creatinine was 1.8 mg/dL, monitored during the stay.\nFollow up with primary care in 7 days.\nThe patient was NOT started on atorvastatin 80 mg nightly due to intolerance.\nHistory of amoxicillin 500 mg TID use prior to admission, since discontinued.\nIf troponin falls below 0.08 ng/mL, replete and recheck.\nHeld spironolactone 25 mg daily pending specialist input.\nThe insulin glargine 18 units nightly course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "metoprolol 25 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started metoprolol 25 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "apixaban 5 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started apixaban 5 mg BID for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "creatinine 1.8 mg/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission creatinine was 1.8 mg/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "primary care in 7 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with primary care in 7 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "The patient was NOT started on atorvastatin 80 mg nightly due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "amoxicillin 500 mg TID",
+        "text": "History of amoxicillin 500 mg TID use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "troponin 0.08 ng/mL",
+        "text": "If troponin falls below 0.08 ng/mL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "spironolactone 25 mg daily",
+        "text": "Held spironolactone 25 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "insulin glargine 18 units nightly",
+        "text": "The insulin glargine 18 units nightly course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0002",
+    "subject_id": "SYNTH_SUBJECT_0002",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted pantoprazole 40 mg daily for ongoing management.\nStarted metoprolol 25 mg BID for ongoing management.\nStarted apixaban 5 mg BID for ongoing management.\nAdmission sodium was 129 mmol/L, monitored during the stay.\nFollow up with cardiology in 2 weeks.\nThe patient was NOT started on insulin glargine 18 units nightly due to intolerance.\nHistory of clopidogrel 75 mg daily use prior to admission, since discontinued.\nIf sodium falls below 129 mmol/L, replete and recheck.\nHeld pantoprazole 40 mg daily pending specialist input.\nThe spironolactone 25 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "pantoprazole 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started pantoprazole 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "metoprolol 25 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started metoprolol 25 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "apixaban 5 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started apixaban 5 mg BID for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "sodium 129 mmol/L",
+        "assertion": "present",
+        "gold_sentence": "Admission sodium was 129 mmol/L, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "cardiology in 2 weeks",
+        "assertion": "present",
+        "gold_sentence": "Follow up with cardiology in 2 weeks."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "insulin glargine 18 units nightly",
+        "text": "The patient was NOT started on insulin glargine 18 units nightly due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "clopidogrel 75 mg daily",
+        "text": "History of clopidogrel 75 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "sodium 129 mmol/L",
+        "text": "If sodium falls below 129 mmol/L, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "pantoprazole 40 mg daily",
+        "text": "Held pantoprazole 40 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "spironolactone 25 mg daily",
+        "text": "The spironolactone 25 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0003",
+    "subject_id": "SYNTH_SUBJECT_0003",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted atorvastatin 80 mg nightly for ongoing management.\nStarted pantoprazole 40 mg daily for ongoing management.\nStarted metoprolol 25 mg BID for ongoing management.\nStarted apixaban 5 mg BID for ongoing management.\nAdmission INR was 2.6, monitored during the stay.\nFollow up with anticoagulation clinic in 3 days.\nThe patient was NOT started on amoxicillin 500 mg TID due to intolerance.\nHistory of lisinopril 10 mg daily use prior to admission, since discontinued.\nIf hemoglobin falls below 9.4 g/dL, replete and recheck.\nHeld amoxicillin 500 mg TID pending specialist input.\nThe furosemide 40 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "atorvastatin 80 mg nightly",
+        "assertion": "present",
+        "gold_sentence": "Started atorvastatin 80 mg nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "pantoprazole 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started pantoprazole 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "metoprolol 25 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started metoprolol 25 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "apixaban 5 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started apixaban 5 mg BID for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "INR 2.6",
+        "assertion": "present",
+        "gold_sentence": "Admission INR was 2.6, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "anticoagulation clinic in 3 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with anticoagulation clinic in 3 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "amoxicillin 500 mg TID",
+        "text": "The patient was NOT started on amoxicillin 500 mg TID due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "lisinopril 10 mg daily",
+        "text": "History of lisinopril 10 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "hemoglobin 9.4 g/dL",
+        "text": "If hemoglobin falls below 9.4 g/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "amoxicillin 500 mg TID",
+        "text": "Held amoxicillin 500 mg TID pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "furosemide 40 mg daily",
+        "text": "The furosemide 40 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0004",
+    "subject_id": "SYNTH_SUBJECT_0004",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted furosemide 40 mg daily for ongoing management.\nStarted atorvastatin 80 mg nightly for ongoing management.\nAdmission hemoglobin was 9.4 g/dL, monitored during the stay.\nFollow up with nephrology in 10 days.\nThe patient was NOT started on pantoprazole 40 mg daily due to intolerance.\nHistory of insulin glargine 18 units nightly use prior to admission, since discontinued.\nIf glucose falls below 212 mg/dL, replete and recheck.\nHeld insulin glargine 18 units nightly pending specialist input.\nThe atorvastatin 80 mg nightly course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "furosemide 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started furosemide 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "atorvastatin 80 mg nightly",
+        "assertion": "present",
+        "gold_sentence": "Started atorvastatin 80 mg nightly for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "hemoglobin 9.4 g/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission hemoglobin was 9.4 g/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "nephrology in 10 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with nephrology in 10 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "pantoprazole 40 mg daily",
+        "text": "The patient was NOT started on pantoprazole 40 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "insulin glargine 18 units nightly",
+        "text": "History of insulin glargine 18 units nightly use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "glucose 212 mg/dL",
+        "text": "If glucose falls below 212 mg/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "insulin glargine 18 units nightly",
+        "text": "Held insulin glargine 18 units nightly pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "The atorvastatin 80 mg nightly course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0005",
+    "subject_id": "SYNTH_SUBJECT_0005",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted spironolactone 25 mg daily for ongoing management.\nStarted furosemide 40 mg daily for ongoing management.\nStarted atorvastatin 80 mg nightly for ongoing management.\nAdmission potassium was 3.2 mmol/L, monitored during the stay.\nFollow up with wound care in 5 days.\nThe patient was NOT started on spironolactone 25 mg daily due to intolerance.\nHistory of spironolactone 25 mg daily use prior to admission, since discontinued.\nIf creatinine falls below 1.8 mg/dL, replete and recheck.\nHeld atorvastatin 80 mg nightly pending specialist input.\nThe pantoprazole 40 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "spironolactone 25 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started spironolactone 25 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "furosemide 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started furosemide 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "atorvastatin 80 mg nightly",
+        "assertion": "present",
+        "gold_sentence": "Started atorvastatin 80 mg nightly for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "potassium 3.2 mmol/L",
+        "assertion": "present",
+        "gold_sentence": "Admission potassium was 3.2 mmol/L, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "wound care in 5 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with wound care in 5 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "spironolactone 25 mg daily",
+        "text": "The patient was NOT started on spironolactone 25 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "spironolactone 25 mg daily",
+        "text": "History of spironolactone 25 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "creatinine 1.8 mg/dL",
+        "text": "If creatinine falls below 1.8 mg/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "Held atorvastatin 80 mg nightly pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "pantoprazole 40 mg daily",
+        "text": "The pantoprazole 40 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0006",
+    "subject_id": "SYNTH_SUBJECT_0006",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted insulin glargine 18 units nightly for ongoing management.\nStarted spironolactone 25 mg daily for ongoing management.\nStarted furosemide 40 mg daily for ongoing management.\nStarted atorvastatin 80 mg nightly for ongoing management.\nAdmission glucose was 212 mg/dL, monitored during the stay.\nFollow up with primary care in 7 days.\nThe patient was NOT started on clopidogrel 75 mg daily due to intolerance.\nHistory of furosemide 40 mg daily use prior to admission, since discontinued.\nIf INR falls below 2.6, replete and recheck.\nHeld apixaban 5 mg BID pending specialist input.\nThe metoprolol 25 mg BID course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "insulin glargine 18 units nightly",
+        "assertion": "present",
+        "gold_sentence": "Started insulin glargine 18 units nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "spironolactone 25 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started spironolactone 25 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "furosemide 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started furosemide 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "atorvastatin 80 mg nightly",
+        "assertion": "present",
+        "gold_sentence": "Started atorvastatin 80 mg nightly for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "glucose 212 mg/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission glucose was 212 mg/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "primary care in 7 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with primary care in 7 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "clopidogrel 75 mg daily",
+        "text": "The patient was NOT started on clopidogrel 75 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "furosemide 40 mg daily",
+        "text": "History of furosemide 40 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "INR 2.6",
+        "text": "If INR falls below 2.6, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "apixaban 5 mg BID",
+        "text": "Held apixaban 5 mg BID pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "metoprolol 25 mg BID",
+        "text": "The metoprolol 25 mg BID course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0007",
+    "subject_id": "SYNTH_SUBJECT_0007",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted lisinopril 10 mg daily for ongoing management.\nStarted insulin glargine 18 units nightly for ongoing management.\nAdmission troponin was 0.08 ng/mL, monitored during the stay.\nFollow up with cardiology in 2 weeks.\nThe patient was NOT started on metoprolol 25 mg BID due to intolerance.\nHistory of atorvastatin 80 mg nightly use prior to admission, since discontinued.\nIf potassium falls below 3.2 mmol/L, replete and recheck.\nHeld lisinopril 10 mg daily pending specialist input.\nThe apixaban 5 mg BID course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "lisinopril 10 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started lisinopril 10 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "insulin glargine 18 units nightly",
+        "assertion": "present",
+        "gold_sentence": "Started insulin glargine 18 units nightly for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "troponin 0.08 ng/mL",
+        "assertion": "present",
+        "gold_sentence": "Admission troponin was 0.08 ng/mL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "cardiology in 2 weeks",
+        "assertion": "present",
+        "gold_sentence": "Follow up with cardiology in 2 weeks."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "metoprolol 25 mg BID",
+        "text": "The patient was NOT started on metoprolol 25 mg BID due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "History of atorvastatin 80 mg nightly use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "potassium 3.2 mmol/L",
+        "text": "If potassium falls below 3.2 mmol/L, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "lisinopril 10 mg daily",
+        "text": "Held lisinopril 10 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "apixaban 5 mg BID",
+        "text": "The apixaban 5 mg BID course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0008",
+    "subject_id": "SYNTH_SUBJECT_0008",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted clopidogrel 75 mg daily for ongoing management.\nStarted lisinopril 10 mg daily for ongoing management.\nStarted insulin glargine 18 units nightly for ongoing management.\nAdmission creatinine was 1.8 mg/dL, monitored during the stay.\nFollow up with anticoagulation clinic in 3 days.\nThe patient was NOT started on furosemide 40 mg daily due to intolerance.\nHistory of pantoprazole 40 mg daily use prior to admission, since discontinued.\nIf troponin falls below 0.08 ng/mL, replete and recheck.\nHeld furosemide 40 mg daily pending specialist input.\nThe amoxicillin 500 mg TID course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "clopidogrel 75 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started clopidogrel 75 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "lisinopril 10 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started lisinopril 10 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "insulin glargine 18 units nightly",
+        "assertion": "present",
+        "gold_sentence": "Started insulin glargine 18 units nightly for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "creatinine 1.8 mg/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission creatinine was 1.8 mg/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "anticoagulation clinic in 3 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with anticoagulation clinic in 3 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "furosemide 40 mg daily",
+        "text": "The patient was NOT started on furosemide 40 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "pantoprazole 40 mg daily",
+        "text": "History of pantoprazole 40 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "troponin 0.08 ng/mL",
+        "text": "If troponin falls below 0.08 ng/mL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "furosemide 40 mg daily",
+        "text": "Held furosemide 40 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "amoxicillin 500 mg TID",
+        "text": "The amoxicillin 500 mg TID course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0009",
+    "subject_id": "SYNTH_SUBJECT_0009",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted amoxicillin 500 mg TID for ongoing management.\nStarted clopidogrel 75 mg daily for ongoing management.\nStarted lisinopril 10 mg daily for ongoing management.\nStarted insulin glargine 18 units nightly for ongoing management.\nAdmission sodium was 129 mmol/L, monitored during the stay.\nFollow up with nephrology in 10 days.\nThe patient was NOT started on lisinopril 10 mg daily due to intolerance.\nHistory of metoprolol 25 mg BID use prior to admission, since discontinued.\nIf sodium falls below 129 mmol/L, replete and recheck.\nHeld metoprolol 25 mg BID pending specialist input.\nThe clopidogrel 75 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "amoxicillin 500 mg TID",
+        "assertion": "present",
+        "gold_sentence": "Started amoxicillin 500 mg TID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "clopidogrel 75 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started clopidogrel 75 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "lisinopril 10 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started lisinopril 10 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "insulin glargine 18 units nightly",
+        "assertion": "present",
+        "gold_sentence": "Started insulin glargine 18 units nightly for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "sodium 129 mmol/L",
+        "assertion": "present",
+        "gold_sentence": "Admission sodium was 129 mmol/L, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "nephrology in 10 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with nephrology in 10 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "lisinopril 10 mg daily",
+        "text": "The patient was NOT started on lisinopril 10 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "metoprolol 25 mg BID",
+        "text": "History of metoprolol 25 mg BID use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "sodium 129 mmol/L",
+        "text": "If sodium falls below 129 mmol/L, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "metoprolol 25 mg BID",
+        "text": "Held metoprolol 25 mg BID pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "clopidogrel 75 mg daily",
+        "text": "The clopidogrel 75 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0010",
+    "subject_id": "SYNTH_SUBJECT_0010",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted apixaban 5 mg BID for ongoing management.\nStarted amoxicillin 500 mg TID for ongoing management.\nAdmission INR was 2.6, monitored during the stay.\nFollow up with wound care in 5 days.\nThe patient was NOT started on apixaban 5 mg BID due to intolerance.\nHistory of apixaban 5 mg BID use prior to admission, since discontinued.\nIf hemoglobin falls below 9.4 g/dL, replete and recheck.\nHeld clopidogrel 75 mg daily pending specialist input.\nThe lisinopril 10 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "apixaban 5 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started apixaban 5 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "amoxicillin 500 mg TID",
+        "assertion": "present",
+        "gold_sentence": "Started amoxicillin 500 mg TID for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "INR 2.6",
+        "assertion": "present",
+        "gold_sentence": "Admission INR was 2.6, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "wound care in 5 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with wound care in 5 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "apixaban 5 mg BID",
+        "text": "The patient was NOT started on apixaban 5 mg BID due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "apixaban 5 mg BID",
+        "text": "History of apixaban 5 mg BID use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "hemoglobin 9.4 g/dL",
+        "text": "If hemoglobin falls below 9.4 g/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "clopidogrel 75 mg daily",
+        "text": "Held clopidogrel 75 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "lisinopril 10 mg daily",
+        "text": "The lisinopril 10 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0011",
+    "subject_id": "SYNTH_SUBJECT_0011",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted metoprolol 25 mg BID for ongoing management.\nStarted apixaban 5 mg BID for ongoing management.\nStarted amoxicillin 500 mg TID for ongoing management.\nAdmission hemoglobin was 9.4 g/dL, monitored during the stay.\nFollow up with primary care in 7 days.\nThe patient was NOT started on atorvastatin 80 mg nightly due to intolerance.\nHistory of amoxicillin 500 mg TID use prior to admission, since discontinued.\nIf glucose falls below 212 mg/dL, replete and recheck.\nHeld spironolactone 25 mg daily pending specialist input.\nThe insulin glargine 18 units nightly course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "metoprolol 25 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started metoprolol 25 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "apixaban 5 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started apixaban 5 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "amoxicillin 500 mg TID",
+        "assertion": "present",
+        "gold_sentence": "Started amoxicillin 500 mg TID for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "hemoglobin 9.4 g/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission hemoglobin was 9.4 g/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "primary care in 7 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with primary care in 7 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "The patient was NOT started on atorvastatin 80 mg nightly due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "amoxicillin 500 mg TID",
+        "text": "History of amoxicillin 500 mg TID use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "glucose 212 mg/dL",
+        "text": "If glucose falls below 212 mg/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "spironolactone 25 mg daily",
+        "text": "Held spironolactone 25 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "insulin glargine 18 units nightly",
+        "text": "The insulin glargine 18 units nightly course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0012",
+    "subject_id": "SYNTH_SUBJECT_0012",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted pantoprazole 40 mg daily for ongoing management.\nStarted metoprolol 25 mg BID for ongoing management.\nStarted apixaban 5 mg BID for ongoing management.\nStarted amoxicillin 500 mg TID for ongoing management.\nAdmission potassium was 3.2 mmol/L, monitored during the stay.\nFollow up with cardiology in 2 weeks.\nThe patient was NOT started on insulin glargine 18 units nightly due to intolerance.\nHistory of clopidogrel 75 mg daily use prior to admission, since discontinued.\nIf creatinine falls below 1.8 mg/dL, replete and recheck.\nHeld pantoprazole 40 mg daily pending specialist input.\nThe spironolactone 25 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "pantoprazole 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started pantoprazole 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "metoprolol 25 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started metoprolol 25 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "apixaban 5 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started apixaban 5 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "amoxicillin 500 mg TID",
+        "assertion": "present",
+        "gold_sentence": "Started amoxicillin 500 mg TID for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "potassium 3.2 mmol/L",
+        "assertion": "present",
+        "gold_sentence": "Admission potassium was 3.2 mmol/L, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "cardiology in 2 weeks",
+        "assertion": "present",
+        "gold_sentence": "Follow up with cardiology in 2 weeks."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "insulin glargine 18 units nightly",
+        "text": "The patient was NOT started on insulin glargine 18 units nightly due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "clopidogrel 75 mg daily",
+        "text": "History of clopidogrel 75 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "creatinine 1.8 mg/dL",
+        "text": "If creatinine falls below 1.8 mg/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "pantoprazole 40 mg daily",
+        "text": "Held pantoprazole 40 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "spironolactone 25 mg daily",
+        "text": "The spironolactone 25 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0013",
+    "subject_id": "SYNTH_SUBJECT_0013",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted atorvastatin 80 mg nightly for ongoing management.\nStarted pantoprazole 40 mg daily for ongoing management.\nAdmission glucose was 212 mg/dL, monitored during the stay.\nFollow up with anticoagulation clinic in 3 days.\nThe patient was NOT started on amoxicillin 500 mg TID due to intolerance.\nHistory of lisinopril 10 mg daily use prior to admission, since discontinued.\nIf INR falls below 2.6, replete and recheck.\nHeld amoxicillin 500 mg TID pending specialist input.\nThe furosemide 40 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "atorvastatin 80 mg nightly",
+        "assertion": "present",
+        "gold_sentence": "Started atorvastatin 80 mg nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "pantoprazole 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started pantoprazole 40 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "glucose 212 mg/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission glucose was 212 mg/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "anticoagulation clinic in 3 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with anticoagulation clinic in 3 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "amoxicillin 500 mg TID",
+        "text": "The patient was NOT started on amoxicillin 500 mg TID due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "lisinopril 10 mg daily",
+        "text": "History of lisinopril 10 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "INR 2.6",
+        "text": "If INR falls below 2.6, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "amoxicillin 500 mg TID",
+        "text": "Held amoxicillin 500 mg TID pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "furosemide 40 mg daily",
+        "text": "The furosemide 40 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0014",
+    "subject_id": "SYNTH_SUBJECT_0014",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted furosemide 40 mg daily for ongoing management.\nStarted atorvastatin 80 mg nightly for ongoing management.\nStarted pantoprazole 40 mg daily for ongoing management.\nAdmission troponin was 0.08 ng/mL, monitored during the stay.\nFollow up with nephrology in 10 days.\nThe patient was NOT started on pantoprazole 40 mg daily due to intolerance.\nHistory of insulin glargine 18 units nightly use prior to admission, since discontinued.\nIf potassium falls below 3.2 mmol/L, replete and recheck.\nHeld insulin glargine 18 units nightly pending specialist input.\nThe atorvastatin 80 mg nightly course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "furosemide 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started furosemide 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "atorvastatin 80 mg nightly",
+        "assertion": "present",
+        "gold_sentence": "Started atorvastatin 80 mg nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "pantoprazole 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started pantoprazole 40 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "troponin 0.08 ng/mL",
+        "assertion": "present",
+        "gold_sentence": "Admission troponin was 0.08 ng/mL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "nephrology in 10 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with nephrology in 10 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "pantoprazole 40 mg daily",
+        "text": "The patient was NOT started on pantoprazole 40 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "insulin glargine 18 units nightly",
+        "text": "History of insulin glargine 18 units nightly use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "potassium 3.2 mmol/L",
+        "text": "If potassium falls below 3.2 mmol/L, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "insulin glargine 18 units nightly",
+        "text": "Held insulin glargine 18 units nightly pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "The atorvastatin 80 mg nightly course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0015",
+    "subject_id": "SYNTH_SUBJECT_0015",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted spironolactone 25 mg daily for ongoing management.\nStarted furosemide 40 mg daily for ongoing management.\nStarted atorvastatin 80 mg nightly for ongoing management.\nStarted pantoprazole 40 mg daily for ongoing management.\nAdmission creatinine was 1.8 mg/dL, monitored during the stay.\nFollow up with wound care in 5 days.\nThe patient was NOT started on spironolactone 25 mg daily due to intolerance.\nHistory of spironolactone 25 mg daily use prior to admission, since discontinued.\nIf troponin falls below 0.08 ng/mL, replete and recheck.\nHeld atorvastatin 80 mg nightly pending specialist input.\nThe pantoprazole 40 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "spironolactone 25 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started spironolactone 25 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "furosemide 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started furosemide 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "atorvastatin 80 mg nightly",
+        "assertion": "present",
+        "gold_sentence": "Started atorvastatin 80 mg nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "pantoprazole 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started pantoprazole 40 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "creatinine 1.8 mg/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission creatinine was 1.8 mg/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "wound care in 5 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with wound care in 5 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "spironolactone 25 mg daily",
+        "text": "The patient was NOT started on spironolactone 25 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "spironolactone 25 mg daily",
+        "text": "History of spironolactone 25 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "troponin 0.08 ng/mL",
+        "text": "If troponin falls below 0.08 ng/mL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "Held atorvastatin 80 mg nightly pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "pantoprazole 40 mg daily",
+        "text": "The pantoprazole 40 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0016",
+    "subject_id": "SYNTH_SUBJECT_0016",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted insulin glargine 18 units nightly for ongoing management.\nStarted spironolactone 25 mg daily for ongoing management.\nAdmission sodium was 129 mmol/L, monitored during the stay.\nFollow up with primary care in 7 days.\nThe patient was NOT started on clopidogrel 75 mg daily due to intolerance.\nHistory of furosemide 40 mg daily use prior to admission, since discontinued.\nIf sodium falls below 129 mmol/L, replete and recheck.\nHeld apixaban 5 mg BID pending specialist input.\nThe metoprolol 25 mg BID course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "insulin glargine 18 units nightly",
+        "assertion": "present",
+        "gold_sentence": "Started insulin glargine 18 units nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "spironolactone 25 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started spironolactone 25 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "sodium 129 mmol/L",
+        "assertion": "present",
+        "gold_sentence": "Admission sodium was 129 mmol/L, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "primary care in 7 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with primary care in 7 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "clopidogrel 75 mg daily",
+        "text": "The patient was NOT started on clopidogrel 75 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "furosemide 40 mg daily",
+        "text": "History of furosemide 40 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "sodium 129 mmol/L",
+        "text": "If sodium falls below 129 mmol/L, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "apixaban 5 mg BID",
+        "text": "Held apixaban 5 mg BID pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "metoprolol 25 mg BID",
+        "text": "The metoprolol 25 mg BID course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0017",
+    "subject_id": "SYNTH_SUBJECT_0017",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted lisinopril 10 mg daily for ongoing management.\nStarted insulin glargine 18 units nightly for ongoing management.\nStarted spironolactone 25 mg daily for ongoing management.\nAdmission INR was 2.6, monitored during the stay.\nFollow up with cardiology in 2 weeks.\nThe patient was NOT started on metoprolol 25 mg BID due to intolerance.\nHistory of atorvastatin 80 mg nightly use prior to admission, since discontinued.\nIf hemoglobin falls below 9.4 g/dL, replete and recheck.\nHeld lisinopril 10 mg daily pending specialist input.\nThe apixaban 5 mg BID course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "lisinopril 10 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started lisinopril 10 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "insulin glargine 18 units nightly",
+        "assertion": "present",
+        "gold_sentence": "Started insulin glargine 18 units nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "spironolactone 25 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started spironolactone 25 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "INR 2.6",
+        "assertion": "present",
+        "gold_sentence": "Admission INR was 2.6, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "cardiology in 2 weeks",
+        "assertion": "present",
+        "gold_sentence": "Follow up with cardiology in 2 weeks."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "metoprolol 25 mg BID",
+        "text": "The patient was NOT started on metoprolol 25 mg BID due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "History of atorvastatin 80 mg nightly use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "hemoglobin 9.4 g/dL",
+        "text": "If hemoglobin falls below 9.4 g/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "lisinopril 10 mg daily",
+        "text": "Held lisinopril 10 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "apixaban 5 mg BID",
+        "text": "The apixaban 5 mg BID course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0018",
+    "subject_id": "SYNTH_SUBJECT_0018",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted clopidogrel 75 mg daily for ongoing management.\nStarted lisinopril 10 mg daily for ongoing management.\nStarted insulin glargine 18 units nightly for ongoing management.\nStarted spironolactone 25 mg daily for ongoing management.\nAdmission hemoglobin was 9.4 g/dL, monitored during the stay.\nFollow up with anticoagulation clinic in 3 days.\nThe patient was NOT started on furosemide 40 mg daily due to intolerance.\nHistory of pantoprazole 40 mg daily use prior to admission, since discontinued.\nIf glucose falls below 212 mg/dL, replete and recheck.\nHeld furosemide 40 mg daily pending specialist input.\nThe amoxicillin 500 mg TID course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "clopidogrel 75 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started clopidogrel 75 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "lisinopril 10 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started lisinopril 10 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "insulin glargine 18 units nightly",
+        "assertion": "present",
+        "gold_sentence": "Started insulin glargine 18 units nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "spironolactone 25 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started spironolactone 25 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "hemoglobin 9.4 g/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission hemoglobin was 9.4 g/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "anticoagulation clinic in 3 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with anticoagulation clinic in 3 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "furosemide 40 mg daily",
+        "text": "The patient was NOT started on furosemide 40 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "pantoprazole 40 mg daily",
+        "text": "History of pantoprazole 40 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "glucose 212 mg/dL",
+        "text": "If glucose falls below 212 mg/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "furosemide 40 mg daily",
+        "text": "Held furosemide 40 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "amoxicillin 500 mg TID",
+        "text": "The amoxicillin 500 mg TID course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0019",
+    "subject_id": "SYNTH_SUBJECT_0019",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted amoxicillin 500 mg TID for ongoing management.\nStarted clopidogrel 75 mg daily for ongoing management.\nAdmission potassium was 3.2 mmol/L, monitored during the stay.\nFollow up with nephrology in 10 days.\nThe patient was NOT started on lisinopril 10 mg daily due to intolerance.\nHistory of metoprolol 25 mg BID use prior to admission, since discontinued.\nIf creatinine falls below 1.8 mg/dL, replete and recheck.\nHeld metoprolol 25 mg BID pending specialist input.\nThe clopidogrel 75 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "amoxicillin 500 mg TID",
+        "assertion": "present",
+        "gold_sentence": "Started amoxicillin 500 mg TID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "clopidogrel 75 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started clopidogrel 75 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "potassium 3.2 mmol/L",
+        "assertion": "present",
+        "gold_sentence": "Admission potassium was 3.2 mmol/L, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "nephrology in 10 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with nephrology in 10 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "lisinopril 10 mg daily",
+        "text": "The patient was NOT started on lisinopril 10 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "metoprolol 25 mg BID",
+        "text": "History of metoprolol 25 mg BID use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "creatinine 1.8 mg/dL",
+        "text": "If creatinine falls below 1.8 mg/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "metoprolol 25 mg BID",
+        "text": "Held metoprolol 25 mg BID pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "clopidogrel 75 mg daily",
+        "text": "The clopidogrel 75 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0020",
+    "subject_id": "SYNTH_SUBJECT_0020",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted apixaban 5 mg BID for ongoing management.\nStarted amoxicillin 500 mg TID for ongoing management.\nStarted clopidogrel 75 mg daily for ongoing management.\nAdmission glucose was 212 mg/dL, monitored during the stay.\nFollow up with wound care in 5 days.\nThe patient was NOT started on apixaban 5 mg BID due to intolerance.\nHistory of apixaban 5 mg BID use prior to admission, since discontinued.\nIf INR falls below 2.6, replete and recheck.\nHeld clopidogrel 75 mg daily pending specialist input.\nThe lisinopril 10 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "apixaban 5 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started apixaban 5 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "amoxicillin 500 mg TID",
+        "assertion": "present",
+        "gold_sentence": "Started amoxicillin 500 mg TID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "clopidogrel 75 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started clopidogrel 75 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "glucose 212 mg/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission glucose was 212 mg/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "wound care in 5 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with wound care in 5 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "apixaban 5 mg BID",
+        "text": "The patient was NOT started on apixaban 5 mg BID due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "apixaban 5 mg BID",
+        "text": "History of apixaban 5 mg BID use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "INR 2.6",
+        "text": "If INR falls below 2.6, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "clopidogrel 75 mg daily",
+        "text": "Held clopidogrel 75 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "lisinopril 10 mg daily",
+        "text": "The lisinopril 10 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0021",
+    "subject_id": "SYNTH_SUBJECT_0021",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted metoprolol 25 mg BID for ongoing management.\nStarted apixaban 5 mg BID for ongoing management.\nStarted amoxicillin 500 mg TID for ongoing management.\nStarted clopidogrel 75 mg daily for ongoing management.\nAdmission troponin was 0.08 ng/mL, monitored during the stay.\nFollow up with primary care in 7 days.\nThe patient was NOT started on atorvastatin 80 mg nightly due to intolerance.\nHistory of amoxicillin 500 mg TID use prior to admission, since discontinued.\nIf potassium falls below 3.2 mmol/L, replete and recheck.\nHeld spironolactone 25 mg daily pending specialist input.\nThe insulin glargine 18 units nightly course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "metoprolol 25 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started metoprolol 25 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "apixaban 5 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started apixaban 5 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "amoxicillin 500 mg TID",
+        "assertion": "present",
+        "gold_sentence": "Started amoxicillin 500 mg TID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "clopidogrel 75 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started clopidogrel 75 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "troponin 0.08 ng/mL",
+        "assertion": "present",
+        "gold_sentence": "Admission troponin was 0.08 ng/mL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "primary care in 7 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with primary care in 7 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "The patient was NOT started on atorvastatin 80 mg nightly due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "amoxicillin 500 mg TID",
+        "text": "History of amoxicillin 500 mg TID use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "potassium 3.2 mmol/L",
+        "text": "If potassium falls below 3.2 mmol/L, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "spironolactone 25 mg daily",
+        "text": "Held spironolactone 25 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "insulin glargine 18 units nightly",
+        "text": "The insulin glargine 18 units nightly course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0022",
+    "subject_id": "SYNTH_SUBJECT_0022",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted pantoprazole 40 mg daily for ongoing management.\nStarted metoprolol 25 mg BID for ongoing management.\nAdmission creatinine was 1.8 mg/dL, monitored during the stay.\nFollow up with cardiology in 2 weeks.\nThe patient was NOT started on insulin glargine 18 units nightly due to intolerance.\nHistory of clopidogrel 75 mg daily use prior to admission, since discontinued.\nIf troponin falls below 0.08 ng/mL, replete and recheck.\nHeld pantoprazole 40 mg daily pending specialist input.\nThe spironolactone 25 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "pantoprazole 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started pantoprazole 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "metoprolol 25 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started metoprolol 25 mg BID for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "creatinine 1.8 mg/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission creatinine was 1.8 mg/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "cardiology in 2 weeks",
+        "assertion": "present",
+        "gold_sentence": "Follow up with cardiology in 2 weeks."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "insulin glargine 18 units nightly",
+        "text": "The patient was NOT started on insulin glargine 18 units nightly due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "clopidogrel 75 mg daily",
+        "text": "History of clopidogrel 75 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "troponin 0.08 ng/mL",
+        "text": "If troponin falls below 0.08 ng/mL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "pantoprazole 40 mg daily",
+        "text": "Held pantoprazole 40 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "spironolactone 25 mg daily",
+        "text": "The spironolactone 25 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0023",
+    "subject_id": "SYNTH_SUBJECT_0023",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted atorvastatin 80 mg nightly for ongoing management.\nStarted pantoprazole 40 mg daily for ongoing management.\nStarted metoprolol 25 mg BID for ongoing management.\nAdmission sodium was 129 mmol/L, monitored during the stay.\nFollow up with anticoagulation clinic in 3 days.\nThe patient was NOT started on amoxicillin 500 mg TID due to intolerance.\nHistory of lisinopril 10 mg daily use prior to admission, since discontinued.\nIf sodium falls below 129 mmol/L, replete and recheck.\nHeld amoxicillin 500 mg TID pending specialist input.\nThe furosemide 40 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "atorvastatin 80 mg nightly",
+        "assertion": "present",
+        "gold_sentence": "Started atorvastatin 80 mg nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "pantoprazole 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started pantoprazole 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "metoprolol 25 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started metoprolol 25 mg BID for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "sodium 129 mmol/L",
+        "assertion": "present",
+        "gold_sentence": "Admission sodium was 129 mmol/L, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "anticoagulation clinic in 3 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with anticoagulation clinic in 3 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "amoxicillin 500 mg TID",
+        "text": "The patient was NOT started on amoxicillin 500 mg TID due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "lisinopril 10 mg daily",
+        "text": "History of lisinopril 10 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "sodium 129 mmol/L",
+        "text": "If sodium falls below 129 mmol/L, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "amoxicillin 500 mg TID",
+        "text": "Held amoxicillin 500 mg TID pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "furosemide 40 mg daily",
+        "text": "The furosemide 40 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0024",
+    "subject_id": "SYNTH_SUBJECT_0024",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted furosemide 40 mg daily for ongoing management.\nStarted atorvastatin 80 mg nightly for ongoing management.\nStarted pantoprazole 40 mg daily for ongoing management.\nStarted metoprolol 25 mg BID for ongoing management.\nAdmission INR was 2.6, monitored during the stay.\nFollow up with nephrology in 10 days.\nThe patient was NOT started on pantoprazole 40 mg daily due to intolerance.\nHistory of insulin glargine 18 units nightly use prior to admission, since discontinued.\nIf hemoglobin falls below 9.4 g/dL, replete and recheck.\nHeld insulin glargine 18 units nightly pending specialist input.\nThe atorvastatin 80 mg nightly course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "furosemide 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started furosemide 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "atorvastatin 80 mg nightly",
+        "assertion": "present",
+        "gold_sentence": "Started atorvastatin 80 mg nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "pantoprazole 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started pantoprazole 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "metoprolol 25 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started metoprolol 25 mg BID for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "INR 2.6",
+        "assertion": "present",
+        "gold_sentence": "Admission INR was 2.6, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "nephrology in 10 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with nephrology in 10 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "pantoprazole 40 mg daily",
+        "text": "The patient was NOT started on pantoprazole 40 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "insulin glargine 18 units nightly",
+        "text": "History of insulin glargine 18 units nightly use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "hemoglobin 9.4 g/dL",
+        "text": "If hemoglobin falls below 9.4 g/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "insulin glargine 18 units nightly",
+        "text": "Held insulin glargine 18 units nightly pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "The atorvastatin 80 mg nightly course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0025",
+    "subject_id": "SYNTH_SUBJECT_0025",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted spironolactone 25 mg daily for ongoing management.\nStarted furosemide 40 mg daily for ongoing management.\nAdmission hemoglobin was 9.4 g/dL, monitored during the stay.\nFollow up with wound care in 5 days.\nThe patient was NOT started on spironolactone 25 mg daily due to intolerance.\nHistory of spironolactone 25 mg daily use prior to admission, since discontinued.\nIf glucose falls below 212 mg/dL, replete and recheck.\nHeld atorvastatin 80 mg nightly pending specialist input.\nThe pantoprazole 40 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "spironolactone 25 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started spironolactone 25 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "furosemide 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started furosemide 40 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "hemoglobin 9.4 g/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission hemoglobin was 9.4 g/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "wound care in 5 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with wound care in 5 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "spironolactone 25 mg daily",
+        "text": "The patient was NOT started on spironolactone 25 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "spironolactone 25 mg daily",
+        "text": "History of spironolactone 25 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "glucose 212 mg/dL",
+        "text": "If glucose falls below 212 mg/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "Held atorvastatin 80 mg nightly pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "pantoprazole 40 mg daily",
+        "text": "The pantoprazole 40 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0026",
+    "subject_id": "SYNTH_SUBJECT_0026",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted insulin glargine 18 units nightly for ongoing management.\nStarted spironolactone 25 mg daily for ongoing management.\nStarted furosemide 40 mg daily for ongoing management.\nAdmission potassium was 3.2 mmol/L, monitored during the stay.\nFollow up with primary care in 7 days.\nThe patient was NOT started on clopidogrel 75 mg daily due to intolerance.\nHistory of furosemide 40 mg daily use prior to admission, since discontinued.\nIf creatinine falls below 1.8 mg/dL, replete and recheck.\nHeld apixaban 5 mg BID pending specialist input.\nThe metoprolol 25 mg BID course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "insulin glargine 18 units nightly",
+        "assertion": "present",
+        "gold_sentence": "Started insulin glargine 18 units nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "spironolactone 25 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started spironolactone 25 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "furosemide 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started furosemide 40 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "potassium 3.2 mmol/L",
+        "assertion": "present",
+        "gold_sentence": "Admission potassium was 3.2 mmol/L, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "primary care in 7 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with primary care in 7 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "clopidogrel 75 mg daily",
+        "text": "The patient was NOT started on clopidogrel 75 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "furosemide 40 mg daily",
+        "text": "History of furosemide 40 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "creatinine 1.8 mg/dL",
+        "text": "If creatinine falls below 1.8 mg/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "apixaban 5 mg BID",
+        "text": "Held apixaban 5 mg BID pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "metoprolol 25 mg BID",
+        "text": "The metoprolol 25 mg BID course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0027",
+    "subject_id": "SYNTH_SUBJECT_0027",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted lisinopril 10 mg daily for ongoing management.\nStarted insulin glargine 18 units nightly for ongoing management.\nStarted spironolactone 25 mg daily for ongoing management.\nStarted furosemide 40 mg daily for ongoing management.\nAdmission glucose was 212 mg/dL, monitored during the stay.\nFollow up with cardiology in 2 weeks.\nThe patient was NOT started on metoprolol 25 mg BID due to intolerance.\nHistory of atorvastatin 80 mg nightly use prior to admission, since discontinued.\nIf INR falls below 2.6, replete and recheck.\nHeld lisinopril 10 mg daily pending specialist input.\nThe apixaban 5 mg BID course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "lisinopril 10 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started lisinopril 10 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "insulin glargine 18 units nightly",
+        "assertion": "present",
+        "gold_sentence": "Started insulin glargine 18 units nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "spironolactone 25 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started spironolactone 25 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "furosemide 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started furosemide 40 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "glucose 212 mg/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission glucose was 212 mg/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "cardiology in 2 weeks",
+        "assertion": "present",
+        "gold_sentence": "Follow up with cardiology in 2 weeks."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "metoprolol 25 mg BID",
+        "text": "The patient was NOT started on metoprolol 25 mg BID due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "History of atorvastatin 80 mg nightly use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "INR 2.6",
+        "text": "If INR falls below 2.6, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "lisinopril 10 mg daily",
+        "text": "Held lisinopril 10 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "apixaban 5 mg BID",
+        "text": "The apixaban 5 mg BID course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0028",
+    "subject_id": "SYNTH_SUBJECT_0028",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted clopidogrel 75 mg daily for ongoing management.\nStarted lisinopril 10 mg daily for ongoing management.\nAdmission troponin was 0.08 ng/mL, monitored during the stay.\nFollow up with anticoagulation clinic in 3 days.\nThe patient was NOT started on furosemide 40 mg daily due to intolerance.\nHistory of pantoprazole 40 mg daily use prior to admission, since discontinued.\nIf potassium falls below 3.2 mmol/L, replete and recheck.\nHeld furosemide 40 mg daily pending specialist input.\nThe amoxicillin 500 mg TID course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "clopidogrel 75 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started clopidogrel 75 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "lisinopril 10 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started lisinopril 10 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "troponin 0.08 ng/mL",
+        "assertion": "present",
+        "gold_sentence": "Admission troponin was 0.08 ng/mL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "anticoagulation clinic in 3 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with anticoagulation clinic in 3 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "furosemide 40 mg daily",
+        "text": "The patient was NOT started on furosemide 40 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "pantoprazole 40 mg daily",
+        "text": "History of pantoprazole 40 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "potassium 3.2 mmol/L",
+        "text": "If potassium falls below 3.2 mmol/L, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "furosemide 40 mg daily",
+        "text": "Held furosemide 40 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "amoxicillin 500 mg TID",
+        "text": "The amoxicillin 500 mg TID course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0029",
+    "subject_id": "SYNTH_SUBJECT_0029",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted amoxicillin 500 mg TID for ongoing management.\nStarted clopidogrel 75 mg daily for ongoing management.\nStarted lisinopril 10 mg daily for ongoing management.\nAdmission creatinine was 1.8 mg/dL, monitored during the stay.\nFollow up with nephrology in 10 days.\nThe patient was NOT started on lisinopril 10 mg daily due to intolerance.\nHistory of metoprolol 25 mg BID use prior to admission, since discontinued.\nIf troponin falls below 0.08 ng/mL, replete and recheck.\nHeld metoprolol 25 mg BID pending specialist input.\nThe clopidogrel 75 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "amoxicillin 500 mg TID",
+        "assertion": "present",
+        "gold_sentence": "Started amoxicillin 500 mg TID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "clopidogrel 75 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started clopidogrel 75 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "lisinopril 10 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started lisinopril 10 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "creatinine 1.8 mg/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission creatinine was 1.8 mg/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "nephrology in 10 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with nephrology in 10 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "lisinopril 10 mg daily",
+        "text": "The patient was NOT started on lisinopril 10 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "metoprolol 25 mg BID",
+        "text": "History of metoprolol 25 mg BID use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "troponin 0.08 ng/mL",
+        "text": "If troponin falls below 0.08 ng/mL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "metoprolol 25 mg BID",
+        "text": "Held metoprolol 25 mg BID pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "clopidogrel 75 mg daily",
+        "text": "The clopidogrel 75 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0030",
+    "subject_id": "SYNTH_SUBJECT_0030",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted apixaban 5 mg BID for ongoing management.\nStarted amoxicillin 500 mg TID for ongoing management.\nStarted clopidogrel 75 mg daily for ongoing management.\nStarted lisinopril 10 mg daily for ongoing management.\nAdmission sodium was 129 mmol/L, monitored during the stay.\nFollow up with wound care in 5 days.\nThe patient was NOT started on apixaban 5 mg BID due to intolerance.\nHistory of apixaban 5 mg BID use prior to admission, since discontinued.\nIf sodium falls below 129 mmol/L, replete and recheck.\nHeld clopidogrel 75 mg daily pending specialist input.\nThe lisinopril 10 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "apixaban 5 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started apixaban 5 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "amoxicillin 500 mg TID",
+        "assertion": "present",
+        "gold_sentence": "Started amoxicillin 500 mg TID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "clopidogrel 75 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started clopidogrel 75 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "lisinopril 10 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started lisinopril 10 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "sodium 129 mmol/L",
+        "assertion": "present",
+        "gold_sentence": "Admission sodium was 129 mmol/L, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "wound care in 5 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with wound care in 5 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "apixaban 5 mg BID",
+        "text": "The patient was NOT started on apixaban 5 mg BID due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "apixaban 5 mg BID",
+        "text": "History of apixaban 5 mg BID use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "sodium 129 mmol/L",
+        "text": "If sodium falls below 129 mmol/L, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "clopidogrel 75 mg daily",
+        "text": "Held clopidogrel 75 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "lisinopril 10 mg daily",
+        "text": "The lisinopril 10 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0031",
+    "subject_id": "SYNTH_SUBJECT_0031",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted metoprolol 25 mg BID for ongoing management.\nStarted apixaban 5 mg BID for ongoing management.\nAdmission INR was 2.6, monitored during the stay.\nFollow up with primary care in 7 days.\nThe patient was NOT started on atorvastatin 80 mg nightly due to intolerance.\nHistory of amoxicillin 500 mg TID use prior to admission, since discontinued.\nIf hemoglobin falls below 9.4 g/dL, replete and recheck.\nHeld spironolactone 25 mg daily pending specialist input.\nThe insulin glargine 18 units nightly course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "metoprolol 25 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started metoprolol 25 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "apixaban 5 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started apixaban 5 mg BID for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "INR 2.6",
+        "assertion": "present",
+        "gold_sentence": "Admission INR was 2.6, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "primary care in 7 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with primary care in 7 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "The patient was NOT started on atorvastatin 80 mg nightly due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "amoxicillin 500 mg TID",
+        "text": "History of amoxicillin 500 mg TID use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "hemoglobin 9.4 g/dL",
+        "text": "If hemoglobin falls below 9.4 g/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "spironolactone 25 mg daily",
+        "text": "Held spironolactone 25 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "insulin glargine 18 units nightly",
+        "text": "The insulin glargine 18 units nightly course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0032",
+    "subject_id": "SYNTH_SUBJECT_0032",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted pantoprazole 40 mg daily for ongoing management.\nStarted metoprolol 25 mg BID for ongoing management.\nStarted apixaban 5 mg BID for ongoing management.\nAdmission hemoglobin was 9.4 g/dL, monitored during the stay.\nFollow up with cardiology in 2 weeks.\nThe patient was NOT started on insulin glargine 18 units nightly due to intolerance.\nHistory of clopidogrel 75 mg daily use prior to admission, since discontinued.\nIf glucose falls below 212 mg/dL, replete and recheck.\nHeld pantoprazole 40 mg daily pending specialist input.\nThe spironolactone 25 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "pantoprazole 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started pantoprazole 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "metoprolol 25 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started metoprolol 25 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "apixaban 5 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started apixaban 5 mg BID for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "hemoglobin 9.4 g/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission hemoglobin was 9.4 g/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "cardiology in 2 weeks",
+        "assertion": "present",
+        "gold_sentence": "Follow up with cardiology in 2 weeks."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "insulin glargine 18 units nightly",
+        "text": "The patient was NOT started on insulin glargine 18 units nightly due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "clopidogrel 75 mg daily",
+        "text": "History of clopidogrel 75 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "glucose 212 mg/dL",
+        "text": "If glucose falls below 212 mg/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "pantoprazole 40 mg daily",
+        "text": "Held pantoprazole 40 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "spironolactone 25 mg daily",
+        "text": "The spironolactone 25 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0033",
+    "subject_id": "SYNTH_SUBJECT_0033",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted atorvastatin 80 mg nightly for ongoing management.\nStarted pantoprazole 40 mg daily for ongoing management.\nStarted metoprolol 25 mg BID for ongoing management.\nStarted apixaban 5 mg BID for ongoing management.\nAdmission potassium was 3.2 mmol/L, monitored during the stay.\nFollow up with anticoagulation clinic in 3 days.\nThe patient was NOT started on amoxicillin 500 mg TID due to intolerance.\nHistory of lisinopril 10 mg daily use prior to admission, since discontinued.\nIf creatinine falls below 1.8 mg/dL, replete and recheck.\nHeld amoxicillin 500 mg TID pending specialist input.\nThe furosemide 40 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "atorvastatin 80 mg nightly",
+        "assertion": "present",
+        "gold_sentence": "Started atorvastatin 80 mg nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "pantoprazole 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started pantoprazole 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "metoprolol 25 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started metoprolol 25 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "apixaban 5 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started apixaban 5 mg BID for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "potassium 3.2 mmol/L",
+        "assertion": "present",
+        "gold_sentence": "Admission potassium was 3.2 mmol/L, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "anticoagulation clinic in 3 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with anticoagulation clinic in 3 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "amoxicillin 500 mg TID",
+        "text": "The patient was NOT started on amoxicillin 500 mg TID due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "lisinopril 10 mg daily",
+        "text": "History of lisinopril 10 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "creatinine 1.8 mg/dL",
+        "text": "If creatinine falls below 1.8 mg/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "amoxicillin 500 mg TID",
+        "text": "Held amoxicillin 500 mg TID pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "furosemide 40 mg daily",
+        "text": "The furosemide 40 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0034",
+    "subject_id": "SYNTH_SUBJECT_0034",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted furosemide 40 mg daily for ongoing management.\nStarted atorvastatin 80 mg nightly for ongoing management.\nAdmission glucose was 212 mg/dL, monitored during the stay.\nFollow up with nephrology in 10 days.\nThe patient was NOT started on pantoprazole 40 mg daily due to intolerance.\nHistory of insulin glargine 18 units nightly use prior to admission, since discontinued.\nIf INR falls below 2.6, replete and recheck.\nHeld insulin glargine 18 units nightly pending specialist input.\nThe atorvastatin 80 mg nightly course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "furosemide 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started furosemide 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "atorvastatin 80 mg nightly",
+        "assertion": "present",
+        "gold_sentence": "Started atorvastatin 80 mg nightly for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "glucose 212 mg/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission glucose was 212 mg/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "nephrology in 10 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with nephrology in 10 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "pantoprazole 40 mg daily",
+        "text": "The patient was NOT started on pantoprazole 40 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "insulin glargine 18 units nightly",
+        "text": "History of insulin glargine 18 units nightly use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "INR 2.6",
+        "text": "If INR falls below 2.6, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "insulin glargine 18 units nightly",
+        "text": "Held insulin glargine 18 units nightly pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "The atorvastatin 80 mg nightly course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0035",
+    "subject_id": "SYNTH_SUBJECT_0035",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted spironolactone 25 mg daily for ongoing management.\nStarted furosemide 40 mg daily for ongoing management.\nStarted atorvastatin 80 mg nightly for ongoing management.\nAdmission troponin was 0.08 ng/mL, monitored during the stay.\nFollow up with wound care in 5 days.\nThe patient was NOT started on spironolactone 25 mg daily due to intolerance.\nHistory of spironolactone 25 mg daily use prior to admission, since discontinued.\nIf potassium falls below 3.2 mmol/L, replete and recheck.\nHeld atorvastatin 80 mg nightly pending specialist input.\nThe pantoprazole 40 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "spironolactone 25 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started spironolactone 25 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "furosemide 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started furosemide 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "atorvastatin 80 mg nightly",
+        "assertion": "present",
+        "gold_sentence": "Started atorvastatin 80 mg nightly for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "troponin 0.08 ng/mL",
+        "assertion": "present",
+        "gold_sentence": "Admission troponin was 0.08 ng/mL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "wound care in 5 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with wound care in 5 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "spironolactone 25 mg daily",
+        "text": "The patient was NOT started on spironolactone 25 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "spironolactone 25 mg daily",
+        "text": "History of spironolactone 25 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "potassium 3.2 mmol/L",
+        "text": "If potassium falls below 3.2 mmol/L, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "Held atorvastatin 80 mg nightly pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "pantoprazole 40 mg daily",
+        "text": "The pantoprazole 40 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0036",
+    "subject_id": "SYNTH_SUBJECT_0036",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted insulin glargine 18 units nightly for ongoing management.\nStarted spironolactone 25 mg daily for ongoing management.\nStarted furosemide 40 mg daily for ongoing management.\nStarted atorvastatin 80 mg nightly for ongoing management.\nAdmission creatinine was 1.8 mg/dL, monitored during the stay.\nFollow up with primary care in 7 days.\nThe patient was NOT started on clopidogrel 75 mg daily due to intolerance.\nHistory of furosemide 40 mg daily use prior to admission, since discontinued.\nIf troponin falls below 0.08 ng/mL, replete and recheck.\nHeld apixaban 5 mg BID pending specialist input.\nThe metoprolol 25 mg BID course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "insulin glargine 18 units nightly",
+        "assertion": "present",
+        "gold_sentence": "Started insulin glargine 18 units nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "spironolactone 25 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started spironolactone 25 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "furosemide 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started furosemide 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "atorvastatin 80 mg nightly",
+        "assertion": "present",
+        "gold_sentence": "Started atorvastatin 80 mg nightly for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "creatinine 1.8 mg/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission creatinine was 1.8 mg/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "primary care in 7 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with primary care in 7 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "clopidogrel 75 mg daily",
+        "text": "The patient was NOT started on clopidogrel 75 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "furosemide 40 mg daily",
+        "text": "History of furosemide 40 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "troponin 0.08 ng/mL",
+        "text": "If troponin falls below 0.08 ng/mL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "apixaban 5 mg BID",
+        "text": "Held apixaban 5 mg BID pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "metoprolol 25 mg BID",
+        "text": "The metoprolol 25 mg BID course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0037",
+    "subject_id": "SYNTH_SUBJECT_0037",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted lisinopril 10 mg daily for ongoing management.\nStarted insulin glargine 18 units nightly for ongoing management.\nAdmission sodium was 129 mmol/L, monitored during the stay.\nFollow up with cardiology in 2 weeks.\nThe patient was NOT started on metoprolol 25 mg BID due to intolerance.\nHistory of atorvastatin 80 mg nightly use prior to admission, since discontinued.\nIf sodium falls below 129 mmol/L, replete and recheck.\nHeld lisinopril 10 mg daily pending specialist input.\nThe apixaban 5 mg BID course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "lisinopril 10 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started lisinopril 10 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "insulin glargine 18 units nightly",
+        "assertion": "present",
+        "gold_sentence": "Started insulin glargine 18 units nightly for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "sodium 129 mmol/L",
+        "assertion": "present",
+        "gold_sentence": "Admission sodium was 129 mmol/L, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "cardiology in 2 weeks",
+        "assertion": "present",
+        "gold_sentence": "Follow up with cardiology in 2 weeks."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "metoprolol 25 mg BID",
+        "text": "The patient was NOT started on metoprolol 25 mg BID due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "History of atorvastatin 80 mg nightly use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "sodium 129 mmol/L",
+        "text": "If sodium falls below 129 mmol/L, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "lisinopril 10 mg daily",
+        "text": "Held lisinopril 10 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "apixaban 5 mg BID",
+        "text": "The apixaban 5 mg BID course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0038",
+    "subject_id": "SYNTH_SUBJECT_0038",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted clopidogrel 75 mg daily for ongoing management.\nStarted lisinopril 10 mg daily for ongoing management.\nStarted insulin glargine 18 units nightly for ongoing management.\nAdmission INR was 2.6, monitored during the stay.\nFollow up with anticoagulation clinic in 3 days.\nThe patient was NOT started on furosemide 40 mg daily due to intolerance.\nHistory of pantoprazole 40 mg daily use prior to admission, since discontinued.\nIf hemoglobin falls below 9.4 g/dL, replete and recheck.\nHeld furosemide 40 mg daily pending specialist input.\nThe amoxicillin 500 mg TID course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "clopidogrel 75 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started clopidogrel 75 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "lisinopril 10 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started lisinopril 10 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "insulin glargine 18 units nightly",
+        "assertion": "present",
+        "gold_sentence": "Started insulin glargine 18 units nightly for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "INR 2.6",
+        "assertion": "present",
+        "gold_sentence": "Admission INR was 2.6, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "anticoagulation clinic in 3 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with anticoagulation clinic in 3 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "furosemide 40 mg daily",
+        "text": "The patient was NOT started on furosemide 40 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "pantoprazole 40 mg daily",
+        "text": "History of pantoprazole 40 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "hemoglobin 9.4 g/dL",
+        "text": "If hemoglobin falls below 9.4 g/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "furosemide 40 mg daily",
+        "text": "Held furosemide 40 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "amoxicillin 500 mg TID",
+        "text": "The amoxicillin 500 mg TID course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0039",
+    "subject_id": "SYNTH_SUBJECT_0039",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted amoxicillin 500 mg TID for ongoing management.\nStarted clopidogrel 75 mg daily for ongoing management.\nStarted lisinopril 10 mg daily for ongoing management.\nStarted insulin glargine 18 units nightly for ongoing management.\nAdmission hemoglobin was 9.4 g/dL, monitored during the stay.\nFollow up with nephrology in 10 days.\nThe patient was NOT started on lisinopril 10 mg daily due to intolerance.\nHistory of metoprolol 25 mg BID use prior to admission, since discontinued.\nIf glucose falls below 212 mg/dL, replete and recheck.\nHeld metoprolol 25 mg BID pending specialist input.\nThe clopidogrel 75 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "amoxicillin 500 mg TID",
+        "assertion": "present",
+        "gold_sentence": "Started amoxicillin 500 mg TID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "clopidogrel 75 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started clopidogrel 75 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "lisinopril 10 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started lisinopril 10 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "insulin glargine 18 units nightly",
+        "assertion": "present",
+        "gold_sentence": "Started insulin glargine 18 units nightly for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "hemoglobin 9.4 g/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission hemoglobin was 9.4 g/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "nephrology in 10 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with nephrology in 10 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "lisinopril 10 mg daily",
+        "text": "The patient was NOT started on lisinopril 10 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "metoprolol 25 mg BID",
+        "text": "History of metoprolol 25 mg BID use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "glucose 212 mg/dL",
+        "text": "If glucose falls below 212 mg/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "metoprolol 25 mg BID",
+        "text": "Held metoprolol 25 mg BID pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "clopidogrel 75 mg daily",
+        "text": "The clopidogrel 75 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0040",
+    "subject_id": "SYNTH_SUBJECT_0040",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted apixaban 5 mg BID for ongoing management.\nStarted amoxicillin 500 mg TID for ongoing management.\nAdmission potassium was 3.2 mmol/L, monitored during the stay.\nFollow up with wound care in 5 days.\nThe patient was NOT started on apixaban 5 mg BID due to intolerance.\nHistory of apixaban 5 mg BID use prior to admission, since discontinued.\nIf creatinine falls below 1.8 mg/dL, replete and recheck.\nHeld clopidogrel 75 mg daily pending specialist input.\nThe lisinopril 10 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "apixaban 5 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started apixaban 5 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "amoxicillin 500 mg TID",
+        "assertion": "present",
+        "gold_sentence": "Started amoxicillin 500 mg TID for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "potassium 3.2 mmol/L",
+        "assertion": "present",
+        "gold_sentence": "Admission potassium was 3.2 mmol/L, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "wound care in 5 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with wound care in 5 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "apixaban 5 mg BID",
+        "text": "The patient was NOT started on apixaban 5 mg BID due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "apixaban 5 mg BID",
+        "text": "History of apixaban 5 mg BID use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "creatinine 1.8 mg/dL",
+        "text": "If creatinine falls below 1.8 mg/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "clopidogrel 75 mg daily",
+        "text": "Held clopidogrel 75 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "lisinopril 10 mg daily",
+        "text": "The lisinopril 10 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0041",
+    "subject_id": "SYNTH_SUBJECT_0041",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted metoprolol 25 mg BID for ongoing management.\nStarted apixaban 5 mg BID for ongoing management.\nStarted amoxicillin 500 mg TID for ongoing management.\nAdmission glucose was 212 mg/dL, monitored during the stay.\nFollow up with primary care in 7 days.\nThe patient was NOT started on atorvastatin 80 mg nightly due to intolerance.\nHistory of amoxicillin 500 mg TID use prior to admission, since discontinued.\nIf INR falls below 2.6, replete and recheck.\nHeld spironolactone 25 mg daily pending specialist input.\nThe insulin glargine 18 units nightly course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "metoprolol 25 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started metoprolol 25 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "apixaban 5 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started apixaban 5 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "amoxicillin 500 mg TID",
+        "assertion": "present",
+        "gold_sentence": "Started amoxicillin 500 mg TID for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "glucose 212 mg/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission glucose was 212 mg/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "primary care in 7 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with primary care in 7 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "The patient was NOT started on atorvastatin 80 mg nightly due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "amoxicillin 500 mg TID",
+        "text": "History of amoxicillin 500 mg TID use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "INR 2.6",
+        "text": "If INR falls below 2.6, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "spironolactone 25 mg daily",
+        "text": "Held spironolactone 25 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "insulin glargine 18 units nightly",
+        "text": "The insulin glargine 18 units nightly course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0042",
+    "subject_id": "SYNTH_SUBJECT_0042",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted pantoprazole 40 mg daily for ongoing management.\nStarted metoprolol 25 mg BID for ongoing management.\nStarted apixaban 5 mg BID for ongoing management.\nStarted amoxicillin 500 mg TID for ongoing management.\nAdmission troponin was 0.08 ng/mL, monitored during the stay.\nFollow up with cardiology in 2 weeks.\nThe patient was NOT started on insulin glargine 18 units nightly due to intolerance.\nHistory of clopidogrel 75 mg daily use prior to admission, since discontinued.\nIf potassium falls below 3.2 mmol/L, replete and recheck.\nHeld pantoprazole 40 mg daily pending specialist input.\nThe spironolactone 25 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "pantoprazole 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started pantoprazole 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "metoprolol 25 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started metoprolol 25 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "apixaban 5 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started apixaban 5 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "amoxicillin 500 mg TID",
+        "assertion": "present",
+        "gold_sentence": "Started amoxicillin 500 mg TID for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "troponin 0.08 ng/mL",
+        "assertion": "present",
+        "gold_sentence": "Admission troponin was 0.08 ng/mL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "cardiology in 2 weeks",
+        "assertion": "present",
+        "gold_sentence": "Follow up with cardiology in 2 weeks."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "insulin glargine 18 units nightly",
+        "text": "The patient was NOT started on insulin glargine 18 units nightly due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "clopidogrel 75 mg daily",
+        "text": "History of clopidogrel 75 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "potassium 3.2 mmol/L",
+        "text": "If potassium falls below 3.2 mmol/L, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "pantoprazole 40 mg daily",
+        "text": "Held pantoprazole 40 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "spironolactone 25 mg daily",
+        "text": "The spironolactone 25 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0043",
+    "subject_id": "SYNTH_SUBJECT_0043",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted atorvastatin 80 mg nightly for ongoing management.\nStarted pantoprazole 40 mg daily for ongoing management.\nAdmission creatinine was 1.8 mg/dL, monitored during the stay.\nFollow up with anticoagulation clinic in 3 days.\nThe patient was NOT started on amoxicillin 500 mg TID due to intolerance.\nHistory of lisinopril 10 mg daily use prior to admission, since discontinued.\nIf troponin falls below 0.08 ng/mL, replete and recheck.\nHeld amoxicillin 500 mg TID pending specialist input.\nThe furosemide 40 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "atorvastatin 80 mg nightly",
+        "assertion": "present",
+        "gold_sentence": "Started atorvastatin 80 mg nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "pantoprazole 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started pantoprazole 40 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "creatinine 1.8 mg/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission creatinine was 1.8 mg/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "anticoagulation clinic in 3 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with anticoagulation clinic in 3 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "amoxicillin 500 mg TID",
+        "text": "The patient was NOT started on amoxicillin 500 mg TID due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "lisinopril 10 mg daily",
+        "text": "History of lisinopril 10 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "troponin 0.08 ng/mL",
+        "text": "If troponin falls below 0.08 ng/mL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "amoxicillin 500 mg TID",
+        "text": "Held amoxicillin 500 mg TID pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "furosemide 40 mg daily",
+        "text": "The furosemide 40 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0044",
+    "subject_id": "SYNTH_SUBJECT_0044",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted furosemide 40 mg daily for ongoing management.\nStarted atorvastatin 80 mg nightly for ongoing management.\nStarted pantoprazole 40 mg daily for ongoing management.\nAdmission sodium was 129 mmol/L, monitored during the stay.\nFollow up with nephrology in 10 days.\nThe patient was NOT started on pantoprazole 40 mg daily due to intolerance.\nHistory of insulin glargine 18 units nightly use prior to admission, since discontinued.\nIf sodium falls below 129 mmol/L, replete and recheck.\nHeld insulin glargine 18 units nightly pending specialist input.\nThe atorvastatin 80 mg nightly course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "furosemide 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started furosemide 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "atorvastatin 80 mg nightly",
+        "assertion": "present",
+        "gold_sentence": "Started atorvastatin 80 mg nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "pantoprazole 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started pantoprazole 40 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "sodium 129 mmol/L",
+        "assertion": "present",
+        "gold_sentence": "Admission sodium was 129 mmol/L, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "nephrology in 10 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with nephrology in 10 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "pantoprazole 40 mg daily",
+        "text": "The patient was NOT started on pantoprazole 40 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "insulin glargine 18 units nightly",
+        "text": "History of insulin glargine 18 units nightly use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "sodium 129 mmol/L",
+        "text": "If sodium falls below 129 mmol/L, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "insulin glargine 18 units nightly",
+        "text": "Held insulin glargine 18 units nightly pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "The atorvastatin 80 mg nightly course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0045",
+    "subject_id": "SYNTH_SUBJECT_0045",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted spironolactone 25 mg daily for ongoing management.\nStarted furosemide 40 mg daily for ongoing management.\nStarted atorvastatin 80 mg nightly for ongoing management.\nStarted pantoprazole 40 mg daily for ongoing management.\nAdmission INR was 2.6, monitored during the stay.\nFollow up with wound care in 5 days.\nThe patient was NOT started on spironolactone 25 mg daily due to intolerance.\nHistory of spironolactone 25 mg daily use prior to admission, since discontinued.\nIf hemoglobin falls below 9.4 g/dL, replete and recheck.\nHeld atorvastatin 80 mg nightly pending specialist input.\nThe pantoprazole 40 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "spironolactone 25 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started spironolactone 25 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "furosemide 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started furosemide 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "atorvastatin 80 mg nightly",
+        "assertion": "present",
+        "gold_sentence": "Started atorvastatin 80 mg nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "pantoprazole 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started pantoprazole 40 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "INR 2.6",
+        "assertion": "present",
+        "gold_sentence": "Admission INR was 2.6, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "wound care in 5 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with wound care in 5 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "spironolactone 25 mg daily",
+        "text": "The patient was NOT started on spironolactone 25 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "spironolactone 25 mg daily",
+        "text": "History of spironolactone 25 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "hemoglobin 9.4 g/dL",
+        "text": "If hemoglobin falls below 9.4 g/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "Held atorvastatin 80 mg nightly pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "pantoprazole 40 mg daily",
+        "text": "The pantoprazole 40 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0046",
+    "subject_id": "SYNTH_SUBJECT_0046",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted insulin glargine 18 units nightly for ongoing management.\nStarted spironolactone 25 mg daily for ongoing management.\nAdmission hemoglobin was 9.4 g/dL, monitored during the stay.\nFollow up with primary care in 7 days.\nThe patient was NOT started on clopidogrel 75 mg daily due to intolerance.\nHistory of furosemide 40 mg daily use prior to admission, since discontinued.\nIf glucose falls below 212 mg/dL, replete and recheck.\nHeld apixaban 5 mg BID pending specialist input.\nThe metoprolol 25 mg BID course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "insulin glargine 18 units nightly",
+        "assertion": "present",
+        "gold_sentence": "Started insulin glargine 18 units nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "spironolactone 25 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started spironolactone 25 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "hemoglobin 9.4 g/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission hemoglobin was 9.4 g/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "primary care in 7 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with primary care in 7 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "clopidogrel 75 mg daily",
+        "text": "The patient was NOT started on clopidogrel 75 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "furosemide 40 mg daily",
+        "text": "History of furosemide 40 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "glucose 212 mg/dL",
+        "text": "If glucose falls below 212 mg/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "apixaban 5 mg BID",
+        "text": "Held apixaban 5 mg BID pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "metoprolol 25 mg BID",
+        "text": "The metoprolol 25 mg BID course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0047",
+    "subject_id": "SYNTH_SUBJECT_0047",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted lisinopril 10 mg daily for ongoing management.\nStarted insulin glargine 18 units nightly for ongoing management.\nStarted spironolactone 25 mg daily for ongoing management.\nAdmission potassium was 3.2 mmol/L, monitored during the stay.\nFollow up with cardiology in 2 weeks.\nThe patient was NOT started on metoprolol 25 mg BID due to intolerance.\nHistory of atorvastatin 80 mg nightly use prior to admission, since discontinued.\nIf creatinine falls below 1.8 mg/dL, replete and recheck.\nHeld lisinopril 10 mg daily pending specialist input.\nThe apixaban 5 mg BID course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "lisinopril 10 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started lisinopril 10 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "insulin glargine 18 units nightly",
+        "assertion": "present",
+        "gold_sentence": "Started insulin glargine 18 units nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "spironolactone 25 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started spironolactone 25 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "potassium 3.2 mmol/L",
+        "assertion": "present",
+        "gold_sentence": "Admission potassium was 3.2 mmol/L, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "cardiology in 2 weeks",
+        "assertion": "present",
+        "gold_sentence": "Follow up with cardiology in 2 weeks."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "metoprolol 25 mg BID",
+        "text": "The patient was NOT started on metoprolol 25 mg BID due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "History of atorvastatin 80 mg nightly use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "creatinine 1.8 mg/dL",
+        "text": "If creatinine falls below 1.8 mg/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "lisinopril 10 mg daily",
+        "text": "Held lisinopril 10 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "apixaban 5 mg BID",
+        "text": "The apixaban 5 mg BID course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0048",
+    "subject_id": "SYNTH_SUBJECT_0048",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted clopidogrel 75 mg daily for ongoing management.\nStarted lisinopril 10 mg daily for ongoing management.\nStarted insulin glargine 18 units nightly for ongoing management.\nStarted spironolactone 25 mg daily for ongoing management.\nAdmission glucose was 212 mg/dL, monitored during the stay.\nFollow up with anticoagulation clinic in 3 days.\nThe patient was NOT started on furosemide 40 mg daily due to intolerance.\nHistory of pantoprazole 40 mg daily use prior to admission, since discontinued.\nIf INR falls below 2.6, replete and recheck.\nHeld furosemide 40 mg daily pending specialist input.\nThe amoxicillin 500 mg TID course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "clopidogrel 75 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started clopidogrel 75 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "lisinopril 10 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started lisinopril 10 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "insulin glargine 18 units nightly",
+        "assertion": "present",
+        "gold_sentence": "Started insulin glargine 18 units nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "spironolactone 25 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started spironolactone 25 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "glucose 212 mg/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission glucose was 212 mg/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "anticoagulation clinic in 3 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with anticoagulation clinic in 3 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "furosemide 40 mg daily",
+        "text": "The patient was NOT started on furosemide 40 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "pantoprazole 40 mg daily",
+        "text": "History of pantoprazole 40 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "INR 2.6",
+        "text": "If INR falls below 2.6, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "furosemide 40 mg daily",
+        "text": "Held furosemide 40 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "amoxicillin 500 mg TID",
+        "text": "The amoxicillin 500 mg TID course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0049",
+    "subject_id": "SYNTH_SUBJECT_0049",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted amoxicillin 500 mg TID for ongoing management.\nStarted clopidogrel 75 mg daily for ongoing management.\nAdmission troponin was 0.08 ng/mL, monitored during the stay.\nFollow up with nephrology in 10 days.\nThe patient was NOT started on lisinopril 10 mg daily due to intolerance.\nHistory of metoprolol 25 mg BID use prior to admission, since discontinued.\nIf potassium falls below 3.2 mmol/L, replete and recheck.\nHeld metoprolol 25 mg BID pending specialist input.\nThe clopidogrel 75 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "amoxicillin 500 mg TID",
+        "assertion": "present",
+        "gold_sentence": "Started amoxicillin 500 mg TID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "clopidogrel 75 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started clopidogrel 75 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "troponin 0.08 ng/mL",
+        "assertion": "present",
+        "gold_sentence": "Admission troponin was 0.08 ng/mL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "nephrology in 10 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with nephrology in 10 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "lisinopril 10 mg daily",
+        "text": "The patient was NOT started on lisinopril 10 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "metoprolol 25 mg BID",
+        "text": "History of metoprolol 25 mg BID use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "potassium 3.2 mmol/L",
+        "text": "If potassium falls below 3.2 mmol/L, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "metoprolol 25 mg BID",
+        "text": "Held metoprolol 25 mg BID pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "clopidogrel 75 mg daily",
+        "text": "The clopidogrel 75 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0050",
+    "subject_id": "SYNTH_SUBJECT_0050",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted apixaban 5 mg BID for ongoing management.\nStarted amoxicillin 500 mg TID for ongoing management.\nStarted clopidogrel 75 mg daily for ongoing management.\nAdmission creatinine was 1.8 mg/dL, monitored during the stay.\nFollow up with wound care in 5 days.\nThe patient was NOT started on apixaban 5 mg BID due to intolerance.\nHistory of apixaban 5 mg BID use prior to admission, since discontinued.\nIf troponin falls below 0.08 ng/mL, replete and recheck.\nHeld clopidogrel 75 mg daily pending specialist input.\nThe lisinopril 10 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "apixaban 5 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started apixaban 5 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "amoxicillin 500 mg TID",
+        "assertion": "present",
+        "gold_sentence": "Started amoxicillin 500 mg TID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "clopidogrel 75 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started clopidogrel 75 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "creatinine 1.8 mg/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission creatinine was 1.8 mg/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "wound care in 5 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with wound care in 5 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "apixaban 5 mg BID",
+        "text": "The patient was NOT started on apixaban 5 mg BID due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "apixaban 5 mg BID",
+        "text": "History of apixaban 5 mg BID use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "troponin 0.08 ng/mL",
+        "text": "If troponin falls below 0.08 ng/mL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "clopidogrel 75 mg daily",
+        "text": "Held clopidogrel 75 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "lisinopril 10 mg daily",
+        "text": "The lisinopril 10 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0051",
+    "subject_id": "SYNTH_SUBJECT_0051",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted metoprolol 25 mg BID for ongoing management.\nStarted apixaban 5 mg BID for ongoing management.\nStarted amoxicillin 500 mg TID for ongoing management.\nStarted clopidogrel 75 mg daily for ongoing management.\nAdmission sodium was 129 mmol/L, monitored during the stay.\nFollow up with primary care in 7 days.\nThe patient was NOT started on atorvastatin 80 mg nightly due to intolerance.\nHistory of amoxicillin 500 mg TID use prior to admission, since discontinued.\nIf sodium falls below 129 mmol/L, replete and recheck.\nHeld spironolactone 25 mg daily pending specialist input.\nThe insulin glargine 18 units nightly course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "metoprolol 25 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started metoprolol 25 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "apixaban 5 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started apixaban 5 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "amoxicillin 500 mg TID",
+        "assertion": "present",
+        "gold_sentence": "Started amoxicillin 500 mg TID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "clopidogrel 75 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started clopidogrel 75 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "sodium 129 mmol/L",
+        "assertion": "present",
+        "gold_sentence": "Admission sodium was 129 mmol/L, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "primary care in 7 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with primary care in 7 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "The patient was NOT started on atorvastatin 80 mg nightly due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "amoxicillin 500 mg TID",
+        "text": "History of amoxicillin 500 mg TID use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "sodium 129 mmol/L",
+        "text": "If sodium falls below 129 mmol/L, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "spironolactone 25 mg daily",
+        "text": "Held spironolactone 25 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "insulin glargine 18 units nightly",
+        "text": "The insulin glargine 18 units nightly course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0052",
+    "subject_id": "SYNTH_SUBJECT_0052",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted pantoprazole 40 mg daily for ongoing management.\nStarted metoprolol 25 mg BID for ongoing management.\nAdmission INR was 2.6, monitored during the stay.\nFollow up with cardiology in 2 weeks.\nThe patient was NOT started on insulin glargine 18 units nightly due to intolerance.\nHistory of clopidogrel 75 mg daily use prior to admission, since discontinued.\nIf hemoglobin falls below 9.4 g/dL, replete and recheck.\nHeld pantoprazole 40 mg daily pending specialist input.\nThe spironolactone 25 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "pantoprazole 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started pantoprazole 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "metoprolol 25 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started metoprolol 25 mg BID for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "INR 2.6",
+        "assertion": "present",
+        "gold_sentence": "Admission INR was 2.6, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "cardiology in 2 weeks",
+        "assertion": "present",
+        "gold_sentence": "Follow up with cardiology in 2 weeks."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "insulin glargine 18 units nightly",
+        "text": "The patient was NOT started on insulin glargine 18 units nightly due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "clopidogrel 75 mg daily",
+        "text": "History of clopidogrel 75 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "hemoglobin 9.4 g/dL",
+        "text": "If hemoglobin falls below 9.4 g/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "pantoprazole 40 mg daily",
+        "text": "Held pantoprazole 40 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "spironolactone 25 mg daily",
+        "text": "The spironolactone 25 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0053",
+    "subject_id": "SYNTH_SUBJECT_0053",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted atorvastatin 80 mg nightly for ongoing management.\nStarted pantoprazole 40 mg daily for ongoing management.\nStarted metoprolol 25 mg BID for ongoing management.\nAdmission hemoglobin was 9.4 g/dL, monitored during the stay.\nFollow up with anticoagulation clinic in 3 days.\nThe patient was NOT started on amoxicillin 500 mg TID due to intolerance.\nHistory of lisinopril 10 mg daily use prior to admission, since discontinued.\nIf glucose falls below 212 mg/dL, replete and recheck.\nHeld amoxicillin 500 mg TID pending specialist input.\nThe furosemide 40 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "atorvastatin 80 mg nightly",
+        "assertion": "present",
+        "gold_sentence": "Started atorvastatin 80 mg nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "pantoprazole 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started pantoprazole 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "metoprolol 25 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started metoprolol 25 mg BID for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "hemoglobin 9.4 g/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission hemoglobin was 9.4 g/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "anticoagulation clinic in 3 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with anticoagulation clinic in 3 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "amoxicillin 500 mg TID",
+        "text": "The patient was NOT started on amoxicillin 500 mg TID due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "lisinopril 10 mg daily",
+        "text": "History of lisinopril 10 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "glucose 212 mg/dL",
+        "text": "If glucose falls below 212 mg/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "amoxicillin 500 mg TID",
+        "text": "Held amoxicillin 500 mg TID pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "furosemide 40 mg daily",
+        "text": "The furosemide 40 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0054",
+    "subject_id": "SYNTH_SUBJECT_0054",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted furosemide 40 mg daily for ongoing management.\nStarted atorvastatin 80 mg nightly for ongoing management.\nStarted pantoprazole 40 mg daily for ongoing management.\nStarted metoprolol 25 mg BID for ongoing management.\nAdmission potassium was 3.2 mmol/L, monitored during the stay.\nFollow up with nephrology in 10 days.\nThe patient was NOT started on pantoprazole 40 mg daily due to intolerance.\nHistory of insulin glargine 18 units nightly use prior to admission, since discontinued.\nIf creatinine falls below 1.8 mg/dL, replete and recheck.\nHeld insulin glargine 18 units nightly pending specialist input.\nThe atorvastatin 80 mg nightly course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "furosemide 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started furosemide 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "atorvastatin 80 mg nightly",
+        "assertion": "present",
+        "gold_sentence": "Started atorvastatin 80 mg nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "pantoprazole 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started pantoprazole 40 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "metoprolol 25 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started metoprolol 25 mg BID for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "potassium 3.2 mmol/L",
+        "assertion": "present",
+        "gold_sentence": "Admission potassium was 3.2 mmol/L, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "nephrology in 10 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with nephrology in 10 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "pantoprazole 40 mg daily",
+        "text": "The patient was NOT started on pantoprazole 40 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "insulin glargine 18 units nightly",
+        "text": "History of insulin glargine 18 units nightly use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "creatinine 1.8 mg/dL",
+        "text": "If creatinine falls below 1.8 mg/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "insulin glargine 18 units nightly",
+        "text": "Held insulin glargine 18 units nightly pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "The atorvastatin 80 mg nightly course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0055",
+    "subject_id": "SYNTH_SUBJECT_0055",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted spironolactone 25 mg daily for ongoing management.\nStarted furosemide 40 mg daily for ongoing management.\nAdmission glucose was 212 mg/dL, monitored during the stay.\nFollow up with wound care in 5 days.\nThe patient was NOT started on spironolactone 25 mg daily due to intolerance.\nHistory of spironolactone 25 mg daily use prior to admission, since discontinued.\nIf INR falls below 2.6, replete and recheck.\nHeld atorvastatin 80 mg nightly pending specialist input.\nThe pantoprazole 40 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "spironolactone 25 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started spironolactone 25 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "furosemide 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started furosemide 40 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "glucose 212 mg/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission glucose was 212 mg/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "wound care in 5 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with wound care in 5 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "spironolactone 25 mg daily",
+        "text": "The patient was NOT started on spironolactone 25 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "spironolactone 25 mg daily",
+        "text": "History of spironolactone 25 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "INR 2.6",
+        "text": "If INR falls below 2.6, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "Held atorvastatin 80 mg nightly pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "pantoprazole 40 mg daily",
+        "text": "The pantoprazole 40 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0056",
+    "subject_id": "SYNTH_SUBJECT_0056",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted insulin glargine 18 units nightly for ongoing management.\nStarted spironolactone 25 mg daily for ongoing management.\nStarted furosemide 40 mg daily for ongoing management.\nAdmission troponin was 0.08 ng/mL, monitored during the stay.\nFollow up with primary care in 7 days.\nThe patient was NOT started on clopidogrel 75 mg daily due to intolerance.\nHistory of furosemide 40 mg daily use prior to admission, since discontinued.\nIf potassium falls below 3.2 mmol/L, replete and recheck.\nHeld apixaban 5 mg BID pending specialist input.\nThe metoprolol 25 mg BID course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "insulin glargine 18 units nightly",
+        "assertion": "present",
+        "gold_sentence": "Started insulin glargine 18 units nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "spironolactone 25 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started spironolactone 25 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "furosemide 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started furosemide 40 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "troponin 0.08 ng/mL",
+        "assertion": "present",
+        "gold_sentence": "Admission troponin was 0.08 ng/mL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "primary care in 7 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with primary care in 7 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "clopidogrel 75 mg daily",
+        "text": "The patient was NOT started on clopidogrel 75 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "furosemide 40 mg daily",
+        "text": "History of furosemide 40 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "potassium 3.2 mmol/L",
+        "text": "If potassium falls below 3.2 mmol/L, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "apixaban 5 mg BID",
+        "text": "Held apixaban 5 mg BID pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "metoprolol 25 mg BID",
+        "text": "The metoprolol 25 mg BID course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0057",
+    "subject_id": "SYNTH_SUBJECT_0057",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted lisinopril 10 mg daily for ongoing management.\nStarted insulin glargine 18 units nightly for ongoing management.\nStarted spironolactone 25 mg daily for ongoing management.\nStarted furosemide 40 mg daily for ongoing management.\nAdmission creatinine was 1.8 mg/dL, monitored during the stay.\nFollow up with cardiology in 2 weeks.\nThe patient was NOT started on metoprolol 25 mg BID due to intolerance.\nHistory of atorvastatin 80 mg nightly use prior to admission, since discontinued.\nIf troponin falls below 0.08 ng/mL, replete and recheck.\nHeld lisinopril 10 mg daily pending specialist input.\nThe apixaban 5 mg BID course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "lisinopril 10 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started lisinopril 10 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "insulin glargine 18 units nightly",
+        "assertion": "present",
+        "gold_sentence": "Started insulin glargine 18 units nightly for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "spironolactone 25 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started spironolactone 25 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "furosemide 40 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started furosemide 40 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "creatinine 1.8 mg/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission creatinine was 1.8 mg/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "cardiology in 2 weeks",
+        "assertion": "present",
+        "gold_sentence": "Follow up with cardiology in 2 weeks."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "metoprolol 25 mg BID",
+        "text": "The patient was NOT started on metoprolol 25 mg BID due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "atorvastatin 80 mg nightly",
+        "text": "History of atorvastatin 80 mg nightly use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "troponin 0.08 ng/mL",
+        "text": "If troponin falls below 0.08 ng/mL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "lisinopril 10 mg daily",
+        "text": "Held lisinopril 10 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "apixaban 5 mg BID",
+        "text": "The apixaban 5 mg BID course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0058",
+    "subject_id": "SYNTH_SUBJECT_0058",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted clopidogrel 75 mg daily for ongoing management.\nStarted lisinopril 10 mg daily for ongoing management.\nAdmission sodium was 129 mmol/L, monitored during the stay.\nFollow up with anticoagulation clinic in 3 days.\nThe patient was NOT started on furosemide 40 mg daily due to intolerance.\nHistory of pantoprazole 40 mg daily use prior to admission, since discontinued.\nIf sodium falls below 129 mmol/L, replete and recheck.\nHeld furosemide 40 mg daily pending specialist input.\nThe amoxicillin 500 mg TID course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "clopidogrel 75 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started clopidogrel 75 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "lisinopril 10 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started lisinopril 10 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "sodium 129 mmol/L",
+        "assertion": "present",
+        "gold_sentence": "Admission sodium was 129 mmol/L, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "anticoagulation clinic in 3 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with anticoagulation clinic in 3 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "furosemide 40 mg daily",
+        "text": "The patient was NOT started on furosemide 40 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "pantoprazole 40 mg daily",
+        "text": "History of pantoprazole 40 mg daily use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "sodium 129 mmol/L",
+        "text": "If sodium falls below 129 mmol/L, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "furosemide 40 mg daily",
+        "text": "Held furosemide 40 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "amoxicillin 500 mg TID",
+        "text": "The amoxicillin 500 mg TID course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0059",
+    "subject_id": "SYNTH_SUBJECT_0059",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted amoxicillin 500 mg TID for ongoing management.\nStarted clopidogrel 75 mg daily for ongoing management.\nStarted lisinopril 10 mg daily for ongoing management.\nAdmission INR was 2.6, monitored during the stay.\nFollow up with nephrology in 10 days.\nThe patient was NOT started on lisinopril 10 mg daily due to intolerance.\nHistory of metoprolol 25 mg BID use prior to admission, since discontinued.\nIf hemoglobin falls below 9.4 g/dL, replete and recheck.\nHeld metoprolol 25 mg BID pending specialist input.\nThe clopidogrel 75 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "amoxicillin 500 mg TID",
+        "assertion": "present",
+        "gold_sentence": "Started amoxicillin 500 mg TID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "clopidogrel 75 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started clopidogrel 75 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "lisinopril 10 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started lisinopril 10 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "INR 2.6",
+        "assertion": "present",
+        "gold_sentence": "Admission INR was 2.6, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "nephrology in 10 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with nephrology in 10 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "lisinopril 10 mg daily",
+        "text": "The patient was NOT started on lisinopril 10 mg daily due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "metoprolol 25 mg BID",
+        "text": "History of metoprolol 25 mg BID use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "hemoglobin 9.4 g/dL",
+        "text": "If hemoglobin falls below 9.4 g/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "metoprolol 25 mg BID",
+        "text": "Held metoprolol 25 mg BID pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "clopidogrel 75 mg daily",
+        "text": "The clopidogrel 75 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  },
+  {
+    "case_id": "SYNTH_GOLD_0060",
+    "subject_id": "SYNTH_SUBJECT_0060",
+    "synthetic": "true",
+    "reference_note": "Fully synthetic construction-true fixture for conformal calibration; not a patient record and not clinically adjudicated.",
+    "discharge_summary": "SYNTHETIC TRAINING EXAMPLE — NOT A PATIENT RECORD.\nHOSPITAL COURSE:\nStarted apixaban 5 mg BID for ongoing management.\nStarted amoxicillin 500 mg TID for ongoing management.\nStarted clopidogrel 75 mg daily for ongoing management.\nStarted lisinopril 10 mg daily for ongoing management.\nAdmission hemoglobin was 9.4 g/dL, monitored during the stay.\nFollow up with wound care in 5 days.\nThe patient was NOT started on apixaban 5 mg BID due to intolerance.\nHistory of apixaban 5 mg BID use prior to admission, since discontinued.\nIf glucose falls below 212 mg/dL, replete and recheck.\nHeld clopidogrel 75 mg daily pending specialist input.\nThe lisinopril 10 mg daily course finished two weeks before this stay.\nDISCHARGE CONDITION: stable.",
+    "gold": [
+      {
+        "field": "medication",
+        "normalized_value": "apixaban 5 mg BID",
+        "assertion": "present",
+        "gold_sentence": "Started apixaban 5 mg BID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "amoxicillin 500 mg TID",
+        "assertion": "present",
+        "gold_sentence": "Started amoxicillin 500 mg TID for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "clopidogrel 75 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started clopidogrel 75 mg daily for ongoing management."
+      },
+      {
+        "field": "medication",
+        "normalized_value": "lisinopril 10 mg daily",
+        "assertion": "present",
+        "gold_sentence": "Started lisinopril 10 mg daily for ongoing management."
+      },
+      {
+        "field": "lab",
+        "normalized_value": "hemoglobin 9.4 g/dL",
+        "assertion": "present",
+        "gold_sentence": "Admission hemoglobin was 9.4 g/dL, monitored during the stay."
+      },
+      {
+        "field": "followup",
+        "normalized_value": "wound care in 5 days",
+        "assertion": "present",
+        "gold_sentence": "Follow up with wound care in 5 days."
+      }
+    ],
+    "distractors": [
+      {
+        "kind": "negated",
+        "value": "apixaban 5 mg BID",
+        "text": "The patient was NOT started on apixaban 5 mg BID due to intolerance."
+      },
+      {
+        "kind": "historical",
+        "value": "apixaban 5 mg BID",
+        "text": "History of apixaban 5 mg BID use prior to admission, since discontinued."
+      },
+      {
+        "kind": "conditional",
+        "value": "glucose 212 mg/dL",
+        "text": "If glucose falls below 212 mg/dL, replete and recheck."
+      },
+      {
+        "kind": "subtle_held",
+        "value": "clopidogrel 75 mg daily",
+        "text": "Held clopidogrel 75 mg daily pending specialist input.",
+        "subtle": true
+      },
+      {
+        "kind": "subtle_completed",
+        "value": "lisinopril 10 mg daily",
+        "text": "The lisinopril 10 mg daily course finished two weeks before this stay.",
+        "subtle": true
+      }
+    ]
+  }
+]

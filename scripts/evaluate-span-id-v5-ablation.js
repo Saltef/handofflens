@@ -1341,6 +1341,10 @@ if (require.main === module) {
 module.exports = {
   buildOutputSchema,
   buildAblationJob,
+  buildProviderRequest,
+  callProvider,
+  providerForModel,
+  toProviderCompatibleSchema,
   toCohereCompatibleSchema,
   scoreAblationRecord,
   repairSpanIdEvidenceItem,
