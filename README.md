@@ -57,7 +57,7 @@ In the fresh June 23 validation rerun, candidate-first v4 passed the determinist
 
 A second wave of pre-registered experiments extends the grounding work from parsing and recovery into contract enforcement, self-verification, and calibrated gating. Each has a results document under `docs/`, a pre-registration, and a row in the claims register.
 
-Pre-registration provenance (honest disclosure): the pre-registrations in this 2026-08 batch were authored before each run within a single working session, but committed together with their results, so Git history alone does not prove they were frozen before the runs. (The earlier span-ID pre-registration in `docs/claims-register.md` is the exception — its prediction commit provably precedes its results commit.) Treat this batch's pre-registrations as declared intent, not git-timestamped proof.
+Pre-registration provenance (honest disclosure): the pre-registrations in this 2026-08 batch were authored before each run within a single working session, but committed together with their results, so Git history alone does not prove they were frozen before the runs. (The earlier span-ID pre-registration in `docs/claims-register.md` is the exception -- its prediction commit provably precedes its results commit.) Treat this batch's pre-registrations as declared intent, not git-timestamped proof.
 
 | Experiment | Finding | Boundary |
 | --- | --- | --- |
