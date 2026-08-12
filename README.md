@@ -12,14 +12,15 @@ This repository is my independent work. It does not represent the views, strateg
 
 Structured output is not the same thing as grounded output.
 
-The current public benchmark result is a 207-row ACI-Bench note-generation run with Command A+ plus a deterministic attribution-repair diagnostic:
+The current public benchmark result is a 207-row ACI-Bench note-generation run, with a same-harness cross-provider baseline (Command A+ and Claude Haiku 4.5 under the identical conservative prompt and scorer) plus a deterministic attribution-repair diagnostic:
 
 | Run | Rows | ROUGE-L F1 | Source-token support | Cases with unsupported sentences | Mean output tokens |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Command A+ generated notes | 207 | 0.2550 | 0.6945 | 100.0% | 250.6 |
-| `compact_extractive` attribution repair | 207 | 0.2324 | 1.0000 | 24.6% | 435.9 |
+| Haiku 4.5 generated notes | 207 | 0.3222 | 0.7329 | 100.0% | 315.3 |
+| `compact_extractive` attribution repair (Command A+) | 207 | 0.2324 | 1.0000 | 24.6% | 435.9 |
 
-The selected repair keeps 91.2% of the raw Command A+ ROUGE-L score while reducing unsupported-sentence case rate by 75.4 percentage points. The tradeoff is output length: repaired notes are 73.9% longer on average. The 1.0000 lexical support score is expected by construction because the repair emits source-dialogue spans; it is a useful gate diagnostic, not proof of semantic factuality.
+Under the identical prompt, Haiku's generated notes score higher on ROUGE-L (0.3222 vs 0.2550) and slightly higher on lexical source support, while running longer. Read this as a same-harness baseline, not a leaderboard or clinical-quality verdict: the prompt is deliberately conservative and source-grounded rather than tuned for reference-note ROUGE, and raw generation ROUGE is not the headline. The headline is the attribution-repair diagnostic, which is where auditability comes from. The selected Command A+ repair keeps 91.2% of its raw ROUGE-L while reducing unsupported-sentence case rate by 75.4 percentage points; the tradeoff is output length (73.9% longer). The 1.0000 lexical support score is expected by construction because the repair emits source-dialogue spans; it is a useful gate diagnostic, not proof of semantic factuality.
 
 Two caveats matter. First, this `0.2550` ROUGE-L result is a reproduced public-JSON diagnostic, not an official ACI-Bench leaderboard submission; it should not be compared directly to published full-note scores without matching the official scorer, preprocessing, and split protocol. Second, `compact_extractive` is treated as a pre-specified repair policy. The four-method repair table is an ablation over the reported rows, not a same-row winner-selection proof.
 

@@ -108,6 +108,7 @@
     "benchmark:generate:aci-note": "node scripts/generate-aci-note-baselines.js",
     "benchmark:aci-note:baselines": "node scripts/evaluate-aci-note-baselines.js",
     "benchmark:aci-note:cohere": "node scripts/evaluate-aci-note-cohere.js",
+    "benchmark:aci-note:openrouter": "node scripts/evaluate-aci-note-openrouter.js",
     "benchmark:aci-note:repair": "node scripts/repair-aci-note-attribution.js",
     "benchmark:score": "node scripts/score-benchmark-records.js",
     "benchmark:test": "node scripts/test-benchmark-adapter-scoring.js",

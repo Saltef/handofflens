@@ -52,11 +52,11 @@ Interpretation: for full-note ACI files, the final reference-length slice is the
 
 Trade-off: extractive baselines have excellent lexical groundedness by construction, but they are not clinically adequate notes. They copy source wording, cannot normalize or reorganize like an expert note, and ROUGE does not establish factual correctness.
 
-### Command A+ Generated Notes and Attribution Repair
+### Generated Notes and Attribution Repair
 
-Command A+ was run over the five canonical full-note ACI splits (`207/207` rows completed). The run used the public ACI `src` conversation only as model input and scored generated notes against the expert `tgt` note. Provider outputs and raw rows are kept outside the public repo.
+Command A+ and, as a same-harness cross-provider baseline, Claude Haiku 4.5 were run over the five canonical full-note ACI splits (`207/207` rows each) under the identical conservative prompt and scorer. The run used the public ACI `src` conversation only as model input and scored generated notes against the expert `tgt` note. Provider outputs and raw rows are kept outside the public repo.
 
-The model-generated notes beat the compressed deterministic baselines on ROUGE, but had weak lexical source support by the repository's current source-support proxy. This does not prove hallucination: a concise clinical paraphrase can be correct while lexically novel. It does, however, show why citation-level or schema-level validity alone is too weak for a source-grounded clinical handoff system.
+Both providers' generated notes beat the compressed deterministic baselines on ROUGE. Under the identical prompt, Haiku scores higher than Command A+ on ROUGE-L (0.3222 vs 0.2550) and slightly higher on source-token support (0.7329 vs 0.6945), while running longer (315 vs 251 tokens). This is a same-harness baseline under a deliberately conservative, source-grounded prompt, not a leaderboard or a note-quality verdict; raw generation ROUGE is not the headline. Both providers had weak lexical source support relative to the repair baseline. This does not prove hallucination: a concise clinical paraphrase can be correct while lexically novel. It does, however, show why citation-level or schema-level validity alone is too weak for a source-grounded clinical handoff system, and why the attribution-repair diagnostic (which lifts source support to 1.0000) is the more informative result.
 
 Comparability caveat: the `0.2550` ROUGE-L F1 should be read as `25.50` on a percentage scale, but it is still far below published full-note ACI-Bench numbers such as `48.62`. Ranked by likely contribution, the gap is:
 
@@ -76,7 +76,8 @@ Aggregate full-note results across train, validation, and the three public held-
 | Method | Cases | ROUGE-1 F1 | ROUGE-2 F1 | ROUGE-L F1 | Source token support | Source bigram support | Unsupported-sentence case rate | Mean prediction tokens |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | Command A+ generated note | 207 | 0.4355 | 0.1651 | 0.2550 | 0.6945 | 0.2201 | 1.0000 | 250.6 |
-| `compact_extractive` attribution repair | 207 | 0.4078 | 0.1576 | 0.2324 | 1.0000 | 0.9344 | 0.2464 | 435.9 |
+| Haiku 4.5 generated note | 207 | 0.5359 | 0.2318 | 0.3222 | 0.7329 | 0.2841 | 1.0000 | 315.3 |
+| `compact_extractive` attribution repair (Command A+) | 207 | 0.4078 | 0.1576 | 0.2324 | 1.0000 | 0.9344 | 0.2464 | 435.9 |
 | `tail_reference_length` extractive baseline | 207 | 0.3659 | 0.1126 | 0.1829 | 1.0000 | 1.0000 | 0.0000 | 428.0 |
 | `source_full` transcript baseline | 207 | 0.3340 | 0.1310 | 0.1953 | 1.0000 | 1.0000 | 0.0000 | 1,201.8 |
 
